@@ -120,7 +120,7 @@ export default function AdminLayout({
 
               <Link href="/admin/dashboard" className="ml-2 xl:ml-0">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.jpg"
                   alt="Clue"
                   width={80}
                   height={26}

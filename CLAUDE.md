@@ -1,6 +1,6 @@
 # CLAUDE.md (Minimized)
 
-> **Loancase**: Commercial loan referral platform connecting referrers with Loancase. Built with Next.js 14+, MongoDB, JWT Auth, Vercel.
+> **Loanease**: Commercial loan referral platform connecting referrers with Loanease. Built with Next.js 14+, MongoDB, JWT Auth, Vercel.
 
 ## Quick Reference
 
@@ -271,6 +271,10 @@ NEXT_PUBLIC_APP_URL=
 
 ## Email System
 
+### Email Configuration
+- **From Email**: `noreply@loanease.com` (general), `partners@loanease.com` (agreements)
+- **Domain**: `loanease.com`
+
 ### Postmark Templates
 - twofactor-code (2FA), new-ip-login, password-reset, email-verification
 
@@ -317,6 +321,14 @@ Red: ICR < 1.5 OR LVR > 80
 8. **PDF generation** - Use `jspdf` with `autoTable(doc, {...})` syntax
 9. **Agreement PDF** - Shows IP address and Australian timezone (AEDT/AEST)
 10. **Dashboard stats** - Never show fake/hardcoded percentage changes
+
+## Branding & Assets
+
+- **App Name**: Loanease
+- **Logo File**: `/logo.jpg` (used in all layouts, emails, PDFs)
+- **Company Name**: Loanease (formerly Clue Commercial)
+- **Email Domain**: `loanease.com`
+- **PDF Agreement Party**: LOANEASE PTY LTD
 
 ## Referrer Portal Design
 

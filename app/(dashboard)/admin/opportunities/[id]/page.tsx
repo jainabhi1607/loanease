@@ -1701,7 +1701,7 @@ export default function OpportunityDetailPage() {
             </div>
             <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
               <p className="text-sm text-yellow-800">
-                Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.
+                Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.
               </p>
             </div>
           </div>

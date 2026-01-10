@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Loancase** is a commercial loan referral management platform that connects loan referrers (accountants, lawyers, finance companies) with Loancase to manage loan opportunities for their clients. Built with Next.js, React, Supabase, and hosted on Vercel.
+**Loanease** is a commercial loan referral management platform that connects loan referrers (accountants, lawyers, finance companies) with Loanease to manage loan opportunities for their clients. Built with Next.js, React, Supabase, and hosted on Vercel.
 
 ## Tech Stack
 
@@ -106,7 +106,7 @@ npm run format
     /results           # Assessment results page
       /page.tsx        # Display ICR, LVR, and outcome with CTA
   /(dashboard)         # Protected dashboard routes
-    /admin             # Loancase admin portal
+    /admin             # Loanease admin portal
       /referrers        # Referrer CRUD pages
         /[id]           # View referrer details
           /edit         # Edit referrer page
@@ -359,7 +359,7 @@ npm run format
 - **Policies**:
   - Referrers see only their organization's data
   - Clients (future) see only their opportunities across all referrers
-  - Loancase (super_admin, admin_team) sees all data
+  - Loanease (super_admin, admin_team) sees all data
 - **Soft deletes**: Use `deleted_at` timestamp, never hard delete
 - **Audit Trail**: All changes logged with user, IP, and timestamp
 
@@ -367,7 +367,7 @@ npm run format
 
 ### 1. Authentication Flow
 - Email/password login
-- 2FA for Loancase (mandatory) and Referrers (optional)
+- 2FA for Loanease (mandatory) and Referrers (optional)
 - 30-day "remember me" functionality
 - IP monitoring (track last 3 IPs, notify on new IP)
 - Session management with "sign out all devices"
@@ -550,7 +550,7 @@ Pre-Assessment (optional) → Draft → Opportunity → Application → Settleme
 ```
 - Each status change triggers email to referrer and/or client
 - Drafts can be saved indefinitely
-- Only Loancase can change status (except draft→opportunity)
+- Only Loanease can change status (except draft→opportunity)
 - Marking as "Unqualified" removes from main Opportunities/Applications views
 
 ### 6. Client Management (COMPLETED - November 2024)
@@ -739,7 +739,7 @@ Centralized settings system for application-wide configurations.
 ## Security Requirements
 
 ### Critical Security Features
-1. **2FA via 6-digit email code** (Loancase mandatory, Referrer optional)
+1. **2FA via 6-digit email code** (Loanease mandatory, Referrer optional)
 2. **Brute force protection** (rate limiting on login attempts)
 3. **IP tracking & notifications** for unusual logins
 4. **Audit trail** for all modifications
@@ -2539,7 +2539,7 @@ Unqualified Page → API (unqualified endpoint) → Only unqualified → Display
 ```
 
 ### Admin Users Management System (November 20, 2024)
-**Purpose**: Comprehensive user management system for Loancase administrators with role-based access control
+**Purpose**: Comprehensive user management system for Loanease administrators with role-based access control
 
 **Features Implemented**:
 
@@ -2666,7 +2666,7 @@ admin_team:
    - Similar design to admin layout
    - Responsive mobile menu with hamburger icon
    - Logout functionality
-   - Sticky header with "Loancase Referrer" branding
+   - Sticky header with "Loanease Referrer" branding
 
 2. **Referrer Dashboard Page** (`/app/(dashboard)/referrer/dashboard/page.tsx`):
    - **Welcome header** with "Add Opportunity" button (navigates to add page)

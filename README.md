@@ -1,4 +1,4 @@
-# Loancase
+# Loanease
 
 Commercial loan referral management platform built with Next.js and Supabase.
 

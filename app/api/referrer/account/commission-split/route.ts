@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     });
 
     const defaultCommissionSplit = setting?.value ||
-      'Clue Commercial will pay 30% (inclusive of GST) of the net upfront commission received by Clue Commercial from the lender (via the aggregator).\n\nThis will be paid typically monthly in arrears as per aggregator / lender payment terms and you will receive your own copy of the commission statement for your records, directly from the aggregator.';
+      'Loanease will pay 30% (inclusive of GST) of the net upfront commission received by Loanease from the lender (via the aggregator).\n\nThis will be paid typically monthly in arrears as per aggregator / lender payment terms and you will receive your own copy of the commission statement for your records, directly from the aggregator.';
 
     return NextResponse.json({
       commission_split: defaultCommissionSplit,

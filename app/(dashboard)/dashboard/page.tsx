@@ -50,7 +50,7 @@ export default function DashboardPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div>
-              <h1 className="text-xl font-semibold">Loancase - Referrer Portal</h1>
+              <h1 className="text-xl font-semibold">Loanease - Referrer Portal</h1>
             </div>
             <div className="flex items-center space-x-4">
               <Button
@@ -81,7 +81,7 @@ export default function DashboardPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-2xl font-bold mb-4">Referrer Dashboard</h2>
           <p className="text-muted-foreground">
-            Welcome to your Loancase referrer portal. Manage your loan opportunities and track their progress.
+            Welcome to your Loanease referrer portal. Manage your loan opportunities and track their progress.
           </p>
           
           {/* Quick Actions */}

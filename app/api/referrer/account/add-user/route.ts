@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         email: email,
         firstName: first_name,
         password: tempPassword,
-        companyName: orgData?.company_name || 'Loancase',
+        companyName: orgData?.company_name || 'Loanease',
       });
 
       if (!emailResult.success) {

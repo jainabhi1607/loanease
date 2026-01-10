@@ -1070,11 +1070,11 @@ export default function SignupPage() {
                     <div className="text-sm space-y-4">
                       <div>
                         <h4 className="font-semibold mb-2">BACKGROUND</h4>
-                        <p className="mb-2">A. Clue Commercial is a provider of the Services.</p>
+                        <p className="mb-2">A. Loanease is a provider of the Services.</p>
                         <p className="mb-2">B. The Referrer is a provider of the Referrer Services.</p>
                         <p className="mb-2">C. Subject to the terms of this Agreement:</p>
-                        <p className="ml-4 mb-1">a. Clue Commercial shall offer the Services to Referred Clients who are Introduced by the Referrer; and</p>
-                        <p className="ml-4">b. where the Referrer provides Clue Commercial with a Referral, Clue Commercial will pay the Referrer the Referral Fees.</p>
+                        <p className="ml-4 mb-1">a. Loanease shall offer the Services to Referred Clients who are Introduced by the Referrer; and</p>
+                        <p className="ml-4">b. where the Referrer provides Loanease with a Referral, Loanease will pay the Referrer the Referral Fees.</p>
                       </div>
 
                       <div>

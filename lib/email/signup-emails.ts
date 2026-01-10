@@ -2,7 +2,7 @@ import { sendHtmlEmail, sendHtmlEmailWithAttachment, wrapInBrandedTemplate } fro
 import { getDatabase } from '@/lib/mongodb/client';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { drawLoancaseLogo, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
+import { drawLoaneaseLogo, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
 
 // Helper to format industry type
 function formatIndustryType(industryType: string | null): string {
@@ -107,7 +107,7 @@ async function generateReferrerAgreementPDF(params: {
   const contentWidth = pageWidth - (margin * 2);
 
   // Add logo
-  drawLoancaseLogo(doc, margin, 20, { fontSize: 24 });
+  drawLoaneaseLogo(doc, margin, 20, { fontSize: 24 });
 
   doc.setFontSize(10);
   doc.setTextColor(100, 100, 100);
@@ -153,7 +153,7 @@ async function generateReferrerAgreementPDF(params: {
 
   // Create schedule table
   const scheduleData = [
-    ['1', 'CLUE COMMERCIAL', `Party: CLUE COMMERCIAL PTY LTD (ACN 676 426 101)\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@cluefinance.com.au\nContact: +61 1300 00 78 78`],
+    ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@loanease.com\nContact: +61 1300 00 78 78`],
     ['2', 'Referrer', `Party: ${params.companyName}\nAddress: ${params.address}\nEmail: ${params.email}\nContact: ${params.phone}`],
     ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
     ['4', 'Referrer Services', formatIndustryType(params.industryType)],
@@ -288,7 +288,7 @@ export async function sendReferrerAgreementEmail(params: SignupEmailParams): Pro
     });
 
     // Generate filename
-    let filename = 'Loancase-ReferrerAgreement';
+    let filename = 'Loanease-ReferrerAgreement';
     if (params.abn) {
       filename += `-${params.abn.replace(/\s/g, '')}`;
     }
@@ -389,7 +389,7 @@ export async function sendNewUserWelcomeEmail(params: {
       'Password': params.password,
     };
 
-    const subject = replaceVariables(subjectTemplate, variables) || 'Welcome to Loancase';
+    const subject = replaceVariables(subjectTemplate, variables) || 'Welcome to Loanease';
     const content = replaceVariables(contentTemplate, variables);
     const htmlBody = wrapInEmailTemplate(content);
 
@@ -400,7 +400,7 @@ export async function sendNewUserWelcomeEmail(params: {
       to: params.email,
       subject,
       htmlBody,
-      from: 'partners@cluefinance.com.au',
+      from: 'partners@loanease.com',
     });
 
     if (result.success) {

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Successfully created two reusable components to eliminate code duplication across the Loancase application.
+Successfully created two reusable components to eliminate code duplication across the Loanease application.
 
 ---
 

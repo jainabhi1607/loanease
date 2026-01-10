@@ -95,15 +95,15 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <Image
-              src="/logo.svg"
-              alt="Loancase"
+              src="/logo.jpg"
+              alt="Loanease"
               width={120}
               height={40}
               priority
             />
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            Welcome to Loancase
+            Welcome to Loanease
           </CardTitle>
           <CardDescription className="text-center">
             Enter your credentials to access your account
@@ -219,15 +219,15 @@ export default function LoginPage() {
                     <p className="text-sm">For new and existing Opportunities and application enquiries email</p>
                     <div className="flex items-center gap-2">
                       <Send className="h-4 w-4" />
-                      <a href="mailto:apps@cluefinance.com.au" className="font-semibold hover:underline">
-                        apps@cluefinance.com.au
+                      <a href="mailto:apps@loanease.com" className="font-semibold hover:underline">
+                        apps@loanease.com
                       </a>
                     </div>
                     <p className="text-sm">For all partnership enquiries email</p>
                     <div className="flex items-center gap-2">
                       <Send className="h-4 w-4" />
-                      <a href="mailto:partners@cluefinance.com.au" className="font-semibold hover:underline">
-                        partners@cluefinance.com.au
+                      <a href="mailto:partners@loanease.com" className="font-semibold hover:underline">
+                        partners@loanease.com
                       </a>
                     </div>
                   </div>

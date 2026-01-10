@@ -7,7 +7,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Loancase - Commercial Loan Referral Platform',
+  title: 'Loanease - Commercial Loan Referral Platform',
   description: 'Connect your clients with commercial finance opportunities',
 };
 

@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           'X-Postmark-Server-Token': process.env.POSTMARK_API_KEY!,
         },
         body: JSON.stringify({
-          From: process.env.POSTMARK_FROM_EMAIL || 'noreply@cluefinance.com.au',
+          From: process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
           To: email,
           TemplateAlias: 'twofactor-code',
           TemplateModel: {

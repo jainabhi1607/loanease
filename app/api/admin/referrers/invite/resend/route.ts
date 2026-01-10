@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
     // Resend invitation email
     try {
       const { sendUserInvitation } = await import('@/lib/email/postmark');
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.cluefinance.com.au';
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.loanease.com';
       const inviteUrl = `${baseUrl}/auth/complete-registration?token=${newToken}`;
 
       const emailResult = await sendUserInvitation(

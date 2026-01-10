@@ -128,7 +128,7 @@ export default function ReferrerLayout({
 
               <Link href="/referrer/dashboard" className="ml-2 lg:ml-0">
                 <Image
-                  src="/logo.svg"
+                  src="/logo.jpg"
                   alt="Clue"
                   width={80}
                   height={26}
@@ -185,15 +185,15 @@ export default function ReferrerLayout({
                       <p className="text-sm">For new and existing Opportunities and application enquiries email</p>
                       <div className="flex items-center gap-2">
                         <Send className="h-4 w-4" />
-                        <a href="mailto:apps@cluefinance.com.au" className="font-semibold hover:underline">
-                          apps@cluefinance.com.au
+                        <a href="mailto:apps@loanease.com" className="font-semibold hover:underline">
+                          apps@loanease.com
                         </a>
                       </div>
                       <p className="text-sm">For all partnership enquiries email</p>
                       <div className="flex items-center gap-2">
                         <Send className="h-4 w-4" />
-                        <a href="mailto:partners@cluefinance.com.au" className="font-semibold hover:underline">
-                          partners@cluefinance.com.au
+                        <a href="mailto:partners@loanease.com" className="font-semibold hover:underline">
+                          partners@loanease.com
                         </a>
                       </div>
                     </div>
@@ -289,15 +289,15 @@ export default function ReferrerLayout({
                       <p className="text-sm">For new and existing Opportunities and application enquiries email</p>
                       <div className="flex items-center gap-2">
                         <Send className="h-4 w-4" />
-                        <a href="mailto:apps@cluefinance.com.au" className="font-semibold hover:underline">
-                          apps@cluefinance.com.au
+                        <a href="mailto:apps@loanease.com" className="font-semibold hover:underline">
+                          apps@loanease.com
                         </a>
                       </div>
                       <p className="text-sm">For all partnership enquiries email</p>
                       <div className="flex items-center gap-2">
                         <Send className="h-4 w-4" />
-                        <a href="mailto:partners@cluefinance.com.au" className="font-semibold hover:underline">
-                          partners@cluefinance.com.au
+                        <a href="mailto:partners@loanease.com" className="font-semibold hover:underline">
+                          partners@loanease.com
                         </a>
                       </div>
                     </div>

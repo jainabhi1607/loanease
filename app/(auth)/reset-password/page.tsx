@@ -53,8 +53,8 @@ export default function ResetPasswordPage() {
           <CardHeader className="space-y-1">
             <div className="flex justify-center mb-4">
               <Image
-                src="/logo.svg"
-                alt="Loancase"
+                src="/logo.jpg"
+                alt="Loanease"
                 width={120}
                 height={40}
                 priority
@@ -111,8 +111,8 @@ export default function ResetPasswordPage() {
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <Image
-              src="/logo.svg"
-              alt="Loancase"
+              src="/logo.jpg"
+              alt="Loanease"
               width={120}
               height={40}
               priority

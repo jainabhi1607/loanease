@@ -611,7 +611,7 @@ export default function ReferrerAccountPage() {
                     const contentDisposition = response.headers.get('Content-Disposition');
                     const filename = contentDisposition
                       ? contentDisposition.split('filename=')[1]?.replace(/"/g, '')
-                      : 'Loancase-ReferrerAgreement.pdf';
+                      : 'Loanease-ReferrerAgreement.pdf';
                     a.download = filename;
                     document.body.appendChild(a);
                     a.click();

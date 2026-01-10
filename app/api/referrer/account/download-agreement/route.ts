@@ -3,7 +3,7 @@ import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { addLoancaseLogoImage, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
+import { addLoaneaseLogoImage, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
 
 // Helper to strip HTML tags and decode entities
 function stripHtml(html: string): string {
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
     const contentWidth = pageWidth - (margin * 2);
 
     // Add logo image
-    addLoancaseLogoImage(doc, margin, 10, { width: 35, height: 12 });
+    addLoaneaseLogoImage(doc, margin, 10, { width: 35, height: 12 });
 
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
     const commencementDate = new Date(commencementDateStr);
 
     const scheduleData = [
-      ['1', 'CLUE COMMERCIAL', `Party: CLUE COMMERCIAL PTY LTD (ACN 676 426 101)\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@cluefinance.com.au\nContact: +61 1300 00 78 78`],
+      ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@loanease.com\nContact: +61 1300 00 78 78`],
       ['2', 'Referrer', `Party: ${organization.company_name || '-'}\nAddress: ${organization.address || '-'}\nEmail: ${userData.email || '-'}\nContact: ${organization.phone || userData.phone || '-'}`],
       ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
       ['4', 'Referrer Services', formatIndustryType(organization.industry_type)],
@@ -213,7 +213,7 @@ export async function GET(request: NextRequest) {
     doc.text(`IP Address: ${agreementIp}`, margin, yPos);
 
     // Generate filename
-    let filename = 'Loancase-ReferrerAgreement';
+    let filename = 'Loanease-ReferrerAgreement';
     if (organization.abn) {
       filename += `-${organization.abn.replace(/\s/g, '')}`;
     }

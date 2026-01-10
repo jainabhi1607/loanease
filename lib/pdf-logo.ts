@@ -1,4 +1,4 @@
-// Loancase Logo utilities for PDF generation
+// Loanease Logo utilities for PDF generation
 // Brand color: #00D37F (green)
 
 import fs from 'fs';
@@ -15,8 +15,8 @@ export const LOANCASE_BRAND_COLOR = {
 export const LOGO_WIDTH = 40;
 export const LOGO_HEIGHT = 13;
 
-// Function to draw the Loancase logo as styled text in the brand color (fallback)
-export function drawLoancaseLogo(
+// Function to draw the Loanease logo as styled text in the brand color (fallback)
+export function drawLoaneaseLogo(
   doc: any,
   x: number,
   y: number,
@@ -30,14 +30,14 @@ export function drawLoancaseLogo(
   doc.setFont('helvetica', 'bold');
 
   // Draw the logo text
-  doc.text('Loancase', x, y);
+  doc.text('Loanease', x, y);
 
   // Reset to defaults
   doc.setFont('helvetica', 'normal');
 }
 
-// Function to add the actual Loancase logo image to the PDF
-export function addLoancaseLogoImage(
+// Function to add the actual Loanease logo image to the PDF
+export function addLoaneaseLogoImage(
   doc: any,
   x: number,
   y: number,

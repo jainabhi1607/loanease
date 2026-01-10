@@ -140,24 +140,24 @@ export async function POST(request: NextRequest) {
         const content = `
           <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName},</p>
 
-          <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Welcome to <strong>Loancase</strong>! Your account has been created successfully.</p>
+          <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Welcome to <strong>Loanease</strong>! Your account has been created successfully.</p>
 
           <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
           <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">You can now log in to access the platform.</p>
 
           <div style="text-align: center; margin: 25px 0;">
-            ${emailButton('Login to Loancase', `${process.env.NEXT_PUBLIC_APP_URL}/login`)}
+            ${emailButton('Login to Loanease', `${process.env.NEXT_PUBLIC_APP_URL}/login`)}
           </div>
 
-          <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for joining Loancase.</p>
+          <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for joining Loanease.</p>
         `;
 
         await sendHtmlEmail({
           to: invitation.email,
-          subject: 'Welcome to Loancase',
+          subject: 'Welcome to Loanease',
           htmlBody: wrapInBrandedTemplate(content, 'Welcome'),
-          from: 'partners@cluefinance.com.au',
+          from: 'partners@loanease.com',
         });
       }
     } catch (emailError) {

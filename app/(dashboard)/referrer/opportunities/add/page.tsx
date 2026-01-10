@@ -1401,7 +1401,7 @@ export default function AddOpportunityPage() {
                       </svg>
                     </div>
                     <div className="text-yellow-800 text-sm">
-                      Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.
+                      Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.
                     </div>
                   </div>
                 )}
@@ -1414,7 +1414,7 @@ export default function AddOpportunityPage() {
                       </svg>
                     </div>
                     <div className="text-red-800 text-sm">
-                      Deal does not meet the streamlined process and will require further assessment. Submit now and a Loancase team member will be in touch to discuss.
+                      Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.
                     </div>
                   </div>
                 )}
@@ -1477,7 +1477,7 @@ export default function AddOpportunityPage() {
                 onCheckedChange={(checked) => setTermsAccepted(prev => ({ ...prev, term4: checked as boolean }))}
               />
               <Label htmlFor="term4" className="cursor-pointer font-normal leading-normal">
-                I confirm that I have advised the client that Loancase will charge a Service Fee in relation to their application and that this will be communicated directly to the client upon application.
+                I confirm that I have advised the client that Loanease will charge a Service Fee in relation to their application and that this will be communicated directly to the client upon application.
               </Label>
             </div>
           </CardContent>

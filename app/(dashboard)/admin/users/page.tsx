@@ -200,7 +200,7 @@ function UsersContent() {
         <div>
           <h1 className="text-2xl font-bold text-[#02383B]">Admin Users</h1>
           <p className="text-gray-500 mt-1">
-            Manage Loancase administrator accounts and permissions.
+            Manage Loanease administrator accounts and permissions.
           </p>
         </div>
         <Button

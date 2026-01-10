@@ -28,9 +28,9 @@ if (fs.existsSync(envPath)) {
 const { createClient } = require('@supabase/supabase-js');
 
 // Super Admin Credentials
-const SUPER_ADMIN_EMAIL = 'admin@cluefinance.com.au';
+const SUPER_ADMIN_EMAIL = 'admin@loanease.com';
 const SUPER_ADMIN_PASSWORD = 'Admin123!@#';
-const SUPER_ADMIN_FIRST_NAME = 'Loancase';
+const SUPER_ADMIN_FIRST_NAME = 'Loanease';
 const SUPER_ADMIN_LAST_NAME = 'Admin';
 
 async function createSuperAdmin() {

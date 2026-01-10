@@ -34,7 +34,7 @@ function ResultsContent() {
         textColor: 'text-green-800',
         title: 'Deal looks promising',
         message: 'will meet the streamlined process.',
-        action: 'Submit now and a Loancase team member will be in touch to discuss.',
+        action: 'Submit now and a Loanease team member will be in touch to discuss.',
         buttonColor: 'bg-green-600 hover:bg-green-700',
       },
       caution: {
@@ -44,7 +44,7 @@ function ResultsContent() {
         textColor: 'text-yellow-800',
         title: 'Deal may meet the streamlined process',
         message: 'will require confirmation.',
-        action: 'Submit now and a Loancase team member will be in touch to discuss.',
+        action: 'Submit now and a Loanease team member will be in touch to discuss.',
         buttonColor: 'bg-yellow-600 hover:bg-yellow-700',
       },
       risk: {
@@ -54,7 +54,7 @@ function ResultsContent() {
         textColor: 'text-red-800',
         title: 'Deal does not meet the streamlined process',
         message: 'will require further assessment.',
-        action: 'Submit now and a Loancase team member will be in touch to discuss.',
+        action: 'Submit now and a Loanease team member will be in touch to discuss.',
         buttonColor: 'bg-red-600 hover:bg-red-700',
       },
     };
@@ -89,7 +89,7 @@ function ResultsContent() {
               </p>
               <Link href="/register">
                 <span className="text-teal-700 font-semibold underline hover:text-teal-800">
-                  Become a Loancase Referral Partner
+                  Become a Loanease Referral Partner
                 </span>
               </Link>
             </div>

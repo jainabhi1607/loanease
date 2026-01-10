@@ -130,37 +130,37 @@ function PreAssessmentContent() {
       isGreen = true;
     } else if (icr >= 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     } else if (icr >= 2 && lvr > 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     } else if (icr < 2 && lvr <= 65) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     } else if (icr < 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     } else if (icr < 2 && lvr > 80) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
     }
 
     // If any Yes answers and was green, change to yellow
     if (hasYesAnswers && isGreen) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     }
 
     // If any Yes answers (regardless of other conditions), show yellow
     if (hasYesAnswers && status === 'green') {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
     }
 
     // ICR < 1.5 always shows red (final override)
     if (icr < 1.5 && icr > 0) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loancase team member will be in touch to discuss.';
+      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
     }
 
     setOutcome({ icr, lvr, status, message });

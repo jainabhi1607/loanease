@@ -38,7 +38,7 @@ export interface EmailTemplate {
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
   try {
     const result = await client.sendEmailWithTemplate({
-      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@cluefinance.com.au',
+      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
       To: to,
       TemplateAlias: templateAlias,
       TemplateModel: templateModel,
@@ -73,7 +73,7 @@ function htmlToPlainText(html: string): string {
     .trim();
 }
 
-// Loancase brand colors
+// Loanease brand colors
 const LOANCASE_GREEN = '#00D37F';
 const LOANCASE_DARK = '#02383B';
 
@@ -87,7 +87,7 @@ export function wrapInBrandedTemplate(content: string, title?: string): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title || 'Loancase'}</title>
+  <title>${title || 'Loanease'}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f4f4f5;">
@@ -100,7 +100,7 @@ export function wrapInBrandedTemplate(content: string, title?: string): string {
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td>
-                    <img src="${logoUrl}" alt="Loancase" width="150" style="display: block; max-width: 150px; height: auto;" />
+                    <img src="${logoUrl}" alt="Loanease" width="150" style="display: block; max-width: 150px; height: auto;" />
                   </td>
                 </tr>
               </table>
@@ -120,22 +120,22 @@ export function wrapInBrandedTemplate(content: string, title?: string): string {
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="color: #ffffff; font-size: 14px; line-height: 1.6;">
-                    <p style="margin: 0 0 15px 0; font-weight: 600;">The Loancase Team</p>
+                    <p style="margin: 0 0 15px 0; font-weight: 600;">The Loanease Team</p>
                     <p style="margin: 0 0 5px 0;">
                       <a href="tel:+611300007878" style="color: ${LOANCASE_GREEN}; text-decoration: none;">+61 1300 00 78 78</a>
                     </p>
                     <p style="margin: 0 0 5px 0;">
-                      Applications: <a href="mailto:apps@cluefinance.com.au" style="color: ${LOANCASE_GREEN}; text-decoration: none;">apps@cluefinance.com.au</a>
+                      Applications: <a href="mailto:apps@loanease.com" style="color: ${LOANCASE_GREEN}; text-decoration: none;">apps@loanease.com</a>
                     </p>
                     <p style="margin: 0 0 20px 0;">
-                      Partners: <a href="mailto:partners@cluefinance.com.au" style="color: ${LOANCASE_GREEN}; text-decoration: none;">partners@cluefinance.com.au</a>
+                      Partners: <a href="mailto:partners@loanease.com" style="color: ${LOANCASE_GREEN}; text-decoration: none;">partners@loanease.com</a>
                     </p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
                     <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">
-                      &copy; ${new Date().getFullYear()} Loancase. All rights reserved.<br>
+                      &copy; ${new Date().getFullYear()} Loanease. All rights reserved.<br>
                       Suite 3, 134 Cambridge Street, Collingwood VIC 3066
                     </p>
                   </td>
@@ -178,7 +178,7 @@ export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: strin
     const textBody = htmlToPlainText(htmlBody);
 
     const result = await client.sendEmail({
-      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@cluefinance.com.au',
+      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
       To: to,
       Subject: subject,
       HtmlBody: htmlBody,
@@ -212,7 +212,7 @@ export async function sendHtmlEmailWithAttachment({
     const textBody = htmlToPlainText(htmlBody);
 
     const emailData: any = {
-      From: 'partners@cluefinance.com.au',
+      From: 'partners@loanease.com',
       To: to,
       Subject: subject,
       HtmlBody: htmlBody,
@@ -238,7 +238,7 @@ export async function send2FACode(email: string, code: string, firstName?: strin
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName || 'User'},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Your verification code for <strong>Loancase</strong> is:</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Your verification code for <strong>Loanease</strong> is:</p>
 
     <div style="text-align: center; margin: 25px 0;">
       <span style="display: inline-block; background-color: #f3f4f6; color: ${LOANCASE_DARK}; padding: 20px 40px; border-radius: 8px; font-size: 32px; font-weight: 700; letter-spacing: 8px; font-family: monospace;">${code}</span>
@@ -251,7 +251,7 @@ export async function send2FACode(email: string, code: string, firstName?: strin
 
   return sendHtmlEmail({
     to: email,
-    subject: 'Your Verification Code - Loancase',
+    subject: 'Your Verification Code - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Verification Code'),
   });
 }
@@ -262,24 +262,24 @@ export async function sendWelcomeEmail(email: string, firstName: string, organiz
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Welcome to <strong>Loancase</strong>${organizationName ? ` as part of <strong>${organizationName}</strong>` : ''}!</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Welcome to <strong>Loanease</strong>${organizationName ? ` as part of <strong>${organizationName}</strong>` : ''}!</p>
 
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
     <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">Your account has been created and you can now log in to access the platform.</p>
 
     <div style="text-align: center; margin: 25px 0;">
-      ${emailButton('Login to Loancase', `${process.env.NEXT_PUBLIC_APP_URL}/login`)}
+      ${emailButton('Login to Loanease', `${process.env.NEXT_PUBLIC_APP_URL}/login`)}
     </div>
 
-    <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for joining Loancase.</p>
+    <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for joining Loanease.</p>
   `;
 
   return sendHtmlEmail({
     to: email,
-    subject: 'Welcome to Loancase',
+    subject: 'Welcome to Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Welcome'),
-    from: 'partners@cluefinance.com.au',
+    from: 'partners@loanease.com',
   });
 }
 
@@ -289,7 +289,7 @@ export async function sendPasswordReset(email: string, resetToken: string, first
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName || 'User'},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We received a request to reset your password for your <strong>Loancase</strong> account.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We received a request to reset your password for your <strong>Loanease</strong> account.</p>
 
     <div style="text-align: center; margin: 25px 0;">
       ${emailButton('Reset Password', resetUrl)}
@@ -302,7 +302,7 @@ export async function sendPasswordReset(email: string, resetToken: string, first
 
   return sendHtmlEmail({
     to: email,
-    subject: 'Reset Your Password - Loancase',
+    subject: 'Reset Your Password - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Password Reset'),
   });
 }
@@ -313,7 +313,7 @@ export async function sendPasswordResetEmail(params: { to: string; userName: str
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${params.userName},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We received a request to reset your password for your <strong>Loancase</strong> account.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We received a request to reset your password for your <strong>Loanease</strong> account.</p>
 
     <div style="text-align: center; margin: 25px 0;">
       ${emailButton('Reset Password', resetUrl)}
@@ -326,7 +326,7 @@ export async function sendPasswordResetEmail(params: { to: string; userName: str
 
   return sendHtmlEmail({
     to: params.to,
-    subject: 'Reset Your Password - Loancase',
+    subject: 'Reset Your Password - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Password Reset'),
   });
 }
@@ -335,7 +335,7 @@ export async function sendNewIPAlert(email: string, ipAddress: string, location?
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName || 'there'},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We detected a new login to your <strong>Loancase</strong> account.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We detected a new login to your <strong>Loanease</strong> account.</p>
 
     <div style="text-align: center; margin: 25px 0;">
       <div style="display: inline-block; background-color: #f3f4f6; padding: 20px 30px; border-radius: 8px; text-align: left;">
@@ -352,7 +352,7 @@ export async function sendNewIPAlert(email: string, ipAddress: string, location?
 
   return sendHtmlEmail({
     to: email,
-    subject: 'New Login Detected - Loancase',
+    subject: 'New Login Detected - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Security Alert'),
   });
 }
@@ -401,7 +401,7 @@ export async function sendVerificationEmail(
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName},</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Please verify your email address to complete your <strong>Loancase</strong> registration${organizationName ? ` for <strong>${organizationName}</strong>` : ''}.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Please verify your email address to complete your <strong>Loanease</strong> registration${organizationName ? ` for <strong>${organizationName}</strong>` : ''}.</p>
 
     <div style="text-align: center; margin: 25px 0;">
       ${emailButton('Verify Email', verificationUrl)}
@@ -414,9 +414,9 @@ export async function sendVerificationEmail(
 
   return sendHtmlEmail({
     to: email,
-    subject: 'Verify Your Email - Loancase',
+    subject: 'Verify Your Email - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'Email Verification'),
-    from: 'partners@cluefinance.com.au',
+    from: 'partners@loanease.com',
   });
 }
 
@@ -432,7 +432,7 @@ export async function sendUserInvitation(
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi there,</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;"><strong>${inviterName}</strong> has invited you to join <strong>${organisationName}</strong> on Loancase.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;"><strong>${inviterName}</strong> has invited you to join <strong>${organisationName}</strong> on Loanease.</p>
 
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
@@ -447,9 +447,9 @@ export async function sendUserInvitation(
 
   return sendHtmlEmail({
     to: email,
-    subject: `You've been invited to join ${organisationName} - Loancase`,
+    subject: `You've been invited to join ${organisationName} - Loanease`,
     htmlBody: wrapInBrandedTemplate(content, 'Invitation'),
-    from: 'partners@cluefinance.com.au',
+    from: 'partners@loanease.com',
   });
 }
 
@@ -471,7 +471,7 @@ export async function sendNewReferrerAlert(
   const content = `
     <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi Team,</p>
 
-    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">A new referrer <strong>${details.companyName}</strong> has signed up to Loancase.</p>
+    <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">A new referrer <strong>${details.companyName}</strong> has signed up to Loanease.</p>
 
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
@@ -494,7 +494,7 @@ export async function sendNewReferrerAlert(
 
   return sendHtmlEmail({
     to: recipientEmail,
-    subject: 'New Referrer Registration - Loancase',
+    subject: 'New Referrer Registration - Loanease',
     htmlBody: wrapInBrandedTemplate(content, 'New Referrer'),
   });
 }
@@ -548,13 +548,13 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${clientName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re pleased to inform you that an application has been created for <strong>${entityName}</strong>.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will be in touch soon with further details.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will be in touch soon with further details.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your ongoing support.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re pleased to inform you that an application has been created for your opportunity <strong>${refDetails}</strong>.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will be in touch soon with further details.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will be in touch soon with further details.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your ongoing support.</p>`;
       break;
 
@@ -564,14 +564,14 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${clientName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Fantastic news! Your application <strong>${refDetails}</strong> has been submitted on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out soon to discuss the next steps.</p>
-        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loancase.</p>`;
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out soon to discuss the next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loanease.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Fantastic news! The application for your referral <strong>${refDetails}</strong> has been submitted on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out soon to discuss the next steps.</p>
-        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loancase with your referrals.</p>`;
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out soon to discuss the next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loanease with your referrals.</p>`;
       break;
 
     case 'approved':
@@ -580,14 +580,14 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${clientName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Fantastic news! Your application <strong>${refDetails}</strong> has been fully approved on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out soon to discuss the next steps.</p>
-        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loancase.</p>`;
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out soon to discuss the next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loanease.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Fantastic news! The application for your referral <strong>${refDetails}</strong> has been fully approved on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out soon to discuss the next steps.</p>
-        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loancase with your referrals.</p>`;
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out soon to discuss the next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loanease with your referrals.</p>`;
       break;
 
     case 'settled':
@@ -596,13 +596,13 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${clientName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re excited to let you know that your application <strong>${refDetails}</strong> has been successfully settled on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will follow up shortly to discuss this great outcome.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will follow up shortly to discuss this great outcome.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your partnership and trust. We look forward to working with you on the next one!</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re excited to let you know that the application for your referral <strong>${refDetails}</strong> has been successfully settled on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will follow up shortly to discuss this great outcome.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will follow up shortly to discuss this great outcome.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your partnership and trust. We look forward to working with you on the next one!</p>`;
       break;
 
@@ -612,13 +612,13 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${clientName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re thrilled to inform you that your application <strong>${applicationId}</strong> for <strong>${entityName}</strong> has been conditionally approved on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will be in touch to discuss the conditions and next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will be in touch to discuss the conditions and next steps.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your continued support.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We&apos;re thrilled to inform you that the application for your referral <strong>${refDetails}</strong> has been conditionally approved on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will be in touch to discuss the conditions and next steps.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will be in touch to discuss the conditions and next steps.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your continued support.</p>`;
       break;
 
@@ -630,14 +630,14 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We regret to inform you that your application <strong>${refDetails}</strong> has been declined on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
         ${declineReason}
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will contact you soon to provide further details and discuss any potential alternatives.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will contact you soon to provide further details and discuss any potential alternatives.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your understanding and support.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">We regret to inform you that the application for your referral <strong>${refDetails}</strong> has been declined on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
         ${declineReason}
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will contact you soon to provide further details and discuss any potential alternatives.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will contact you soon to provide further details and discuss any potential alternatives.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your understanding and support.</p>`;
       break;
 
@@ -649,14 +649,14 @@ export async function sendStatusChangeEmails({
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Please consider this email as notification that we are withdrawing your application <strong>${refDetails}</strong> on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
         ${withdrawReason}
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will contact you soon to discuss further.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will contact you soon to discuss further.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your support.</p>`;
       referrerMessage = `
         <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${referrerName},</p>
         <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Please consider this email as notification that we are withdrawing the referral application <strong>${refDetails}</strong> on ${today}.</p>
         <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
         ${withdrawReason}
-        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will contact you soon to discuss further.</p>
+        <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will contact you soon to discuss further.</p>
         <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for your support.</p>`;
       break;
 
@@ -721,16 +721,16 @@ export async function sendOpportunityConfirmationToReferrer({
 
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
-    <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out shortly to discuss the next steps.</p>
+    <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out shortly to discuss the next steps.</p>
 
     <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting us with your referrals.</p>
   `;
 
   return sendHtmlEmail({
     to: referrerEmail,
-    subject: 'Loancase - Referral Received',
+    subject: 'Loanease - Referral Received',
     htmlBody: wrapInBrandedTemplate(content, 'Referral Received'),
-    from: 'partners@cluefinance.com.au',
+    from: 'partners@loanease.com',
   });
 }
 
@@ -753,16 +753,16 @@ export async function sendOpportunityConfirmationToClient({
 
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
-    <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loancase representative will reach out shortly to discuss the next steps.</p>
+    <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">A Loanease representative will reach out shortly to discuss the next steps.</p>
 
-    <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loancase.</p>
+    <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for trusting Loanease.</p>
   `;
 
   return sendHtmlEmail({
     to: clientEmail,
-    subject: 'Loancase - Application Received',
+    subject: 'Loanease - Application Received',
     htmlBody: wrapInBrandedTemplate(content, 'Application Received'),
-    from: 'partners@cluefinance.com.au',
+    from: 'partners@loanease.com',
   });
 }
 
@@ -812,7 +812,7 @@ export async function sendNewOpportunityAlert(
 
   return sendHtmlEmail({
     to: recipientEmail,
-    subject: `New Opportunity ${details.opportunityId} - Loancase`,
+    subject: `New Opportunity ${details.opportunityId} - Loanease`,
     htmlBody: wrapInBrandedTemplate(content, 'New Opportunity'),
   });
 }

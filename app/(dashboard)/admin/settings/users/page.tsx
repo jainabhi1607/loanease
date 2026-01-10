@@ -275,7 +275,7 @@ export default function UserManagementPage() {
               User Management
             </h1>
             <p className="text-muted-foreground mt-1">
-              Manage Loancase administrator accounts and permissions
+              Manage Loanease administrator accounts and permissions
             </p>
           </div>
           <Button className="gap-2" onClick={() => setIsAddModalOpen(true)}>
@@ -295,7 +295,7 @@ export default function UserManagementPage() {
               System Administrators
             </CardTitle>
             <CardDescription>
-              Users with full access to the Loancase system
+              Users with full access to the Loanease system
             </CardDescription>
           </CardHeader>
           <CardContent>

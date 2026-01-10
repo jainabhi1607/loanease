@@ -173,7 +173,7 @@ const industryTypeMapNew: Record<number, string> = {
 };
 
 function mapRole(oldRole: number | null, email: string | null): string {
-  if (email === 'admin@cluefinance.com.au' || email === 'luay@duofinance.com.au') {
+  if (email === 'admin@loanease.com' || email === 'luay@duofinance.com.au') {
     return 'super_admin';
   }
   switch (oldRole) {
