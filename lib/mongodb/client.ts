@@ -1,12 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
 
-const MONGODB_URI = process.env.MONGODB_URI || '';
-const MONGODB_DB = process.env.MONGODB_DB || 'loanease';
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
-}
-
 interface MongoClientCache {
   client: MongoClient | null;
   db: Db | null;
@@ -32,6 +25,14 @@ if (!global._mongoClientPromise) {
 export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db }> {
   if (cached.client && cached.db) {
     return { client: cached.client, db: cached.db };
+  }
+
+  // Check environment variables at runtime, not build time
+  const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_DB = process.env.MONGODB_DB || 'loanease';
+
+  if (!MONGODB_URI) {
+    throw new Error('Please define the MONGODB_URI environment variable');
   }
 
   if (!cached.promise) {
