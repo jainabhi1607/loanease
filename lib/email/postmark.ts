@@ -1,7 +1,18 @@
 import { ServerClient } from 'postmark';
 
-// Initialize Postmark client
-const client = new ServerClient(process.env.POSTMARK_API_KEY || '');
+// Lazy initialization of Postmark client to avoid build-time errors
+let _client: ServerClient | null = null;
+
+function getPostmarkClient(): ServerClient {
+  if (!_client) {
+    const apiKey = process.env.POSTMARK_API_KEY;
+    if (!apiKey) {
+      throw new Error('POSTMARK_API_KEY environment variable is not set');
+    }
+    _client = new ServerClient(apiKey);
+  }
+  return _client;
+}
 
 // Australian timezone constant for consistent formatting
 const AUSTRALIAN_TIMEZONE = 'Australia/Sydney';
@@ -37,7 +48,7 @@ export interface EmailTemplate {
 
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
   try {
-    const result = await client.sendEmailWithTemplate({
+    const result = await getPostmarkClient().sendEmailWithTemplate({
       From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
       To: to,
       TemplateAlias: templateAlias,
@@ -177,7 +188,7 @@ export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: strin
   try {
     const textBody = htmlToPlainText(htmlBody);
 
-    const result = await client.sendEmail({
+    const result = await getPostmarkClient().sendEmail({
       From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
       To: to,
       Subject: subject,
@@ -224,7 +235,7 @@ export async function sendHtmlEmailWithAttachment({
       emailData.Attachments = [attachment];
     }
 
-    const result = await client.sendEmail(emailData);
+    const result = await getPostmarkClient().sendEmail(emailData);
 
     return { success: true, messageId: result.MessageID };
   } catch (error) {
