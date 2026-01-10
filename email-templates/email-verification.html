@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email - Loancase</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f5; line-height: 1.6;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f4f4f5;">
+        <tr>
+            <td align="center" style="padding: 40px 20px;">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #02383B; padding: 30px 40px; border-radius: 12px 12px 0 0;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td>
+                                        <img src="{{app_url}}/logo.jpg" alt="Loancase" width="150" style="display: block; max-width: 150px; height: auto;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Content -->
+                    <tr>
+                        <td style="background-color: #ffffff; padding: 40px; border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb;">
+                            <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi {{first_name}},</p>
+
+                            <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Please verify your email address to complete your <strong>Loancase</strong> registration for <strong>{{organisation_name}}</strong>.</p>
+
+                            <div style="text-align: center; margin: 25px 0;">
+                                <a href="{{verification_url}}" style="display: inline-block; background-color: #00D37F; color: #02383B; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">Verify Email Address</a>
+                            </div>
+
+                            <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">This link will expire in <strong>{{expiry_hours}} hours</strong>.</p>
+
+                            <p style="font-size: 14px; color: #6b7280; margin: 20px 0 10px 0;">Or copy and paste this link into your browser:</p>
+
+                            <p style="font-size: 14px; color: #00D37F; word-break: break-all; margin: 0 0 20px 0;">{{verification_url}}</p>
+
+                            <p style="font-size: 15px; color: #374151; margin: 0;">If you didn't create an account, you can safely ignore this email.</p>
+                        </td>
+                    </tr>
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #02383B; padding: 30px 40px; border-radius: 0 0 12px 12px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td style="color: #ffffff; font-size: 14px; line-height: 1.6;">
+                                        <p style="margin: 0 0 15px 0; font-weight: 600;">The Loancase Team</p>
+                                        <p style="margin: 0 0 5px 0;">
+                                            <a href="tel:+611300007878" style="color: #00D37F; text-decoration: none;">+61 1300 00 78 78</a>
+                                        </p>
+                                        <p style="margin: 0 0 5px 0;">
+                                            Applications: <a href="mailto:apps@cluefinance.com.au" style="color: #00D37F; text-decoration: none;">apps@cluefinance.com.au</a>
+                                        </p>
+                                        <p style="margin: 0 0 20px 0;">
+                                            Partners: <a href="mailto:partners@cluefinance.com.au" style="color: #00D37F; text-decoration: none;">partners@cluefinance.com.au</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                                        <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">
+                                            &copy; 2025 Loancase. All rights reserved.<br>
+                                            Suite 3, 134 Cambridge Street, Collingwood VIC 3066
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

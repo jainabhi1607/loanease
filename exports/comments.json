@@ -1,0 +1,242 @@
+[
+  {
+    "created_at": "2025-05-13T15:18:14+00:00",
+    "updated_at": "2025-12-24T09:25:08.607064+00:00",
+    "deleted_at": null,
+    "opportunity_id": "aa0d9a0b-dffb-4d70-83f0-25c4b076bacb",
+    "user_id": "c141eb14-8572-488d-b65b-50462338025c",
+    "comment": "here is a note...",
+    "is_public": true,
+    "_id": "9fad2c09-f223-4ab0-83eb-8a009295d039"
+  },
+  {
+    "created_at": "2025-06-16T08:38:22+00:00",
+    "updated_at": "2025-12-24T09:25:08.825437+00:00",
+    "deleted_at": null,
+    "opportunity_id": "60bc6cfb-5763-46ce-a5a0-749f44563100",
+    "user_id": "fc16686a-c5f6-478b-8142-c07c48911049",
+    "comment": "here is a note",
+    "is_public": true,
+    "_id": "edb28dc6-ae58-4a6f-8466-49b08bf515bc"
+  },
+  {
+    "created_at": "2025-06-16T12:58:46+00:00",
+    "updated_at": "2025-12-24T09:25:09.038803+00:00",
+    "deleted_at": null,
+    "opportunity_id": "9d98031e-bc87-4d4e-bb3b-6595ac5a1d41",
+    "user_id": "fc16686a-c5f6-478b-8142-c07c48911049",
+    "comment": "Testing notes at the lead stage! and now edited",
+    "is_public": true,
+    "_id": "b2621fe8-6a43-4879-a7de-ec143147ad2b"
+  },
+  {
+    "created_at": "2025-06-16T14:32:19+00:00",
+    "updated_at": "2025-12-24T09:25:09.251796+00:00",
+    "deleted_at": null,
+    "opportunity_id": "41775269-66e0-4823-87c2-5a0afb989a5f",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "test",
+    "is_public": true,
+    "_id": "790942d7-d8f9-488c-b1b1-91ef49dabd80"
+  },
+  {
+    "created_at": "2025-06-17T11:54:54+00:00",
+    "updated_at": "2025-12-24T09:25:09.449996+00:00",
+    "deleted_at": null,
+    "opportunity_id": "906eb376-2ea8-477f-b93e-0e1dd363d48f",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "test",
+    "is_public": true,
+    "_id": "1defbdca-d8a3-4b26-8319-c92da5421a15"
+  },
+  {
+    "created_at": "2025-06-17T11:56:33+00:00",
+    "updated_at": "2025-12-24T09:25:09.662661+00:00",
+    "deleted_at": null,
+    "opportunity_id": "0203c6d2-e3c1-40d3-a984-2d5c6e0088fd",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "test",
+    "is_public": true,
+    "_id": "e213d620-f9dd-4d85-95d0-2f125c87ca64"
+  },
+  {
+    "created_at": "2025-06-17T11:58:34+00:00",
+    "updated_at": "2025-12-24T09:25:09.855183+00:00",
+    "deleted_at": null,
+    "opportunity_id": "c14bed43-e215-452d-b889-e5d798b7bcfb",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "ICR : 70.599\\r\\nLVR : 837.431",
+    "is_public": true,
+    "_id": "be04c650-7881-4239-a44e-305111c5d824"
+  },
+  {
+    "created_at": "2025-06-17T11:59:32+00:00",
+    "updated_at": "2025-12-24T09:25:10.112278+00:00",
+    "deleted_at": null,
+    "opportunity_id": "e50c5f93-6860-40a8-aafc-69b3df6db22c",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "ICR : 70.599\\r\\nLVR : 837.431",
+    "is_public": true,
+    "_id": "63c53c0f-1aa7-4b68-a42e-02211f030575"
+  },
+  {
+    "created_at": "2025-06-17T12:00:31+00:00",
+    "updated_at": "2025-12-24T09:25:10.313413+00:00",
+    "deleted_at": null,
+    "opportunity_id": "ac5105ba-e124-4f18-9c73-11f91d45e95f",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "ICR : 70.599\\r\\nLVR : 837.431",
+    "is_public": true,
+    "_id": "861aaacd-d2ca-4401-a57a-1768bdcc1ba4"
+  },
+  {
+    "created_at": "2025-06-17T12:02:37+00:00",
+    "updated_at": "2025-12-24T09:25:10.531639+00:00",
+    "deleted_at": null,
+    "opportunity_id": "64548486-c1a9-4f2d-8692-cfd627be0f99",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "ICR : 70.599\\r\\nLVR : 837.431",
+    "is_public": true,
+    "_id": "8db48c5d-a90d-4893-a961-b683c5bd982e"
+  },
+  {
+    "created_at": "2025-06-24T08:47:02+00:00",
+    "updated_at": "2025-12-24T09:25:10.736666+00:00",
+    "deleted_at": null,
+    "opportunity_id": "aaf0033a-2fa9-4b83-b533-8dc711d16543",
+    "user_id": "dc7ddffc-4610-4df5-a9ea-adcdbe11d641",
+    "comment": "This is a test Entry",
+    "is_public": true,
+    "_id": "15a3df7a-6d31-4ff8-8617-0dabb6b2b36f"
+  },
+  {
+    "created_at": "2025-06-24T08:47:12+00:00",
+    "updated_at": "2025-12-24T09:25:10.949068+00:00",
+    "deleted_at": null,
+    "opportunity_id": "fa298cf5-4051-4a8d-b925-557e63ea7241",
+    "user_id": "dc7ddffc-4610-4df5-a9ea-adcdbe11d641",
+    "comment": "This is a test Entry",
+    "is_public": true,
+    "_id": "7bbef308-3325-49ca-90da-42e0f28ab0bc"
+  },
+  {
+    "created_at": "2025-06-24T08:49:17+00:00",
+    "updated_at": "2025-12-24T09:25:11.145965+00:00",
+    "deleted_at": null,
+    "opportunity_id": "043c6104-86d5-41ca-abd5-dca60138451c",
+    "user_id": "dc7ddffc-4610-4df5-a9ea-adcdbe11d641",
+    "comment": "6756756",
+    "is_public": true,
+    "_id": "bd4c816e-b7c5-4c4f-acf7-60e67aba4abc"
+  },
+  {
+    "created_at": "2025-07-08T21:46:43+00:00",
+    "updated_at": "2025-12-24T09:25:11.381918+00:00",
+    "deleted_at": null,
+    "opportunity_id": "20e197f8-d6b6-4835-9328-febf2daa7744",
+    "user_id": "7e8bc313-798c-4603-911c-9cd4c7d7064c",
+    "comment": "This is a test entry please ignore",
+    "is_public": true,
+    "_id": "d11ad23d-ff9d-4f69-bbd8-4f0317e1df4c"
+  },
+  {
+    "created_at": "2025-07-09T07:39:20+00:00",
+    "updated_at": "2025-12-24T09:25:11.588028+00:00",
+    "deleted_at": null,
+    "opportunity_id": "6f3c1f1b-3999-4674-b419-604f841b9959",
+    "user_id": "9592185f-e69e-45cf-82b5-d299683b3e0a",
+    "comment": "This is test entry",
+    "is_public": true,
+    "_id": "ca97329c-a3cf-4bc1-9e9f-16ab9128194b"
+  },
+  {
+    "created_at": "2025-09-09T09:51:51+00:00",
+    "updated_at": "2025-12-24T09:25:11.816129+00:00",
+    "deleted_at": null,
+    "opportunity_id": "be255cba-624c-45c3-98bb-5cf300313c05",
+    "user_id": "62740952-45ed-47d4-83fd-050dd2df5759",
+    "comment": "test",
+    "is_public": true,
+    "_id": "88c253d2-180d-443a-8354-e5326e5fe341"
+  },
+  {
+    "created_at": "2025-10-11T17:30:08+00:00",
+    "updated_at": "2025-12-24T09:25:12.01826+00:00",
+    "deleted_at": null,
+    "opportunity_id": "559aeafe-b710-4ca9-9aea-056ddab633b8",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "test",
+    "is_public": true,
+    "_id": "22a5490c-9c24-42e1-9763-f61c76c76880"
+  },
+  {
+    "created_at": "2025-10-11T19:03:37+00:00",
+    "updated_at": "2025-12-24T09:25:12.241582+00:00",
+    "deleted_at": null,
+    "opportunity_id": "398b8883-95f5-4bcf-887d-a46facfe64b8",
+    "user_id": "d2979647-1a33-42a9-9edc-0893a04c97e1",
+    "comment": "test",
+    "is_public": true,
+    "_id": "ae649898-d007-4b1c-a8db-2de6fffdab77"
+  },
+  {
+    "created_at": "2025-10-14T12:36:49+00:00",
+    "updated_at": "2025-12-24T09:25:12.436971+00:00",
+    "deleted_at": null,
+    "opportunity_id": "ea1d0ff8-0419-4be5-b7aa-3f7268ccbaba",
+    "user_id": "1b6dbfb4-c49c-479c-9946-e76ac5776ab8",
+    "comment": "here is an additional note.",
+    "is_public": true,
+    "_id": "b4e64c98-33fb-4173-8aeb-5a00a1c4e2d2"
+  },
+  {
+    "created_at": "2025-12-29T04:02:53.536159+00:00",
+    "updated_at": "2025-12-29T04:02:53.536159+00:00",
+    "deleted_at": null,
+    "opportunity_id": "094182bf-392b-4184-bd3b-6c9668679712",
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "comment": "Opportunity created.",
+    "is_public": false,
+    "_id": "476e0758-9780-4ffd-a443-417c556e2eed"
+  },
+  {
+    "created_at": "2025-12-29T09:33:14.832619+00:00",
+    "updated_at": "2025-12-29T09:33:14.832619+00:00",
+    "deleted_at": null,
+    "opportunity_id": "c8ae4853-41c6-4e01-87fd-94b08676cc6a",
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "comment": "Opportunity created.",
+    "is_public": false,
+    "_id": "047fc935-5efe-425a-aed0-2ac60d375e77"
+  },
+  {
+    "created_at": "2025-12-29T15:17:31.346723+00:00",
+    "updated_at": "2025-12-29T15:17:31.346723+00:00",
+    "deleted_at": null,
+    "opportunity_id": "9c10b7be-6273-46fd-a470-78db53057017",
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "comment": "Opportunity created.",
+    "is_public": false,
+    "_id": "8605d058-8852-41e1-9070-6e1034fad287"
+  },
+  {
+    "created_at": "2025-12-31T06:23:35.179831+00:00",
+    "updated_at": "2025-12-31T06:23:35.179831+00:00",
+    "deleted_at": null,
+    "opportunity_id": "c8d0b507-26fd-425a-88bc-570f62a00e23",
+    "user_id": "f5c853c4-833f-4a4b-b69f-9c5729190698",
+    "comment": "Opportunity created by referrer.",
+    "is_public": false,
+    "_id": "b9213324-e684-4016-8c87-127597875a92"
+  },
+  {
+    "created_at": "2026-01-03T07:26:26.45538+00:00",
+    "updated_at": "2026-01-03T07:26:26.45538+00:00",
+    "deleted_at": null,
+    "opportunity_id": "7d1b2fb4-e89f-4689-a23c-e6249041fad1",
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "comment": "Opportunity created.",
+    "is_public": false,
+    "_id": "d353d847-fcf9-4a89-a440-a227aada193b"
+  }
+]

@@ -1,0 +1,1252 @@
+[
+  {
+    "user_id": null,
+    "email": "abhishek@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-21T04:53:14.014941+00:00",
+    "_id": "b36cc648-f17b-49d5-87f5-fc3b630667ec"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-21T11:09:44.508859+00:00",
+    "_id": "bc142a24-a9e4-4a19-a8b2-8730f11a6c63"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.202",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-23T08:52:09.911803+00:00",
+    "_id": "7fadafea-f7c1-4d76-861e-83fdcec7161a"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "103.87.58.202",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-23T08:53:14.732366+00:00",
+    "_id": "07f12407-8b81-4cf2-a61a-32e46b7ce5b1"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-24T11:19:02.921608+00:00",
+    "_id": "1e119310-df8a-4717-b8a9-f323df218549"
+  },
+  {
+    "user_id": null,
+    "email": "abhishek1@northbase.au",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-24T14:02:29.708735+00:00",
+    "_id": "61c8b259-c805-49b1-aab7-5733f704e7b2"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-26T06:19:32.291451+00:00",
+    "_id": "21e52489-c269-4d53-b155-27cb21cd1010"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-26T06:19:49.027047+00:00",
+    "_id": "c588eeef-9b7e-43f7-8fe3-022f32eb4343"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-26T11:42:05.358214+00:00",
+    "_id": "51fded51-f243-4b47-bdb1-aaca36616faf"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-11-26T11:42:11.042518+00:00",
+    "_id": "931684e9-622a-48a2-bb28-5b1ba9f57839"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-26T11:42:41.087858+00:00",
+    "_id": "5a59d368-cc9e-4b53-b5a6-9c7e7f80ca38"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-26T16:26:09.931271+00:00",
+    "_id": "e5e1287e-6d3a-43f7-a25a-be1e497ad0df"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-11-26T16:26:13.157938+00:00",
+    "_id": "5b0ee6c2-d77b-41eb-b6cf-89b46a8ece1e"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-26T16:26:40.231561+00:00",
+    "_id": "9c9755e9-c158-4d4e-8718-b957eefbae4c"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-27T17:25:24.319828+00:00",
+    "_id": "a5461d32-5562-4705-8817-feb278be8f64"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-28T09:04:21.084233+00:00",
+    "_id": "4a23b0ce-0dc2-43ab-bcd9-c2a9b86fe7f8"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-28T10:17:15.594653+00:00",
+    "_id": "0ca7e56d-7226-496b-9b12-4d66d8c80c8c"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "103.87.58.204",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-11-28T11:58:17.063254+00:00",
+    "_id": "b6b78da0-bb68-4755-a431-5418141088cf"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.204",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-28T11:58:52.588159+00:00",
+    "_id": "cdb8f8dc-a60c-49f8-ae3c-efd5fdd28313"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.229",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-11-29T13:24:12.83032+00:00",
+    "_id": "87b04957-0eeb-432b-9e3c-9cb06b661373"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.243",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-01T05:45:21.669396+00:00",
+    "_id": "153a1f79-83b7-4e7e-a573-4efa3b75a1e1"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.243",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-01T05:46:23.615844+00:00",
+    "_id": "dd4aa6a3-5564-45b0-985b-4823d30d72c6"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.148.116",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-02T04:49:40.911338+00:00",
+    "_id": "b80fa678-8316-4908-b59d-88cc60c9d4b4"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.148.116",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-02T05:09:30.977002+00:00",
+    "_id": "ace13937-5861-4140-86e4-8ec34b85f540"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.148.116",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-02T10:50:20.731343+00:00",
+    "_id": "b61fdbc6-479b-4872-af33-5ae8c669aedd"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-05T14:53:12.498998+00:00",
+    "_id": "82254102-ec1d-4bfb-b2ef-bcbab2348952"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-05T14:53:19.622865+00:00",
+    "_id": "1d1f7a2b-8b02-481e-b7bb-e94274d3b2fe"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-05T15:02:34.568465+00:00",
+    "_id": "9f1a3b2f-a34c-44d4-a11a-d6109ae16119"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-06T08:09:25.497271+00:00",
+    "_id": "ea8e6087-8694-47d2-999c-be3eb8de7c9a"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
+    "failure_reason": null,
+    "created_at": "2025-12-06T08:09:35.234838+00:00",
+    "_id": "e3472059-c56e-4930-853a-32c7d806a5d2"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-10T13:59:06.705371+00:00",
+    "_id": "89a50dcb-4f54-4933-8ad6-e08360b21cbf"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-10T13:59:13.039683+00:00",
+    "_id": "a3371e92-ce07-44f6-b722-ac885241ed47"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.128.198",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-11T10:39:04.306888+00:00",
+    "_id": "0ca4a979-3a05-46b4-9f67-fff0899b444b"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.128.198",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-11T10:42:47.617581+00:00",
+    "_id": "546f033f-06a2-4721-b1fe-b10f4699d8aa"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.128.198",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-11T10:48:27.735111+00:00",
+    "_id": "5b2efe5a-c31c-4a10-9743-278e0bce6b90"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "180.214.128.198",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-11T10:58:35.172362+00:00",
+    "_id": "b58c8e7e-8cd5-41f2-bb0e-7928308521ea"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.210",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-12T13:55:24.34554+00:00",
+    "_id": "afc19a90-a348-4c4a-b2cc-cbc6d089fd13"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-13T01:50:01.456386+00:00",
+    "_id": "259afb2f-212e-4fa2-aa10-ec4e1ef0b547"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-13T01:51:44.16548+00:00",
+    "_id": "e0268a90-ce2f-4296-9a18-22990e3ed2ef"
+  },
+  {
+    "user_id": null,
+    "email": "abhishek@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-13T07:22:07.949149+00:00",
+    "_id": "b8a6721b-7be0-48ab-b3ae-86e3efe622e4"
+  },
+  {
+    "user_id": null,
+    "email": "abhishek@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-13T07:22:24.263228+00:00",
+    "_id": "cc5d1750-887b-4543-b515-d21f00c3868b"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-13T16:18:46.394092+00:00",
+    "_id": "a85da423-8e92-4326-8a48-d7c15d8d5adb"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "103.87.58.134",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-14T12:45:43.349011+00:00",
+    "_id": "acf083d0-3e06-4ad5-bd40-c27f531e3399"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-16T05:13:20.257233+00:00",
+    "_id": "d77e7235-153c-4496-af76-7ae077101f87"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-16T07:01:39.007449+00:00",
+    "_id": "decc7207-7fb1-4257-bd1d-236589c61162"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-17T10:02:28.039385+00:00",
+    "_id": "584b4ac6-399c-4ca8-a694-3d011aa5dab4"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.231",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-19T06:52:44.902064+00:00",
+    "_id": "7e09af6c-9235-4f29-b6ab-33709805d874"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.181",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-24T03:11:28.898971+00:00",
+    "_id": "ee1d452e-3e62-4683-9e2f-0c56a8d3dde5"
+  },
+  {
+    "user_id": "ce7724d9-63ff-4a06-bcfb-da7e29f3c531",
+    "email": "cf@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15",
+    "failure_reason": null,
+    "created_at": "2025-12-24T03:12:40.680595+00:00",
+    "_id": "9b4eb937-42c0-4595-8f1e-646dca4ba245"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.181",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-24T06:08:08.598542+00:00",
+    "_id": "19fa086c-e505-490c-92d6-fa35cea63d07"
+  },
+  {
+    "user_id": null,
+    "email": "shankey@sxda.com.au",
+    "status": "failed",
+    "ip_address": "103.87.58.181",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T09:07:26.220859+00:00",
+    "_id": "8ddde2b6-6de0-4dcd-a870-bd381144fec9"
+  },
+  {
+    "user_id": null,
+    "email": "shankey@sxda.com.au",
+    "status": "failed",
+    "ip_address": "103.87.58.181",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-12-24T09:07:30.094696+00:00",
+    "_id": "2dc3b813-3811-472b-bdad-a0805b8e63fc"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@gmail.com",
+    "status": "failed",
+    "ip_address": "103.87.58.181",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T09:08:06.412928+00:00",
+    "_id": "98f289e0-3731-4ede-8e2a-7c2908e8f618"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T09:54:32.491961+00:00",
+    "_id": "4caa7fbb-59a9-4cb2-88f5-529f2632a27d"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-12-24T09:55:14.078569+00:00",
+    "_id": "ab0b3d47-f440-494f-b392-eabc84d9c52b"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-24T09:55:29.945636+00:00",
+    "_id": "0b1d02a0-e402-4c82-b191-60602ef713e8"
+  },
+  {
+    "user_id": null,
+    "email": "patcummins@northbase.app",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T10:05:31.823121+00:00",
+    "_id": "361c07ce-b7b3-4c31-992b-44c5e6c46e10"
+  },
+  {
+    "user_id": null,
+    "email": "patcummins@northbase.app",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-12-24T10:07:18.103798+00:00",
+    "_id": "5691aab3-a748-43e8-a76f-22e75fa7befd"
+  },
+  {
+    "user_id": null,
+    "email": "patcummins@northbase.app",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 3/5",
+    "created_at": "2025-12-24T10:07:27.909827+00:00",
+    "_id": "2a659fd1-305e-483a-8372-1079ae435e0f"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-24T10:11:45.264465+00:00",
+    "_id": "e045e77c-f374-476d-83f6-6d206a922c6c"
+  },
+  {
+    "user_id": null,
+    "email": "patcummins@northbase.app",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T10:18:33.381413+00:00",
+    "_id": "78760631-d4cd-44ae-a184-aced6b32e249"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-24T10:21:09.342745+00:00",
+    "_id": "0af64276-0f31-4935-87d9-ffa411180863"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-24T10:21:23.715961+00:00",
+    "_id": "5d2710af-20b4-4d88-a828-5253b3eb09e9"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-24T13:30:18.64259+00:00",
+    "_id": "12cc56b7-7d8a-4091-b6bf-c4a34bbb5cc7"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-24T13:30:28.28345+00:00",
+    "_id": "b81d35c6-e7c0-44f0-82dc-83bb3a86edf9"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-24T13:53:19.979706+00:00",
+    "_id": "e47ffa65-fc18-4207-b79e-fb4cfb322087"
+  },
+  {
+    "user_id": null,
+    "email": "cf@northbase.io",
+    "status": "failed",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-25T01:25:18.632136+00:00",
+    "_id": "56a606a0-8d2d-4bf0-b412-19973083720e"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.234",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-26T02:17:19.785+00:00",
+    "_id": "343817d7-a4db-45b9-8ffb-64817e18e3c1"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:08:17.123299+00:00",
+    "_id": "e567b717-cd46-4b1b-ab62-8b48974cdd92"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:17:05.968678+00:00",
+    "_id": "3cb1b1ce-33bb-4d8d-9c80-6b4b2b4959c5"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:17:48.642705+00:00",
+    "_id": "9d34f87c-f682-4565-ad17-b5afc32bf023"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-29T03:31:31.027119+00:00",
+    "_id": "ea3f3ece-c2d5-44c4-8ec6-642619fdb163"
+  },
+  {
+    "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
+    "email": "admin@cluefinance.com.au",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:31:46.247819+00:00",
+    "_id": "5964b24f-a1e8-4401-a62b-26a6becae5ab"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:32:25.733817+00:00",
+    "_id": "cdfdcefc-9b07-411c-ab54-51468ba51d04"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:34:49.361894+00:00",
+    "_id": "f549e813-4f9d-4f10-93fd-a898d2fc12f2"
+  },
+  {
+    "user_id": "ce7724d9-63ff-4a06-bcfb-da7e29f3c531",
+    "email": "cf@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:35:18.133034+00:00",
+    "_id": "538dc4cc-f97a-48ef-b604-d7a4ce05a42f"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@gmail.com",
+    "status": "failed",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-29T03:39:34.209029+00:00",
+    "_id": "b2ae0910-38e1-46fd-bfb0-1ee37dfab9aa"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:39:38.026011+00:00",
+    "_id": "c2c6ba63-50b9-445b-9b85-23524608c6ee"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T03:55:54.761282+00:00",
+    "_id": "ba792c83-d116-4b75-83f0-a602c78627cd"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "103.87.58.143",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-29T04:07:16.048797+00:00",
+    "_id": "9c8dbcb8-b230-4992-bda8-88b09d0be9a2"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T04:37:34.978619+00:00",
+    "_id": "7ef0d880-7019-4982-9a78-7c0388dfa517"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-29T05:09:08.862202+00:00",
+    "_id": "e8643160-141b-40fe-855a-cc3e630f258e"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-30T06:38:10.027416+00:00",
+    "_id": "b62345fc-cc7c-4096-929f-1f05607a3eab"
+  },
+  {
+    "user_id": "ce7724d9-63ff-4a06-bcfb-da7e29f3c531",
+    "email": "cf@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15",
+    "failure_reason": null,
+    "created_at": "2025-12-30T11:11:18.042889+00:00",
+    "_id": "c38bffbd-1c86-4071-8d22-7946cb0e23f8"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.134",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-30T11:14:28.521833+00:00",
+    "_id": "74d3d42c-4717-4417-81b6-5a962efd5cd6"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.134",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-30T13:21:28.41708+00:00",
+    "_id": "78bd95b9-88d1-418d-81ed-f6a4b1558254"
+  },
+  {
+    "user_id": null,
+    "email": "companytwo@northbase.io",
+    "status": "failed",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-30T22:18:02.803994+00:00",
+    "_id": "203f26be-4354-400e-9e31-bc0cc2507953"
+  },
+  {
+    "user_id": "fc16686a-c5f6-478b-8142-c07c48911049",
+    "email": "referrer1@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-30T22:24:03.558987+00:00",
+    "_id": "279e6246-d9c9-4a37-8ea7-8d5b7abc6383"
+  },
+  {
+    "user_id": "3ec5e985-189e-4821-94a4-96981c1c6749",
+    "email": "referrer9@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-30T23:10:33.812708+00:00",
+    "_id": "dcb1b5f7-94a3-4449-9a27-df1b0f7d6071"
+  },
+  {
+    "user_id": "fc16686a-c5f6-478b-8142-c07c48911049",
+    "email": "referrer1@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-30T23:11:16.348659+00:00",
+    "_id": "5faff786-cb72-4fa4-8f98-37f9d97604db"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2025-12-31T04:12:55.730382+00:00",
+    "_id": "c2b9177e-56fe-462f-9a4a-371568be08f7"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2025-12-31T04:13:26.119927+00:00",
+    "_id": "8e45688a-661c-4825-8223-cecd935dc0f5"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 3/5",
+    "created_at": "2025-12-31T04:13:33.067311+00:00",
+    "_id": "ea07ea4a-47f9-4d42-893c-837e79529d8d"
+  },
+  {
+    "user_id": null,
+    "email": "jnshankey@northbase.dev",
+    "status": "failed",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 4/5",
+    "created_at": "2025-12-31T04:13:39.709579+00:00",
+    "_id": "9f7e8e24-0761-4ca7-9b03-df1f0031cf49"
+  },
+  {
+    "user_id": "f5c853c4-833f-4a4b-b69f-9c5729190698",
+    "email": "abhidevphp2@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2025-12-31T05:20:47.388433+00:00",
+    "_id": "97783da4-bd15-4b0f-8ca1-5edba2fe7cf1"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-31T07:11:08.661852+00:00",
+    "_id": "181398cc-c9a3-4605-946d-f3470c533ce3"
+  },
+  {
+    "user_id": "f5c853c4-833f-4a4b-b69f-9c5729190698",
+    "email": "abhidevphp2@gmail.com",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-31T07:12:09.133339+00:00",
+    "_id": "10e7aa69-1e3f-4ec2-af5b-0bc93d24ce96"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.145",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2025-12-31T09:34:42.9545+00:00",
+    "_id": "0cf8468b-05ea-4777-85d6-c7b13815acdf"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-01T11:05:42.261663+00:00",
+    "_id": "d88116d6-a863-464f-aef7-a567904315a8"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-01T11:29:57.839542+00:00",
+    "_id": "004fb906-ed56-4504-a009-d3bca8a6b30d"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-01T11:49:23.516503+00:00",
+    "_id": "d502b19d-d180-4f8c-9831-3748f4be2486"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T02:47:06.739512+00:00",
+    "_id": "04e633ab-d90b-4183-b40a-f1545190ae1d"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T03:10:32.581886+00:00",
+    "_id": "6ae799b4-b105-46a6-9906-791ffde7fea3"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T03:12:06.777878+00:00",
+    "_id": "a293798f-71a7-4a45-a8a9-2e68fb25396d"
+  },
+  {
+    "user_id": "6a81c87d-5be5-4120-8e3e-0808b559a60f",
+    "email": "jnshankey@gmail.com",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-02T03:21:08.060839+00:00",
+    "_id": "90f33d62-49a2-4dc9-8a29-d71626ab170b"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T04:15:40.529829+00:00",
+    "_id": "99c9d453-9c85-462b-9365-383e671e7f64"
+  },
+  {
+    "user_id": "0ece8216-32cf-485b-9fcd-d5a01074761c",
+    "email": "abhidevphp1@gmail.com",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-02T04:32:03.480315+00:00",
+    "_id": "fabe0403-f23e-41de-8102-8fe60c6a5e5f"
+  },
+  {
+    "user_id": "0ece8216-32cf-485b-9fcd-d5a01074761c",
+    "email": "abhidevphp1@gmail.com",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T06:07:04.022503+00:00",
+    "_id": "860be7b2-74e2-4eed-bf53-ef9c7f099b8f"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T06:15:07.422539+00:00",
+    "_id": "9f8250d0-b794-4d81-8bc8-7acaa40e231c"
+  },
+  {
+    "user_id": "f44dfaaa-3909-4f2f-8ac8-070dd8248401",
+    "email": "abhishek-dev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T09:47:05.886663+00:00",
+    "_id": "fe636ab8-f618-4591-b86a-ce54a1bef37e"
+  },
+  {
+    "user_id": "0ece8216-32cf-485b-9fcd-d5a01074761c",
+    "email": "abhidevphp1@gmail.com",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-02T10:15:20.813634+00:00",
+    "_id": "7454aba6-5088-42c0-b33f-8fa2ae6310e4"
+  },
+  {
+    "user_id": null,
+    "email": "abhidevphp1@gmail.com",
+    "status": "failed",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2026-01-03T05:06:39.431556+00:00",
+    "_id": "3648e499-7a65-465f-b4e7-02503e142b7b"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-03T05:08:20.819077+00:00",
+    "_id": "3e33054f-b263-469b-8057-9fed65ea3351"
+  },
+  {
+    "user_id": "0ece8216-32cf-485b-9fcd-d5a01074761c",
+    "email": "abhidevphp1@gmail.com",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-03T05:13:35.284616+00:00",
+    "_id": "d8da221f-7d3a-4363-8daf-9dc315da2759"
+  },
+  {
+    "user_id": "ec080353-ad3d-4a18-8867-aefcc4e8b5ea",
+    "email": "abhishekdev@northbase.dev",
+    "status": "success",
+    "ip_address": "::ffff:127.0.0.1",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-03T10:41:34.444965+00:00",
+    "_id": "9ba2baf6-57d7-46ce-81c0-0a26d6d26e94"
+  },
+  {
+    "user_id": "27e440a3-a11c-4735-acb4-d17174ada6e2",
+    "email": "joysharma@northbase.dev",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-03T11:06:23.857434+00:00",
+    "_id": "4e407390-a744-46d4-a41c-a987746852ad"
+  },
+  {
+    "user_id": "0ece8216-32cf-485b-9fcd-d5a01074761c",
+    "email": "abhidevphp1@gmail.com",
+    "status": "success",
+    "ip_address": "103.87.58.255",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
+    "failure_reason": null,
+    "created_at": "2026-01-03T16:14:49.9912+00:00",
+    "_id": "73fd14d7-81c5-479b-b532-f3f88441ca05"
+  },
+  {
+    "user_id": null,
+    "email": "harrypotter@northbase.app",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2026-01-05T03:20:13.329264+00:00",
+    "_id": "9739ff4f-6df6-4910-abc3-a843ce426069"
+  },
+  {
+    "user_id": null,
+    "email": "gunjitsingh@hotmail.com",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2026-01-05T03:20:25.355044+00:00",
+    "_id": "ba00b01e-a7e7-4818-a453-8d2752375533"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2026-01-05T03:20:34.412923+00:00",
+    "_id": "76d7ef01-e04c-40a9-821f-cea8052e8c05"
+  },
+  {
+    "user_id": null,
+    "email": "gunjitsingh@hotmail.com",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2026-01-05T03:21:30.767268+00:00",
+    "_id": "9a2030bc-177c-4d8c-817b-1d0d2d473404"
+  },
+  {
+    "user_id": null,
+    "email": "admin@cluefinance.com.au",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 2/5",
+    "created_at": "2026-01-05T03:21:55.605275+00:00",
+    "_id": "b51a38a9-d664-410e-b20a-839c063f20a5"
+  },
+  {
+    "user_id": null,
+    "email": "sxda@northbase.io",
+    "status": "failed",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": "Invalid credentials. Attempt 1/5",
+    "created_at": "2026-01-05T03:22:27.436655+00:00",
+    "_id": "f84d20ad-f9d9-4e90-99e8-d580e053f203"
+  },
+  {
+    "user_id": "d5df118e-3018-4909-ace2-3fdd55516e2b",
+    "email": "gunjitsingh@hotmail.com",
+    "status": "success",
+    "ip_address": "180.214.147.246",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    "failure_reason": null,
+    "created_at": "2026-01-05T03:24:13.907299+00:00",
+    "_id": "067aa8d2-fa08-43ef-bf1b-93f23c64741b"
+  },
+  {
+    "user_id": "ce7724d9-63ff-4a06-bcfb-da7e29f3c531",
+    "email": "cf@northbase.io",
+    "status": "success",
+    "ip_address": "101.115.169.67",
+    "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15",
+    "failure_reason": null,
+    "created_at": "2026-01-08T02:51:05.528524+00:00",
+    "_id": "1c59aba7-29c1-4af2-ab97-a741ebaf70ac"
+  }
+]

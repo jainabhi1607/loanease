@@ -1,0 +1,44 @@
+[
+  {
+    "user_id": "39b9e1f1-3a76-48ff-8362-009b437f20bf",
+    "token": "ca39bad1fff19db9f287c7ba6601f37aeef1d6b378e9a77e41766f0ae4027bb6",
+    "expires_at": "2025-12-30T11:34:09.907+00:00",
+    "created_at": "2025-12-29T11:34:10.026863+00:00",
+    "used_at": null,
+    "signup_data": {
+      "abn": "71659919785",
+      "email": "jnshankey@northbase.dev",
+      "phone": "9111111111",
+      "address": "Terania Creek Road, The Channon New South Wales 2480, Australia",
+      "lastName": "Jain",
+      "password": "Qwert!2345",
+      "firstName": "Abhishek",
+      "ipAddress": "103.87.58.143",
+      "companyName": "VIVID ENGINEERING",
+      "tradingName": "Ster",
+      "industryType": "lawyer"
+    },
+    "_id": "6e7a6c05-3e11-4c88-b9f3-299e6d07985e"
+  },
+  {
+    "user_id": "27e440a3-a11c-4735-acb4-d17174ada6e2",
+    "token": "9d128a595134ca6a5047a46bc193cff93ace5ea26d93ad14423f0df92d714684",
+    "expires_at": "2026-01-04T11:05:22.219+00:00",
+    "created_at": "2026-01-03T11:05:22.3401+00:00",
+    "used_at": "2026-01-03T11:05:49.229+00:00",
+    "signup_data": {
+      "abn": "56601203865",
+      "email": "joysharma@northbase.dev",
+      "phone": "9558844551",
+      "address": "Herdegen Close, Bonville New South Wales 2450, Australia",
+      "lastName": "Sharma",
+      "password": "Qwert!2345",
+      "firstName": "Joy",
+      "ipAddress": "103.87.58.255",
+      "companyName": "A &amp; B BIFFIN PTY LTD",
+      "tradingName": "JoyTrade",
+      "industryType": "mortgage_broker"
+    },
+    "_id": "9067dd30-c010-4d26-bd56-ef7e0fb889d1"
+  }
+]
