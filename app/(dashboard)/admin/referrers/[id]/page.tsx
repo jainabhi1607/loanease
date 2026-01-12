@@ -605,7 +605,7 @@ export default function ViewReferrerPage() {
                       <p className="mt-1">{referrer.organisation?.trading_name || ''}</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-gray-500">ABN</label>
+                      <label className="text-sm font-medium text-gray-500">ABN / GST No.</label>
                       <p className="mt-1">{referrer.organisation?.abn || ''}</p>
                     </div>
                     <div>

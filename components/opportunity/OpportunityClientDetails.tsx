@@ -77,7 +77,7 @@ export function OpportunityClientDetails({
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-500">ABN</p>
+            <p className="text-sm text-gray-500">ABN / GST No.</p>
             <p className="font-medium">{opportunity.client_abn || '-'}</p>
           </div>
           <div>

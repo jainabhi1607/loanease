@@ -1547,7 +1547,7 @@ export default function OpportunityDetailPage() {
                 <p className="font-medium">{opportunity.client_address || '-'}</p>
               </div>
               <div>
-                <p className="text-gray-600">ABN</p>
+                <p className="text-gray-600">ABN / GST No.</p>
                 <p className="font-medium">{opportunity.client_abn || '-'}</p>
               </div>
               <div>
@@ -2301,7 +2301,7 @@ export default function OpportunityDetailPage() {
                 <Input value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} type="email" />
               </div>
               <div>
-                <Label>ABN</Label>
+                <Label>ABN / GST No.</Label>
                 <Input value={clientAbn} onChange={(e) => setClientAbn(e.target.value)} />
               </div>
               <div className="col-span-2">

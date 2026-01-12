@@ -529,7 +529,7 @@ export default function ReferrerAccountPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-3 py-4">
-                  <div className="text-sm text-[#787274]">ABN</div>
+                  <div className="text-sm text-[#787274]">ABN / GST No.</div>
                   <div className="col-span-2 text-sm font-bold text-[#02383B]">{organization.abn || '-'}</div>
                 </div>
                 <div className="grid grid-cols-3 py-4">

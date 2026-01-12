@@ -20,7 +20,7 @@ const fieldLabels: Record<string, string> = {
   directorSurname: 'Director Surname',
   contactPhone: 'Contact Phone',
   contactEmail: 'Contact Email',
-  abn: 'ABN',
+  abn: 'ABN / GST No.',
   companyName: 'Company Name',
   tradingName: 'Trading Name',
   companyAddress: 'Company Address',
@@ -35,12 +35,7 @@ export default function SignupPage() {
   const router = useRouter();
   const errorRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLookingUpABN, setIsLookingUpABN] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasLookedUpABN, setHasLookedUpABN] = useState(false);
-  const [abnStatus, setAbnStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid' | 'exists'>('idle');
-  const [abnMessage, setAbnMessage] = useState<string>('');
-  const [abnEntityType, setAbnEntityType] = useState<string>('');
   
   // Email validation states
   const [emailStatus, setEmailStatus] = useState<'idle' | 'checking' | 'available' | 'taken' | 'invalid'>('idle');
@@ -116,9 +111,6 @@ export default function SignupPage() {
     // Terms Acceptance
     acceptTerms: false,
   });
-
-  // Company name options from ABN lookup
-  const [companyNameOptions, setCompanyNameOptions] = useState<string[]>([]);
 
   // Helper function to set error and scroll to it
   const setErrorAndScroll = (errorMessage: string) => {
@@ -264,13 +256,7 @@ export default function SignupPage() {
     if (field === 'password' && typeof value === 'string') {
       validatePassword(value);
     }
-    
-    // Clear company name options if ABN is changed
-    if (field === 'abn') {
-      setCompanyNameOptions([]);
-      setFormData(prev => ({ ...prev, companyName: '' }));
-    }
-    
+
     // Handle additional directors count change
     if (field === 'numberOfAdditionalDirectors' && typeof value === 'string') {
       const count = value === 'None' ? 0 : parseInt(value);
@@ -292,119 +278,6 @@ export default function SignupPage() {
       newDirectors[index] = { ...newDirectors[index], [field]: sanitizedValue };
       return { ...prev, additionalDirectors: newDirectors };
     });
-  };
-
-  const formatABN = (value: string) => {
-    // Remove all non-digits
-    const digits = value.replace(/\D/g, '');
-    
-    // Format as XX XXX XXX XXX
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-    if (digits.length <= 8) return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
-    return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8, 11)}`;
-  };
-
-  const handleABNLookup = async (abnNumber: string) => {
-    const abnDigits = abnNumber.replace(/\s/g, '');
-    
-    setIsLookingUpABN(true);
-    setAbnStatus('loading');
-    setAbnMessage('');
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/abn/lookup?abn=${abnDigits}`);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        setAbnStatus('invalid');
-        setAbnMessage(data.message || 'Invalid ABN');
-        setCompanyNameOptions([]);
-        setFormData(prev => ({ ...prev, companyName: '' }));
-      } else if (data.exists) {
-        // ABN already registered
-        setAbnStatus('exists');
-        setAbnMessage(data.message);
-        setCompanyNameOptions([]);
-        setFormData(prev => ({ ...prev, companyName: '' }));
-      } else if (data.valid) {
-        // Valid ABN, not registered yet
-        setAbnStatus('valid');
-        setAbnMessage(data.message);
-        setCompanyNameOptions(data.businessNames || []);
-        setAbnEntityType(data.entityType || '');
-        
-        // Auto-select if only one business name
-        if (data.businessNames && data.businessNames.length === 1) {
-          setFormData(prev => ({ ...prev, companyName: data.businessNames[0] }));
-        } else {
-          setFormData(prev => ({ ...prev, companyName: '' }));
-        }
-        
-        // Auto-set entity type if available
-        if (data.entityType) {
-          // Map ABR entity types to our form options
-          let entityValue = '';
-          const entityTypeLower = data.entityType.toLowerCase();
-          if (entityTypeLower.includes('sole trader') || entityTypeLower.includes('individual')) {
-            entityValue = 'sole_trader';
-          } else if (entityTypeLower.includes('public company')) {
-            entityValue = 'public_company';
-          } else if (entityTypeLower.includes('private company') || entityTypeLower.includes('proprietary')) {
-            entityValue = 'private_company';
-          } else if (entityTypeLower.includes('trust')) {
-            entityValue = 'trust';
-          } else if (entityTypeLower.includes('partnership')) {
-            entityValue = 'partnership';
-          }
-          
-          if (entityValue) {
-            setFormData(prev => ({ ...prev, entity: entityValue }));
-          }
-        }
-      }
-      
-      setIsLookingUpABN(false);
-      setHasLookedUpABN(true);
-    } catch (err) {
-      console.error('ABN lookup failed:', err);
-      setIsLookingUpABN(false);
-      setAbnStatus('invalid');
-      setAbnMessage('Failed to verify ABN. Please try again.');
-    }
-  };
-
-  const handleABNChange = async (value: string, forceLookup: boolean = false) => {
-    const formatted = formatABN(value);
-    const digits = formatted.replace(/\s/g, '');
-    
-    if (digits.length <= 11) {
-      handleInputChange('abn', formatted);
-      
-      // Auto-lookup when 11 digits are entered
-      if (digits.length === 11) {
-        // Force lookup on paste or if not already looked up
-        if (forceLookup || !hasLookedUpABN) {
-          await handleABNLookup(formatted);
-        }
-      } else if (digits.length < 11) {
-        // Reset lookup state if user edits the ABN
-        setHasLookedUpABN(false);
-        setCompanyNameOptions([]);
-        setFormData(prev => ({ ...prev, companyName: '' }));
-        setAbnStatus('idle');
-        setAbnMessage('');
-      }
-    }
-  };
-
-  const handleABNPaste = async (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedText = e.clipboardData.getData('text');
-    
-    // Handle the paste with force lookup flag
-    await handleABNChange(pastedText, true);
   };
 
 
@@ -444,22 +317,6 @@ export default function SignupPage() {
 
     if (emailStatus === 'taken') {
       setErrorAndScroll('This email is already registered. Please sign in or use a different email.');
-      return;
-    }
-
-    if (!formData.abn || formData.abn.replace(/\s/g, '').length !== 11) {
-      setErrorAndScroll('Please enter a valid ABN');
-      return;
-    }
-
-    // Check ABN validation status
-    if (abnStatus === 'invalid') {
-      setErrorAndScroll('Please enter a valid ABN');
-      return;
-    }
-
-    if (abnStatus === 'exists') {
-      setErrorAndScroll('This ABN already has a referrer account. Please sign in.');
       return;
     }
 
@@ -726,110 +583,31 @@ export default function SignupPage() {
             {/* Company Information */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Company Information</h3>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="abn">
-                    ABN <span className="text-red-500">*</span>
-                    {isLookingUpABN && (
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        <Loader2 className="inline h-3 w-3 animate-spin mr-1" />
-                        Verifying ABN...
-                      </span>
-                    )}
-                  </Label>
+                  <Label htmlFor="abn">ABN / GST No.</Label>
                   <Input
                     id="abn"
-                    placeholder="XX XXX XXX XXX"
+                    placeholder="ABN / GST No."
                     value={formData.abn}
-                    onChange={(e) => handleABNChange(e.target.value)}
-                    onPaste={handleABNPaste}
-                    required
-                    disabled={isLoading || isLookingUpABN}
-                    className={
-                      abnStatus === 'valid' ? 'border-green-500' :
-                      abnStatus === 'invalid' ? 'border-red-500' :
-                      abnStatus === 'exists' ? 'border-orange-500' :
-                      ''
-                    }
+                    onChange={(e) => handleInputChange('abn', e.target.value)}
+                    disabled={isLoading}
                   />
-                  {abnStatus === 'valid' && (
-                    <div className="flex items-start gap-2 text-sm text-green-600">
-                      <CheckCircle className="h-4 w-4 mt-0.5" />
-                      <div>
-                        <p>{abnMessage}</p>
-                        {abnEntityType && (
-                          <p className="text-xs text-muted-foreground mt-1">Entity type: {abnEntityType}</p>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  {abnStatus === 'invalid' && (
-                    <div className="flex items-start gap-2 text-sm text-red-500">
-                      <AlertCircle className="h-4 w-4 mt-0.5" />
-                      <p>{abnMessage}</p>
-                    </div>
-                  )}
-                  {abnStatus === 'exists' && (
-                    <div className="flex items-start gap-2 text-sm text-orange-500">
-                      <AlertCircle className="h-4 w-4 mt-0.5" />
-                      <div>
-                        <p>{abnMessage}</p>
-                        <Link 
-                          href="/login" 
-                          className="text-primary underline hover:no-underline"
-                        >
-                          Click here to sign in
-                        </Link>
-                      </div>
-                    </div>
-                  )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="companyName">
                     Company Name <span className="text-red-500">*</span>
-                    {abnStatus !== 'valid' && abnStatus !== 'idle' && (
-                      <span className="ml-2 text-xs text-muted-foreground">
-                        (Enter valid ABN first)
-                      </span>
-                    )}
                   </Label>
-                  {companyNameOptions.length > 0 ? (
-                    <Select
-                      value={formData.companyName}
-                      onValueChange={(value) => handleInputChange('companyName', value)}
-                      disabled={isLoading || abnStatus !== 'valid'}
-                    >
-                      <SelectTrigger className={abnStatus !== 'valid' ? 'opacity-50' : ''}>
-                        <SelectValue placeholder="Select Company Name" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {companyNameOptions.map((name) => (
-                          <SelectItem key={name} value={name}>
-                            {name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  ) : (
-                    <div>
-                      <Input
-                        id="companyName"
-                        placeholder={abnStatus === 'valid' ? "No names found - enter manually" : "Enter valid ABN to enable"}
-                        value={formData.companyName}
-                        onChange={(e) => handleInputChange('companyName', e.target.value)}
-                        required
-                        disabled={isLoading || abnStatus !== 'valid'}
-                        className={abnStatus !== 'valid' ? 'opacity-50' : ''}
-                      />
-                      {abnStatus === 'valid' && companyNameOptions.length === 0 && (
-                        <p className="text-xs text-muted-foreground mt-1">
-                          No business names found for this ABN. Please enter your company name manually.
-                        </p>
-                      )}
-                    </div>
-                  )}
+                  <Input
+                    id="companyName"
+                    placeholder="Company Name"
+                    value={formData.companyName}
+                    onChange={(e) => handleInputChange('companyName', e.target.value)}
+                    required
+                    disabled={isLoading}
+                  />
                 </div>
               </div>
 

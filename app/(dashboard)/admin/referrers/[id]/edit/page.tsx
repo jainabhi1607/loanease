@@ -18,12 +18,7 @@ export default function EditReferrerPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
-  const [isLookingUpABN, setIsLookingUpABN] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [abnStatus, setAbnStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid' | 'exists'>('idle');
-  const [abnMessage, setAbnMessage] = useState<string>('');
-  const [companyNameOptions, setCompanyNameOptions] = useState<string[]>([]);
-  const [originalABN, setOriginalABN] = useState('');
 
   const [formData, setFormData] = useState({
     directorFirstName: '',
@@ -56,16 +51,12 @@ export default function EditReferrerPage() {
       const data = await response.json();
       const referrer = data.referrer;
 
-      // Format ABN with spaces
-      const formattedABN = formatABN(referrer.organisation?.abn || '');
-      setOriginalABN(formattedABN);
-
       setFormData({
         directorFirstName: referrer.user?.first_name || '',
         directorSurname: referrer.user?.surname || '',
         contactPhone: referrer.user?.phone || '',
         contactEmail: referrer.user?.email || '',
-        abn: formattedABN,
+        abn: referrer.organisation?.abn || '',
         companyName: referrer.organisation?.company_name || '',
         tradingName: referrer.organisation?.trading_name || '',
         companyAddress: referrer.organisation?.address || '',
@@ -81,7 +72,6 @@ export default function EditReferrerPage() {
         industryType: referrer.organisation?.industry_type || '',
       });
 
-      setAbnStatus('valid');
       setIsFetching(false);
     } catch (error) {
       console.error('Error fetching referrer:', error);
@@ -90,90 +80,6 @@ export default function EditReferrerPage() {
     }
   };
 
-  const formatABN = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-    if (digits.length <= 8) return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
-    return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8, 11)}`;
-  };
-
-  const handleABNLookup = async (abnNumber: string) => {
-    const abnDigits = abnNumber.replace(/\s/g, '');
-
-    setIsLookingUpABN(true);
-    setAbnStatus('loading');
-    setAbnMessage('');
-    setError(null);
-
-    try {
-      const response = await fetch(`/api/abn/lookup?abn=${abnDigits}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        setAbnStatus('invalid');
-        setAbnMessage(data.message || 'Invalid ABN');
-        setCompanyNameOptions([]);
-      } else if (data.exists && abnNumber !== originalABN) {
-        setAbnStatus('exists');
-        setAbnMessage(data.message);
-        setCompanyNameOptions([]);
-      } else if (data.valid) {
-        setAbnStatus('valid');
-        setAbnMessage(data.message);
-        setCompanyNameOptions(data.businessNames || []);
-
-        if (data.businessNames && data.businessNames.length === 1) {
-          setFormData(prev => ({ ...prev, companyName: data.businessNames[0] }));
-        }
-
-        if (data.entityType) {
-          let entityValue = '';
-          const entityTypeLower = data.entityType.toLowerCase();
-          if (entityTypeLower.includes('sole trader') || entityTypeLower.includes('individual')) {
-            entityValue = 'sole_trader';
-          } else if (entityTypeLower.includes('public company')) {
-            entityValue = 'public_company';
-          } else if (entityTypeLower.includes('private company') || entityTypeLower.includes('proprietary')) {
-            entityValue = 'private_company';
-          } else if (entityTypeLower.includes('trust')) {
-            entityValue = 'trust';
-          } else if (entityTypeLower.includes('partnership')) {
-            entityValue = 'partnership';
-          }
-
-          if (entityValue) {
-            setFormData(prev => ({ ...prev, entity: entityValue }));
-          }
-        }
-      }
-
-      setIsLookingUpABN(false);
-    } catch (err) {
-      console.error('ABN lookup failed:', err);
-      setIsLookingUpABN(false);
-      setAbnStatus('invalid');
-      setAbnMessage('Failed to verify ABN. Please try again.');
-    }
-  };
-
-  const handleABNChange = async (value: string) => {
-    const formatted = formatABN(value);
-    const digits = formatted.replace(/\s/g, '');
-
-    if (digits.length <= 11) {
-      setFormData(prev => ({ ...prev, abn: formatted }));
-
-      if (digits.length === 11 && formatted !== originalABN) {
-        await handleABNLookup(formatted);
-      } else if (digits.length < 11) {
-        setAbnStatus('idle');
-        setAbnMessage('');
-      } else if (formatted === originalABN) {
-        setAbnStatus('valid');
-      }
-    }
-  };
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -215,21 +121,6 @@ export default function EditReferrerPage() {
 
     if (!formData.contactPhone || !formData.contactEmail) {
       setError('Please enter contact details');
-      return;
-    }
-
-    if (!formData.abn || formData.abn.replace(/\s/g, '').length !== 11) {
-      setError('Please enter a valid ABN');
-      return;
-    }
-
-    if (abnStatus === 'invalid') {
-      setError('Please enter a valid ABN');
-      return;
-    }
-
-    if (abnStatus === 'exists') {
-      setError('This ABN already has a referrer account.');
       return;
     }
 
@@ -390,78 +281,26 @@ export default function EditReferrerPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="abn">
-                      ABN *
-                      {isLookingUpABN && (
-                        <span className="ml-2 text-sm text-muted-foreground">
-                          <Loader2 className="inline h-3 w-3 animate-spin mr-1" />
-                          Verifying...
-                        </span>
-                      )}
-                    </Label>
+                    <Label htmlFor="abn">ABN / GST No.</Label>
                     <Input
                       id="abn"
-                      placeholder="XX XXX XXX XXX"
+                      placeholder="ABN / GST No."
                       value={formData.abn}
-                      onChange={(e) => handleABNChange(e.target.value)}
-                      required
-                      disabled={isLoading || isLookingUpABN}
-                      className={
-                        abnStatus === 'valid' ? 'border-green-500' :
-                        abnStatus === 'invalid' ? 'border-red-500' :
-                        abnStatus === 'exists' ? 'border-orange-500' :
-                        ''
-                      }
+                      onChange={(e) => handleInputChange('abn', e.target.value)}
+                      disabled={isLoading}
                     />
-                    {abnStatus === 'valid' && (
-                      <div className="flex items-center gap-2 text-sm text-green-600">
-                        <CheckCircle className="h-4 w-4" />
-                        <p>{abnMessage || 'ABN is valid'}</p>
-                      </div>
-                    )}
-                    {abnStatus === 'invalid' && (
-                      <div className="flex items-center gap-2 text-sm text-red-500">
-                        <AlertCircle className="h-4 w-4" />
-                        <p>{abnMessage}</p>
-                      </div>
-                    )}
-                    {abnStatus === 'exists' && (
-                      <div className="flex items-center gap-2 text-sm text-orange-500">
-                        <AlertCircle className="h-4 w-4" />
-                        <p>{abnMessage}</p>
-                      </div>
-                    )}
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="companyName">Company Name *</Label>
-                    {companyNameOptions.length > 0 ? (
-                      <Select
-                        value={formData.companyName}
-                        onValueChange={(value) => handleInputChange('companyName', value)}
-                        disabled={isLoading}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select Company Name" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {companyNameOptions.map((name) => (
-                            <SelectItem key={name} value={name}>
-                              {name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <Input
-                        id="companyName"
-                        placeholder="Company Name"
-                        value={formData.companyName}
-                        onChange={(e) => handleInputChange('companyName', e.target.value)}
-                        required
-                        disabled={isLoading}
-                      />
-                    )}
+                    <Input
+                      id="companyName"
+                      placeholder="Company Name"
+                      value={formData.companyName}
+                      onChange={(e) => handleInputChange('companyName', e.target.value)}
+                      required
+                      disabled={isLoading}
+                    />
                   </div>
                 </div>
 

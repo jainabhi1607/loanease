@@ -55,12 +55,6 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     briefOverview: ''
   });
 
-  // ABN Lookup State
-  const [isLookingUpABN, setIsLookingUpABN] = useState(false);
-  const [abnStatus, setAbnStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid' | 'exists'>('idle');
-  const [abnMessage, setAbnMessage] = useState('');
-  const [entityNameOptions, setEntityNameOptions] = useState<string[]>([]);
-  const [hasLookedUpABN, setHasLookedUpABN] = useState(false);
 
   const [hasMoreInfo, setHasMoreInfo] = useState<'no' | 'yes'>('no');
   const [opportunityData, setOpportunityData] = useState({
@@ -250,116 +244,6 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
 
   const handleBack = () => router.push('/referrer/opportunities');
 
-  // ABN formatting and lookup functions
-  const formatABN = (value: string) => {
-    const digits = value.replace(/\D/g, '');
-    if (digits.length <= 2) return digits;
-    if (digits.length <= 5) return `${digits.slice(0, 2)} ${digits.slice(2)}`;
-    if (digits.length <= 8) return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5)}`;
-    return `${digits.slice(0, 2)} ${digits.slice(2, 5)} ${digits.slice(5, 8)} ${digits.slice(8, 11)}`;
-  };
-
-  const handleABNLookup = async (abnNumber: string) => {
-    const abnDigits = abnNumber.replace(/\s/g, '');
-
-    setIsLookingUpABN(true);
-    setAbnStatus('loading');
-    setAbnMessage('');
-
-    try {
-      const response = await fetch(`/api/abn/lookup?abn=${abnDigits}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        setAbnStatus('invalid');
-        setAbnMessage(data.message || 'Invalid ABN');
-        setEntityNameOptions([]);
-        setClientData(prev => ({ ...prev, entityName: '', entityType: '' }));
-      } else if (data.exists) {
-        setAbnStatus('exists');
-        setAbnMessage(data.message);
-        setEntityNameOptions([]);
-        setClientData(prev => ({ ...prev, entityName: '', entityType: '' }));
-      } else if (data.valid) {
-        setAbnStatus('valid');
-        setAbnMessage(data.message);
-        setEntityNameOptions(data.businessNames || []);
-
-        // Auto-select if only one business name
-        if (data.businessNames && data.businessNames.length === 1) {
-          setClientData(prev => ({ ...prev, entityName: data.businessNames[0] }));
-        } else {
-          setClientData(prev => ({ ...prev, entityName: '' }));
-        }
-
-        // Auto-set entity type if available
-        if (data.entityType) {
-          let entityValue = '';
-          const entityTypeLower = data.entityType.toLowerCase();
-          if (entityTypeLower.includes('sole trader')) {
-            entityValue = 'sole_trader';
-          } else if (entityTypeLower.includes('individual')) {
-            entityValue = 'individual';
-          } else if (entityTypeLower.includes('private company') || entityTypeLower.includes('proprietary') || entityTypeLower.includes('public company')) {
-            entityValue = 'private_company';
-          } else if (entityTypeLower.includes('smsf') || entityTypeLower.includes('self managed')) {
-            entityValue = 'smsf_trust';
-          } else if (entityTypeLower.includes('trust')) {
-            entityValue = 'trust';
-          } else if (entityTypeLower.includes('partnership')) {
-            entityValue = 'partnership';
-          }
-
-          if (entityValue) {
-            setClientData(prev => ({ ...prev, entityType: entityValue }));
-          }
-        }
-
-        // Auto-set time in business if available
-        if (data.timeInBusiness) {
-          setClientData(prev => ({ ...prev, timeInBusiness: data.timeInBusiness }));
-        }
-      }
-
-      setIsLookingUpABN(false);
-      setHasLookedUpABN(true);
-    } catch (err) {
-      console.error('ABN lookup failed:', err);
-      setIsLookingUpABN(false);
-      setAbnStatus('invalid');
-      setAbnMessage('Failed to verify ABN. Please try again.');
-    }
-  };
-
-  const handleABNChange = async (value: string, forceLookup: boolean = false) => {
-    const formatted = formatABN(value);
-    const digits = formatted.replace(/\s/g, '');
-
-    if (digits.length <= 11) {
-      setClientData(prev => ({ ...prev, abn: formatted }));
-
-      if (digits.length === 11) {
-        if (forceLookup || !hasLookedUpABN) {
-          await handleABNLookup(formatted);
-        }
-      } else if (digits.length < 11) {
-        setHasLookedUpABN(false);
-        setEntityNameOptions([]);
-        setClientData(prev => ({ ...prev, entityName: '', entityType: '', timeInBusiness: '' }));
-        setAbnStatus('idle');
-        setAbnMessage('');
-      }
-    }
-  };
-
-  const handleABNPaste = async (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    const pastedText = e.clipboardData.getData('text');
-    const digits = pastedText.replace(/\D/g, '');
-    if (digits.length <= 11) {
-      await handleABNChange(digits, true);
-    }
-  };
 
   const handleSubmit = async (saveAsDraft: boolean = false) => {
     // Skip all validation for draft - just save whatever is filled
@@ -498,28 +382,14 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             <CardDescription>Review and update client information</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {/* ABN Field - moved before Entity fields */}
+            {/* ABN / GST No. Field */}
             <div className="space-y-2">
-              <Label>ABN</Label>
-              <div className="relative">
-                <Input
-                  placeholder="XX XXX XXX XXX"
-                  value={clientData.abn}
-                  onChange={(e) => handleABNChange(e.target.value)}
-                  onPaste={handleABNPaste}
-                  maxLength={14}
-                />
-                {isLookingUpABN && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                    <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-                  </div>
-                )}
-              </div>
-              {abnMessage && (
-                <p className={`text-sm ${abnStatus === 'valid' ? 'text-green-600' : abnStatus === 'exists' ? 'text-yellow-600' : 'text-red-600'}`}>
-                  {abnMessage}
-                </p>
-              )}
+              <Label>ABN / GST No.</Label>
+              <Input
+                placeholder="ABN / GST No."
+                value={clientData.abn}
+                onChange={(e) => setClientData(prev => ({ ...prev, abn: e.target.value }))}
+              />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -538,18 +408,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
               </div>
               <div className="space-y-2">
                 <Label>Entity Name</Label>
-                {entityNameOptions.length > 1 ? (
-                  <Select value={clientData.entityName} onValueChange={(v) => setClientData(prev => ({ ...prev, entityName: v }))}>
-                    <SelectTrigger><SelectValue placeholder="Select entity name" /></SelectTrigger>
-                    <SelectContent>
-                      {entityNameOptions.map((name) => (
-                        <SelectItem key={name} value={name}>{name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <Input value={clientData.entityName} onChange={(e) => setClientData(prev => ({ ...prev, entityName: e.target.value }))} />
-                )}
+                <Input value={clientData.entityName} onChange={(e) => setClientData(prev => ({ ...prev, entityName: e.target.value }))} />
               </div>
             </div>
             <div className="space-y-2">

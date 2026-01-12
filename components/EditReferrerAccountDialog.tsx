@@ -240,9 +240,9 @@ export function EditReferrerAccountDialog({
             </div>
           </div>
 
-          {/* ABN */}
+          {/* ABN / GST No. */}
           <div>
-            <Label htmlFor="abn">ABN</Label>
+            <Label htmlFor="abn">ABN / GST No.</Label>
             <Input
               id="abn"
               value={abn}
