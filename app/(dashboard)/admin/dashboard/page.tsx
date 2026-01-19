@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Plus, ArrowRight } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import Image from 'next/image';
 import {
   Table,
   TableBody,
@@ -39,6 +40,7 @@ interface NewReferrer {
 export default function AdminDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState('');
   const [statistics, setStatistics] = useState<DashboardStats>({
     numberOfOpportunities: 0,
     numberOfApplications: 0,
@@ -64,6 +66,7 @@ export default function AdminDashboard() {
         setNewOpportunities(data.newOpportunities || []);
         setNewReferrers(data.newReferrers || []);
         setCurrentMonth(data.currentMonth || '');
+        setUserName(data.userName || 'Admin');
       } else {
         console.error('Failed to fetch dashboard data:', data.error);
       }
@@ -89,7 +92,7 @@ export default function AdminDashboard() {
       'construction': 'Construction',
       'lease_doc': 'Lease Doc',
       'low_doc': 'Low Doc',
-      'private_short_term': 'Private/Short Term',
+      'private_short_term': 'Private Short Term',
       'unsure': 'Unsure',
     };
     return loanTypeMap[loanType] || loanType;
@@ -105,14 +108,50 @@ export default function AdminDashboard() {
     );
   }
 
+  const statsCards = [
+    {
+      icon: '/icons/dahsboard-icon-1.png',
+      value: statistics.numberOfOpportunities.toString(),
+      label: 'NUMBER OF OPPORTUNITIES',
+      onClick: () => router.push('/admin/opportunities'),
+    },
+    {
+      icon: '/icons/dahsboard-icon-2.png',
+      value: statistics.numberOfApplications.toString(),
+      label: 'NUMBER OF APPLICATIONS',
+      onClick: () => router.push('/admin/applications'),
+    },
+    {
+      icon: '/icons/dahsboard-icon-3.png',
+      value: formatCurrency(statistics.totalLoansSettledVolume),
+      label: 'TOTAL LOANS SETTLED (BY VOLUME)',
+      onClick: undefined,
+    },
+    {
+      icon: '/icons/dahsboard-icon-4.png',
+      value: `${statistics.conversionRatio}%`,
+      label: 'OPPORTUNITIES SETTLEMENT CONVERSION',
+      onClick: undefined,
+    },
+    {
+      icon: '/icons/dahsboard-icon-5.png',
+      value: statistics.totalLoansSettledUnit.toString(),
+      label: 'TOTAL LOANS SETTLED (BY UNIT)',
+      onClick: undefined,
+    },
+  ];
+
   return (
     <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Welcome</h1>
+      {/* Welcome Header Card */}
+      <div className="bg-[#02383B] rounded-lg p-6 mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white mb-1">Welcome back, {userName}</h1>
+          <p className="text-gray-300 text-sm">Welcome back to your Loanease administration portal.</p>
+        </div>
         <Button
           onClick={() => router.push('/admin/opportunities/add')}
-          className="bg-[#00D37F] hover:bg-[#00b86e] text-white"
+          className="bg-[#02383B] hover:bg-[#035a5e] text-white border border-white"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Opportunity
@@ -120,70 +159,60 @@ export default function AdminDashboard() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-        {/* Number of Opportunities */}
-        <div
-          className="bg-[#02383B] text-white rounded-lg p-10 cursor-pointer hover:opacity-90 transition-opacity"
-          onClick={() => router.push('/admin/opportunities')}
-        >
-          <p className="text-sm font-medium mb-2 h-10">Number of Opportunities</p>
-          <div className="flex items-end justify-between">
-            <span className="text-4xl font-bold">{statistics.numberOfOpportunities}</span>
-            <ArrowRight className="h-6 w-6 opacity-70" />
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+        {statsCards.map((card, index) => (
+          <div
+            key={index}
+            className={`bg-white rounded-lg p-6 flex flex-col items-center text-center ${
+              card.onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''
+            }`}
+            onClick={card.onClick}
+          >
+            <div className="h-[200px] w-full mb-4 flex items-center justify-center">
+              <Image
+                src={card.icon}
+                alt={card.label}
+                width={120}
+                height={120}
+                className="object-contain"
+              />
+            </div>
+            <p className="text-3xl font-bold text-[#02383B] mb-2">{card.value}</p>
+            <p className="text-xs text-gray-500 font-medium uppercase tracking-wide h-10 flex items-start justify-center">{card.label}</p>
           </div>
-        </div>
-
-        {/* Number of Applications */}
-        <div
-          className="bg-[#02383B] text-white rounded-lg p-10 cursor-pointer hover:opacity-90 transition-opacity"
-          onClick={() => router.push('/admin/applications')}
-        >
-          <p className="text-sm font-medium mb-2 h-10">Number of Applications</p>
-          <div className="flex items-end justify-between">
-            <span className="text-4xl font-bold">{statistics.numberOfApplications}</span>
-            <ArrowRight className="h-6 w-6 opacity-70" />
-          </div>
-        </div>
-
-        {/* Total Loans Settled (By Volume) */}
-        <div className="bg-[#00D37F] text-white rounded-lg p-10">
-          <p className="text-sm font-medium mb-2 h-10">Total Loans Settled (By Volume)</p>
-          <span className="text-3xl font-bold">{formatCurrency(statistics.totalLoansSettledVolume)}</span>
-        </div>
-
-        {/* Settlement Conversion Ratio */}
-        <div className="bg-[#a8b8d0] text-gray-800 rounded-lg p-10">
-          <p className="text-sm font-medium mb-2 h-10">Opportunities Settlement Conversion Ratio</p>
-          <span className="text-4xl font-bold">{statistics.conversionRatio} %</span>
-        </div>
-
-        {/* Total Loans Settled (By Unit) */}
-        <div className="bg-orange-400 text-white rounded-lg p-10">
-          <p className="text-sm font-medium mb-2 h-10">Total Loans Settled (By Unit)</p>
-          <span className="text-4xl font-bold">{statistics.totalLoansSettledUnit}</span>
-        </div>
+        ))}
       </div>
 
       {/* Tables Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* New Opportunities Table */}
-        <div className="lg:col-span-2 bg-[#EDFFD7] rounded-lg border border-gray-200 p-10">
-          <h2 className="font-semibold text-gray-900 mb-6">New Opportunities for {currentMonth}</h2>
+        <div className="lg:col-span-2 bg-[#EDFFD7] rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-[#02383B]">New Opportunities for {currentMonth}</h2>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-sm border-gray-300 hover:bg-white"
+              onClick={() => router.push('/admin/opportunities')}
+            >
+              View All
+            </Button>
+          </div>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-b border-gray-200">
-                  <TableHead className="font-normal text-[#787274]">Deal ID</TableHead>
-                  <TableHead className="font-normal text-[#787274]">Borrower Name</TableHead>
-                  <TableHead className="font-normal text-[#787274]">Referrer Name</TableHead>
-                  <TableHead className="font-normal text-[#787274]">Loan Type</TableHead>
-                  <TableHead className="font-normal text-[#787274]">Loan Amount</TableHead>
+                <TableRow className="border-b border-gray-300 hover:bg-transparent">
+                  <TableHead className="font-normal text-[#787274] text-sm">Deal ID</TableHead>
+                  <TableHead className="font-normal text-[#787274] text-sm">Borrower Name</TableHead>
+                  <TableHead className="font-normal text-[#787274] text-sm">Referrer Name</TableHead>
+                  <TableHead className="font-normal text-[#787274] text-sm">Loan Type</TableHead>
+                  <TableHead className="font-normal text-[#787274] text-sm">Loan Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {newOpportunities.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
                       No new opportunities this month
                     </TableCell>
                   </TableRow>
@@ -191,14 +220,14 @@ export default function AdminDashboard() {
                   newOpportunities.map((opp) => (
                     <TableRow
                       key={opp.id}
-                      className="border-b border-gray-100 hover:bg-white/50 cursor-pointer"
+                      className="border-b border-gray-200 hover:bg-white/50 cursor-pointer"
                       onClick={() => router.push(`/admin/opportunities/${opp.id}`)}
                     >
-                      <TableCell className="font-medium">{opp.deal_id}</TableCell>
-                      <TableCell className="font-semibold">{opp.borrower_name}</TableCell>
-                      <TableCell>{opp.referrer_name}</TableCell>
+                      <TableCell className="font-bold text-[#02383B]">{opp.deal_id}</TableCell>
+                      <TableCell className="text-teal-700">{opp.borrower_name}</TableCell>
+                      <TableCell className="text-teal-700">{opp.referrer_name}</TableCell>
                       <TableCell>{formatLoanType(opp.loan_type)}</TableCell>
-                      <TableCell>{formatCurrency(opp.loan_amount)}</TableCell>
+                      <TableCell className="text-teal-700">{formatCurrency(opp.loan_amount)}</TableCell>
                     </TableRow>
                   ))
                 )}
@@ -208,41 +237,31 @@ export default function AdminDashboard() {
         </div>
 
         {/* New Referrers Table */}
-        <div className="bg-white rounded-lg shadow p-10">
-          <h2 className="font-semibold text-gray-900 mb-6">New Referrer</h2>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableBody>
-                {newReferrers.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={2} className="text-center py-8">
-                      No new referrers
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  newReferrers.map((ref) => (
-                    <TableRow
-                      key={ref.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
-                      onClick={() => router.push(`/admin/referrers/${ref.id}`)}
-                    >
-                      <TableCell className="font-semibold">{ref.name}</TableCell>
-                      <TableCell className="text-right">
-                        <span
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                            ref.status === 'Active'
-                              ? 'bg-[#00D37F] text-white'
-                              : 'bg-gray-200 text-gray-700'
-                          }`}
-                        >
-                          {ref.status}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="font-semibold text-[#02383B] mb-4">New Referrer</h2>
+          <div className="space-y-3">
+            {newReferrers.length === 0 ? (
+              <p className="text-center py-8 text-gray-500">No new referrers</p>
+            ) : (
+              newReferrers.map((ref) => (
+                <div
+                  key={ref.id}
+                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0 cursor-pointer hover:bg-gray-50"
+                  onClick={() => router.push(`/admin/referrers/${ref.id}`)}
+                >
+                  <span className="text-[#02383B]">{ref.name}</span>
+                  <span
+                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                      ref.status === 'Active'
+                        ? 'bg-[#00D169] text-white'
+                        : 'bg-gray-200 text-gray-700'
+                    }`}
+                  >
+                    {ref.status}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

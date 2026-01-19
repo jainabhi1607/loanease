@@ -187,6 +187,10 @@ export async function GET(request: NextRequest) {
       status: ref.organisation?.is_active !== false ? 'Active' : 'Inactive',
     }));
 
+    // Get user details for welcome message
+    const currentUser = await db.collection('users').findOne({ _id: user.userId as any });
+    const userName = currentUser?.first_name || 'Admin';
+
     return NextResponse.json({
       statistics: {
         numberOfOpportunities,
@@ -198,6 +202,7 @@ export async function GET(request: NextRequest) {
       newOpportunities: formattedNewOpportunities,
       newReferrers: formattedReferrers,
       currentMonth: now.toLocaleString('en-AU', { month: 'long' }),
+      userName,
     });
 
   } catch (error) {

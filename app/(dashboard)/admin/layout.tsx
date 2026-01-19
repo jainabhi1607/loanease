@@ -132,8 +132,21 @@ export default function AdminLayout({
             {/* Desktop navigation */}
             <nav className="hidden xl:flex items-center space-x-1">
               {filteredNavigation.map((item) => {
-                const isActive = pathname === item.href ||
+                // Check if viewing opportunity from applications (via ?from=applications)
+                const isFromApplications = typeof window !== 'undefined' && window.location.search.includes('from=applications');
+                const isOpportunityDetail = pathname.startsWith('/admin/opportunities/') && pathname !== '/admin/opportunities';
+
+                let isActive = pathname === item.href ||
                   (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
+
+                // Special case: highlight Applications instead of Opportunities when viewing from applications
+                if (isFromApplications && isOpportunityDetail) {
+                  if (item.href === '/admin/applications') {
+                    isActive = true;
+                  } else if (item.href === '/admin/opportunities') {
+                    isActive = false;
+                  }
+                }
 
                 return (
                   <LoadingLink
@@ -182,8 +195,19 @@ export default function AdminLayout({
           <div className="xl:hidden border-t border-[#0f2a2a]">
             <nav className="px-2 pt-2 pb-3 space-y-1">
               {filteredNavigation.map((item) => {
-                const isActive = pathname === item.href ||
+                const isFromApplications = typeof window !== 'undefined' && window.location.search.includes('from=applications');
+                const isOpportunityDetail = pathname.startsWith('/admin/opportunities/') && pathname !== '/admin/opportunities';
+
+                let isActive = pathname === item.href ||
                   (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
+
+                if (isFromApplications && isOpportunityDetail) {
+                  if (item.href === '/admin/applications') {
+                    isActive = true;
+                  } else if (item.href === '/admin/opportunities') {
+                    isActive = false;
+                  }
+                }
 
                 return (
                   <LoadingLink

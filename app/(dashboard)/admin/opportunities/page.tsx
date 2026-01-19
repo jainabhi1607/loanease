@@ -748,7 +748,7 @@ function OpportunitiesContent() {
                     currentSortKey={sortKey}
                     currentSortDirection={sortDirection}
                     onSort={handleSort}
-                    className="text-[#787274]"
+                    className="text-[#787274] min-w-[180px]"
                   />
                   <TableHead className="text-[#787274] font-normal text-right">Actions</TableHead>
                 </TableRow>
@@ -762,9 +762,9 @@ function OpportunitiesContent() {
                     <TableCell>{formatLoanType(opp.loan_type)}</TableCell>
                     <TableCell>{opp.referrer_name}</TableCell>
                     <TableCell>{formatCurrency(opp.loan_amount)}</TableCell>
-                    <TableCell>
+                    <TableCell className="min-w-[180px]">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(
                           opp.status
                         )}`}
                       >

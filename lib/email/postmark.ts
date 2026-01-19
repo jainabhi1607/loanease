@@ -47,6 +47,11 @@ export interface EmailTemplate {
 }
 
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
+  // TEMPORARY: Email sending disabled for development - will be re-enabled later
+  console.log('[EMAIL DISABLED] Would send template email to:', to, 'template:', templateAlias);
+  return { success: true, messageId: 'disabled-' + Date.now() };
+
+  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const result = await getPostmarkClient().sendEmailWithTemplate({
       From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
@@ -60,6 +65,7 @@ export async function sendEmail({ to, templateAlias, templateModel, from }: Emai
     console.error('Error sending email:', error);
     return { success: false, error };
   }
+  */
 }
 
 // Helper to convert HTML to plain text for email
@@ -185,6 +191,11 @@ export function emailInfoTable(rows: Array<{ label: string; value: string }>): s
 }
 
 export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: string; subject: string; htmlBody: string; from?: string }) {
+  // TEMPORARY: Email sending disabled for development - will be re-enabled later
+  console.log('[EMAIL DISABLED] Would send HTML email to:', to, 'subject:', subject);
+  return { success: true, messageId: 'disabled-' + Date.now() };
+
+  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const textBody = htmlToPlainText(htmlBody);
 
@@ -202,6 +213,7 @@ export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: strin
     console.error('Error sending HTML email:', error);
     return { success: false, error };
   }
+  */
 }
 
 export async function sendHtmlEmailWithAttachment({
@@ -219,6 +231,11 @@ export async function sendHtmlEmailWithAttachment({
     ContentType: string;
   };
 }) {
+  // TEMPORARY: Email sending disabled for development - will be re-enabled later
+  console.log('[EMAIL DISABLED] Would send HTML email with attachment to:', to, 'subject:', subject);
+  return { success: true, messageId: 'disabled-' + Date.now() };
+
+  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const textBody = htmlToPlainText(htmlBody);
 
@@ -242,6 +259,7 @@ export async function sendHtmlEmailWithAttachment({
     console.error('Error sending HTML email with attachment:', error);
     return { success: false, error };
   }
+  */
 }
 
 // Specific email functions

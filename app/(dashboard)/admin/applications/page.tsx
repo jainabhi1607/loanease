@@ -61,7 +61,7 @@ function ApplicationsContent() {
   };
 
   const handleViewApplication = (id: string) => {
-    router.push(`/admin/opportunities/${id}`);
+    router.push(`/admin/opportunities/${id}?from=applications`);
   };
 
   const formatDate = (dateString: string) => {
@@ -305,7 +305,7 @@ function ApplicationsContent() {
                     currentSortKey={sortKey}
                     currentSortDirection={sortDirection}
                     onSort={handleSort}
-                    className="text-[#787274]"
+                    className="text-[#787274] min-w-[180px]"
                   />
                   <TableHead className="text-[#787274] font-normal text-right">Actions</TableHead>
                 </TableRow>
@@ -319,9 +319,9 @@ function ApplicationsContent() {
                     <TableCell>{formatLoanType(app.loan_type)}</TableCell>
                     <TableCell>{app.referrer_name}</TableCell>
                     <TableCell>{formatCurrency(app.loan_amount)}</TableCell>
-                    <TableCell>
+                    <TableCell className="min-w-[180px]">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(
                           app.status
                         )}`}
                       >
