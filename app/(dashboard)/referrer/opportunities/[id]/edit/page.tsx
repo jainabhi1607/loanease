@@ -49,6 +49,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     entityName: '',
     entityType: '',
     companyAddress: '',
+    companyStreetAddress: '',
+    companySuburb: '',
+    companyState: '',
+    companyPostcode: '',
+    companyCountry: 'AU',
     abn: '',
     timeInBusiness: '',
     industry: '',
@@ -64,6 +69,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     loanPurpose: '',
     assetType: '',
     assetAddress: '',
+    assetStreetAddress: '',
+    assetSuburb: '',
+    assetState: '',
+    assetPostcode: '',
+    assetCountry: 'AU',
   });
 
   const [financialDetails, setFinancialDetails] = useState({
@@ -416,20 +426,27 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
               <Input value={clientData.timeInBusiness} onChange={(e) => setClientData(prev => ({ ...prev, timeInBusiness: e.target.value }))} placeholder="e.g., 4 Years" />
             </div>
             <div className="space-y-2">
-              <Label>Company Address</Label>
+              <Label className="text-base font-semibold">Company Address</Label>
               <AddressAutocomplete
                 value={clientData.companyAddress}
                 onChange={(value: string, addressData?: AddressData) => {
                   if (addressData) {
                     setClientData(prev => ({
                       ...prev,
-                      companyAddress: addressData.fullAddress
+                      companyAddress: addressData.fullAddress,
+                      companyStreetAddress: addressData.streetAddress,
+                      companySuburb: addressData.suburb,
+                      companyState: addressData.state,
+                      companyPostcode: addressData.postcode,
+                      companyCountry: addressData.country || 'AU'
                     }));
-                  } else {
-                    setClientData(prev => ({ ...prev, companyAddress: value }));
                   }
                 }}
-                placeholder="Start typing address or enter manually"
+                streetAddress={clientData.companyStreetAddress}
+                suburb={clientData.companySuburb}
+                state={clientData.companyState}
+                postcode={clientData.companyPostcode}
+                country={clientData.companyCountry}
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -501,23 +518,30 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label>Asset Address</Label>
-                    <AddressAutocomplete
-                      value={opportunityData.assetAddress}
-                      onChange={(value: string, addressData?: AddressData) => {
-                        if (addressData) {
-                          setOpportunityData(prev => ({
-                            ...prev,
-                            assetAddress: addressData.fullAddress
-                          }));
-                        } else {
-                          setOpportunityData(prev => ({ ...prev, assetAddress: value }));
-                        }
-                      }}
-                      placeholder="Start typing address or enter manually"
-                    />
-                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-base font-semibold">Asset Address</Label>
+                  <AddressAutocomplete
+                    value={opportunityData.assetAddress}
+                    onChange={(value: string, addressData?: AddressData) => {
+                      if (addressData) {
+                        setOpportunityData(prev => ({
+                          ...prev,
+                          assetAddress: addressData.fullAddress,
+                          assetStreetAddress: addressData.streetAddress,
+                          assetSuburb: addressData.suburb,
+                          assetState: addressData.state,
+                          assetPostcode: addressData.postcode,
+                          assetCountry: addressData.country || 'AU'
+                        }));
+                      }
+                    }}
+                    streetAddress={opportunityData.assetStreetAddress}
+                    suburb={opportunityData.assetSuburb}
+                    state={opportunityData.assetState}
+                    postcode={opportunityData.assetPostcode}
+                    country={opportunityData.assetCountry}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label>Loan Type <span className="text-red-500">*</span></Label>

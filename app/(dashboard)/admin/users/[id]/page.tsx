@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
+import { ArrowLeft, Edit } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { EditAdminUserDialog } from '@/components/EditAdminUserDialog';
@@ -199,7 +200,7 @@ function UserDetailContent({ params }: { params: Promise<{ id: string }> }) {
                   onClick={() => setDeleteDialogOpen(true)}
                   className="text-red-600 hover:text-red-700 border-red-600 hover:border-red-700"
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
+                  <TrashIcon className="mr-2" size={16} />
                   Delete User
                 </Button>
               )}

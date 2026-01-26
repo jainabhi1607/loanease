@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
       );
 
       if (!emailResult.success) {
-        console.error('Error sending invitation email:', emailResult.error);
+        console.error('Error sending invitation email');
         // Still continue even if email fails - admin can resend later
       } else {
         console.log('Admin invitation email sent successfully to:', email);

@@ -6,8 +6,13 @@ const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'loanease-jwt-secret-change-in-production-2024'
 );
 
+const JWT_REFRESH_SECRET = new TextEncoder().encode(
+  process.env.JWT_REFRESH_SECRET || 'loanease-refresh-secret-change-in-production-2024'
+);
+
 // Cookie names
 const ACCESS_TOKEN_COOKIE = 'cf_access_token';
+const REFRESH_TOKEN_COOKIE = 'cf_refresh_token';
 const TWO_FA_VERIFIED_COOKIE = 'cf_2fa_verified';
 
 interface JWTPayload {
@@ -18,9 +23,18 @@ interface JWTPayload {
   twoFaEnabled?: boolean;
 }
 
-async function verifyToken(token: string): Promise<JWTPayload | null> {
+async function verifyAccessToken(token: string): Promise<JWTPayload | null> {
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload as unknown as JWTPayload;
+  } catch {
+    return null;
+  }
+}
+
+async function verifyRefreshToken(token: string): Promise<JWTPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, JWT_REFRESH_SECRET);
     return payload as unknown as JWTPayload;
   } catch {
     return null;
@@ -31,9 +45,15 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next({ request });
   const url = request.nextUrl.clone();
 
-  // Get the access token from cookies
+  // Get tokens from cookies
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
-  const user = accessToken ? await verifyToken(accessToken) : null;
+  const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
+
+  // Try access token first, then fall back to refresh token
+  let user = accessToken ? await verifyAccessToken(accessToken) : null;
+  if (!user && refreshToken) {
+    user = await verifyRefreshToken(refreshToken);
+  }
 
   // Check if user has verified 2FA (if required)
   const has2FAVerified = request.cookies.get(TWO_FA_VERIFIED_COOKIE);

@@ -5,7 +5,8 @@ import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Circle, Edit, Trash2, MoreVertical, Eye, Clock } from 'lucide-react';
+import { ArrowLeft, Circle, Edit, MoreVertical, Eye, Clock } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -522,75 +523,66 @@ export default function ReferrerOpportunityDetailPage() {
           />
 
           {/* Opportunity Notes */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold">Opportunity Notes</h3>
-              <p className="text-sm text-[#787274] mt-1">
-                Please add any notes you feel relevant for the Clue team regarding this Opportunity
-              </p>
-            </div>
-            <div className="p-6">
-              {/* Add New Note */}
-              <div className="mb-6">
-                <Textarea
-                  placeholder="Start typing..."
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  className="mb-3"
-                  rows={4}
-                />
-                <Button
-                  onClick={handleAddNote}
-                  disabled={!newNote.trim()}
-                  className="bg-green-600 hover:bg-green-700 text-white"
-                >
-                  Save
-                </Button>
-              </div>
+          <div className="bg-[#EDFFD7] rounded-lg p-6">
+            <h3 className="text-lg font-semibold text-[#02383B]">Opportunity Notes</h3>
+            <p className="text-sm text-[#787274] mt-1 mb-4">
+              Please add any notes you feel relevant for the Loanease team regarding this Opportunity
+            </p>
 
-              {/* Notes List */}
-              <div className="space-y-4">
-                {notes.map((note) => (
-                  <div key={note.id} className="border-b border-gray-200 pb-4 last:border-b-0">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="flex-1">
-                        <p className="font-semibold">{note.created_by_name}</p>
-                        <p className="text-sm text-[#787274]">
-                          {formatDate(note.created_at)}
-                        </p>
-                      </div>
-                      {!isUnqualified && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setEditingNote(note);
-                                setEditNoteContent(note.content);
-                              }}
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => setDeleteNoteId(note.id)}
-                              className="text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
+            {/* Add New Note */}
+            <div className="mb-6">
+              <Textarea
+                placeholder="Start typing..."
+                value={newNote}
+                onChange={(e) => setNewNote(e.target.value)}
+                className="mb-3 bg-white border-0 rounded-lg"
+                rows={4}
+              />
+              <Button
+                onClick={handleAddNote}
+                disabled={!newNote.trim()}
+                className="bg-[#00D37F] hover:bg-[#00b86e] text-white"
+              >
+                Save
+              </Button>
+            </div>
+
+            {/* Notes List */}
+            <div className="space-y-4">
+              {notes.map((note) => (
+                <div key={note.id} className="pb-4 border-b border-[#00D37F]/20 last:border-b-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="font-semibold text-[#02383B]">{note.created_by_name}</p>
+                      <p className="text-sm text-[#787274]">
+                        {formatDate(note.created_at)}
+                      </p>
+                      <p className="whitespace-pre-wrap text-[#00D37F] mt-1">{note.content}</p>
                     </div>
-                    <p className="whitespace-pre-wrap text-[#787274]">{note.content}</p>
+                    {!isUnqualified && (
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setEditingNote(note);
+                            setEditNoteContent(note.content);
+                          }}
+                          className="text-gray-400 hover:text-[#02383B] transition-colors"
+                          title="Edit"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => setDeleteNoteId(note.id)}
+                          className="text-gray-400 hover:text-red-600 transition-colors"
+                          title="Delete"
+                        >
+                          <TrashIcon size={16} />
+                        </button>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
           </>

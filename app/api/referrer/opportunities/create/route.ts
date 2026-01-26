@@ -333,17 +333,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // Step 5: Create initial comment
-    await db.collection(COLLECTIONS.COMMENTS).insertOne({
-      _id: new ObjectId().toString() as any,
-      opportunity_id: opportunityId,
-      user_id: user.userId,
-      comment: 'Opportunity created by referrer.',
-      is_public: false,
-      created_at: new Date().toISOString()
-    });
-
-    // Step 6: Send opportunity alert emails (only for submitted opportunities, not drafts)
+    // Step 5: Send opportunity alert emails (only for submitted opportunities, not drafts)
     if (status === 'opportunity') {
       try {
         // Fetch common data needed for all emails

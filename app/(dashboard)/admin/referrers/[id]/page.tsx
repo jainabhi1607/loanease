@@ -707,7 +707,7 @@ export default function ViewReferrerPage() {
                       Add User
                     </Button>
                   </div>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-hidden">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -865,7 +865,7 @@ export default function ViewReferrerPage() {
                 <p className="text-gray-500">No opportunities found for this referrer</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>

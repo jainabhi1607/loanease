@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react';
+import { ArrowLeft, Plus, Pencil } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -353,7 +354,7 @@ export default function GeneralSettingsPage() {
                         onClick={() => handleDeleteReason(reason.id)}
                         className="p-1 hover:bg-gray-200 rounded"
                       >
-                        <Trash2 className="h-4 w-4 text-red-600" />
+                        <TrashIcon className="text-red-600" size={16} />
                       </button>
                     </div>
                   </div>

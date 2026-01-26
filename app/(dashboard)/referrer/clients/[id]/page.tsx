@@ -166,36 +166,44 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
         {/* Left Column - Client Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Client Details Card */}
-          <div className="bg-[#EDFFD7] rounded-lg p-[40px]">
-            <h3 className="text-lg font-semibold text-teal-800 mb-4">Client Details</h3>
-            <div className="space-y-3">
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Borrowing Entity Type</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{formatEntityType(client.entity)}</span>
+          <div className="bg-white rounded-lg border border-gray-200 p-10">
+            <h3 className="text-lg font-semibold text-[#02383B] mb-6">Client Details</h3>
+            <div className="divide-y divide-gray-200">
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Borrowing Entity Type</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{formatEntityType(client.entity)}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Borrowing Entity Name</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.entity_name || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Borrowing Entity Name</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.entity_name || '-'}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Borrower Contact</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.borrower_contact || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Borrower Contact</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.borrower_contact || '-'}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Mobile</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.mobile || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Mobile</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.mobile || '-'}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Email</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.email || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Email</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.email || '-'}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Industry</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.industry || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Company Address</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.company_address || '-'}</span>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <span className="text-sm text-[#787274] font-normal">Company Address</span>
-                <span className="col-span-2 text-sm font-bold text-[#02383B]">{client.company_address || '-'}</span>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">ABN</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.abn || '-'}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Time in Business</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.time_in_business || '-'}</span>
+              </div>
+              <div className="grid grid-cols-3 gap-4 py-4">
+                <span className="text-sm text-[#00857C]">Industry</span>
+                <span className="col-span-2 text-sm font-semibold text-[#02383B]">{client.industry || '-'}</span>
               </div>
             </div>
           </div>
@@ -203,7 +211,7 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
           {/* Opportunities Table */}
           <div className="bg-[#EDFFD7] rounded-lg overflow-hidden p-[40px]">
             <h3 className="text-lg font-semibold text-teal-800 mb-4">Opportunities</h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="border-b border-[#c8e6c9] hover:bg-transparent">

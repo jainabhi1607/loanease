@@ -91,6 +91,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     email: '',
     entityType: '',
     companyAddress: '',
+    companyStreetAddress: '',
+    companySuburb: '',
+    companyState: '',
+    companyPostcode: '',
+    companyCountry: 'AU',
     abn: '',
     entityName: '',
     timeInBusiness: '',
@@ -108,6 +113,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     loanPurpose: '',
     assetType: '',
     assetAddress: '',
+    assetStreetAddress: '',
+    assetSuburb: '',
+    assetState: '',
+    assetPostcode: '',
+    assetCountry: 'AU',
   });
 
   // Financial Details
@@ -741,20 +751,27 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="companyAddress">Company Address</Label>
+              <Label htmlFor="companyAddress" className="text-base font-semibold">Company Address</Label>
               <AddressAutocomplete
                 value={newClientData.companyAddress}
                 onChange={(value: string, addressData?: AddressData) => {
                   if (addressData) {
                     setNewClientData(prev => ({
                       ...prev,
-                      companyAddress: addressData.fullAddress
+                      companyAddress: addressData.fullAddress,
+                      companyStreetAddress: addressData.streetAddress,
+                      companySuburb: addressData.suburb,
+                      companyState: addressData.state,
+                      companyPostcode: addressData.postcode,
+                      companyCountry: addressData.country || 'AU'
                     }));
-                  } else {
-                    setNewClientData(prev => ({ ...prev, companyAddress: value }));
                   }
                 }}
-                placeholder="Start typing address or enter manually"
+                streetAddress={newClientData.companyStreetAddress}
+                suburb={newClientData.companySuburb}
+                state={newClientData.companyState}
+                postcode={newClientData.companyPostcode}
+                country={newClientData.companyCountry}
               />
             </div>
 
@@ -868,23 +885,30 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="assetAddress">Asset Address</Label>
-                    <AddressAutocomplete
-                      value={opportunityData.assetAddress}
-                      onChange={(value: string, addressData?: AddressData) => {
-                        if (addressData) {
-                          setOpportunityData(prev => ({
-                            ...prev,
-                            assetAddress: addressData.fullAddress
-                          }));
-                        } else {
-                          setOpportunityData(prev => ({ ...prev, assetAddress: value }));
-                        }
-                      }}
-                      placeholder="Start typing address or enter manually"
-                    />
-                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="assetAddress" className="text-base font-semibold">Asset Address</Label>
+                  <AddressAutocomplete
+                    value={opportunityData.assetAddress}
+                    onChange={(value: string, addressData?: AddressData) => {
+                      if (addressData) {
+                        setOpportunityData(prev => ({
+                          ...prev,
+                          assetAddress: addressData.fullAddress,
+                          assetStreetAddress: addressData.streetAddress,
+                          assetSuburb: addressData.suburb,
+                          assetState: addressData.state,
+                          assetPostcode: addressData.postcode,
+                          assetCountry: addressData.country || 'AU'
+                        }));
+                      }
+                    }}
+                    streetAddress={opportunityData.assetStreetAddress}
+                    suburb={opportunityData.assetSuburb}
+                    state={opportunityData.assetState}
+                    postcode={opportunityData.assetPostcode}
+                    country={opportunityData.assetCountry}
+                  />
                 </div>
 
                 <div className="space-y-2">

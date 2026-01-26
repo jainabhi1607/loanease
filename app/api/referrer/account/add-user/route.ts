@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
       });
 
       if (!emailResult.success) {
-        console.error('Failed to send welcome email:', emailResult.error);
+        console.error('Failed to send welcome email');
       } else {
         console.log('Welcome email sent successfully to:', email);
       }

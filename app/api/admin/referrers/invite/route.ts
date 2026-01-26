@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
         // Delete the invitation if email fails
         await db.collection('user_invitations').deleteOne({ _id: invitationId as any });
 
-        console.error('Error sending invitation email:', emailResult.error);
+        console.error('Error sending invitation email');
         return NextResponse.json({
           error: 'Failed to send invitation email'
         }, { status: 500 });

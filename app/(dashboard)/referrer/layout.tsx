@@ -129,9 +129,10 @@ export default function ReferrerLayout({
               <Link href="/referrer/dashboard" className="ml-2 lg:ml-0">
                 <Image
                   src="/logo.jpg"
-                  alt="Clue"
-                  width={80}
-                  height={26}
+                  alt="Loanease"
+                  width={200}
+                  height={100}
+                  className="!h-[56px] !w-auto"
                   priority
                 />
               </Link>

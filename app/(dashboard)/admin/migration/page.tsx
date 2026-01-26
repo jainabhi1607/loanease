@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, XCircle, Loader2, Play, AlertCircle, Trash2 } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Play, AlertCircle } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 
 interface MigrationStep {
   id: string;
@@ -193,7 +194,7 @@ export default function MigrationPage() {
                 </>
               ) : (
                 <>
-                  <Trash2 className="w-4 h-4 mr-2" />
+                  <TrashIcon className="mr-2" size={16} />
                   Clear All Data
                 </>
               )}

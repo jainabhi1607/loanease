@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash2, UserPlus } from 'lucide-react';
+import { Edit, UserPlus } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import {
   Table,
   TableBody,
@@ -226,7 +227,7 @@ function UsersContent() {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto p-10">
+          <div className="overflow-hidden p-10">
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-gray-200">
@@ -321,7 +322,7 @@ function UsersContent() {
                             onClick={() => openDeleteDialog(user.id, user.name)}
                             className="text-red-600 hover:text-red-700 hover:bg-red-50"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <TrashIcon size={16} />
                           </Button>
                         )}
                       </div>

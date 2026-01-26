@@ -406,7 +406,7 @@ export async function sendNewUserWelcomeEmail(params: {
     if (result.success) {
       console.log('Email sent successfully with messageId:', result.messageId);
     } else {
-      console.error('Email failed to send:', result.error);
+      console.error('Email failed to send');
     }
 
     return result;

@@ -70,6 +70,11 @@ export default function AddOpportunityPage() {
     email: '',
     entityType: '',
     companyAddress: '',
+    companyStreetAddress: '',
+    companySuburb: '',
+    companyState: '',
+    companyPostcode: '',
+    companyCountry: 'AU',
     abn: '',
     entityName: '',
     timeInBusiness: '',
@@ -87,6 +92,11 @@ export default function AddOpportunityPage() {
     loanPurpose: '', // Single string value
     assetType: '',
     assetAddress: '',
+    assetStreetAddress: '',
+    assetSuburb: '',
+    assetState: '',
+    assetPostcode: '',
+    assetCountry: 'AU',
   });
 
   // Financial Details
@@ -685,7 +695,7 @@ export default function AddOpportunityPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="companyAddress">
+                  <Label htmlFor="companyAddress" className="text-base font-semibold">
                     Company Address
                   </Label>
                   <AddressAutocomplete
@@ -694,13 +704,20 @@ export default function AddOpportunityPage() {
                       if (addressData) {
                         setNewClientData(prev => ({
                           ...prev,
-                          companyAddress: addressData.fullAddress
+                          companyAddress: addressData.fullAddress,
+                          companyStreetAddress: addressData.streetAddress,
+                          companySuburb: addressData.suburb,
+                          companyState: addressData.state,
+                          companyPostcode: addressData.postcode,
+                          companyCountry: addressData.country || 'AU'
                         }));
-                      } else {
-                        setNewClientData(prev => ({ ...prev, companyAddress: value }));
                       }
                     }}
-                    placeholder="Start typing address or enter manually"
+                    streetAddress={newClientData.companyStreetAddress}
+                    suburb={newClientData.companySuburb}
+                    state={newClientData.companyState}
+                    postcode={newClientData.companyPostcode}
+                    country={newClientData.companyCountry}
                   />
                 </div>
 
@@ -764,8 +781,8 @@ export default function AddOpportunityPage() {
                       <SelectValue placeholder={isLoadingClients ? "Loading clients..." : "Select"} />
                     </SelectTrigger>
                     <SelectContent>
-                      {clients.map((client) => (
-                        <SelectItem key={client.id} value={client.id}>
+                      {clients.map((client, index) => (
+                        <SelectItem key={client.id || `client-${index}`} value={client.id}>
                           {client.entity_name} - {client.contact_first_name} {client.contact_last_name}
                         </SelectItem>
                       ))}
@@ -866,25 +883,32 @@ export default function AddOpportunityPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="assetAddress">
-                      Asset Address
-                    </Label>
-                    <AddressAutocomplete
-                      value={opportunityData.assetAddress}
-                      onChange={(value: string, addressData?: AddressData) => {
-                        if (addressData) {
-                          setOpportunityData(prev => ({
-                            ...prev,
-                            assetAddress: addressData.fullAddress
-                          }));
-                        } else {
-                          setOpportunityData(prev => ({ ...prev, assetAddress: value }));
-                        }
-                      }}
-                      placeholder="Start typing address or enter manually"
-                    />
-                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="assetAddress" className="text-base font-semibold">
+                    Asset Address
+                  </Label>
+                  <AddressAutocomplete
+                    value={opportunityData.assetAddress}
+                    onChange={(value: string, addressData?: AddressData) => {
+                      if (addressData) {
+                        setOpportunityData(prev => ({
+                          ...prev,
+                          assetAddress: addressData.fullAddress,
+                          assetStreetAddress: addressData.streetAddress,
+                          assetSuburb: addressData.suburb,
+                          assetState: addressData.state,
+                          assetPostcode: addressData.postcode,
+                          assetCountry: addressData.country || 'AU'
+                        }));
+                      }
+                    }}
+                    streetAddress={opportunityData.assetStreetAddress}
+                    suburb={opportunityData.assetSuburb}
+                    state={opportunityData.assetState}
+                    postcode={opportunityData.assetPostcode}
+                    country={opportunityData.assetCountry}
+                  />
                 </div>
 
                 <div className="space-y-2">

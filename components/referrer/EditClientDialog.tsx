@@ -52,6 +52,11 @@ export function EditClientDialog({
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [suburb, setSuburb] = useState('');
+  const [addressState, setAddressState] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [country, setCountry] = useState('AU');
 
   useEffect(() => {
     if (client) {
@@ -182,11 +187,24 @@ export function EditClientDialog({
             </div>
 
             <div className="grid gap-2">
-              <Label>Company Address</Label>
+              <Label className="text-base font-semibold">Company Address</Label>
               <AddressAutocomplete
                 value={address}
-                onChange={(value) => setAddress(value)}
-                placeholder="Start typing address..."
+                onChange={(value, addressData) => {
+                  if (addressData) {
+                    setAddress(addressData.fullAddress);
+                    setStreetAddress(addressData.streetAddress);
+                    setSuburb(addressData.suburb);
+                    setAddressState(addressData.state);
+                    setPostcode(addressData.postcode);
+                    setCountry(addressData.country || 'AU');
+                  }
+                }}
+                streetAddress={streetAddress}
+                suburb={suburb}
+                state={addressState}
+                postcode={postcode}
+                country={country}
               />
             </div>
           </div>

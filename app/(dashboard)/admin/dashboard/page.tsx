@@ -198,7 +198,7 @@ export default function AdminDashboard() {
               View All
             </Button>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-gray-300 hover:bg-transparent">

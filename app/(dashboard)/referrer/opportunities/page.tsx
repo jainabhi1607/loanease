@@ -193,7 +193,7 @@ export default function ReferrerOpportunitiesPage() {
             <div className="mb-4">
               <h2 className="text-xl font-semibold text-[#02383B]">Drafts</h2>
             </div>
-            <div className="overflow-x-auto bg-white">
+            <div className="overflow-hidden bg-white">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-white border-y border-gray-200">
@@ -242,7 +242,7 @@ export default function ReferrerOpportunitiesPage() {
               <p className="text-[#787274]">No opportunities yet</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#EDFFD7] border-y border-[#d4f0b8]">

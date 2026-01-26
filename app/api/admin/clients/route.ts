@@ -26,13 +26,19 @@ export async function GET(request: NextRequest) {
     const db = await getDatabase();
 
     // Fetch all clients for the organization
-    const clients = await db.collection('clients')
+    const clientsRaw = await db.collection('clients')
       .find({
         organisation_id: organizationId,
         deleted_at: null
       })
       .sort({ created_at: -1 })
       .toArray();
+
+    // Map _id to id for frontend compatibility
+    const clients = clientsRaw.map((client: any) => ({
+      ...client,
+      id: client._id,
+    }));
 
     return NextResponse.json({ clients: clients || [] });
 

@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2, Download, Check } from 'lucide-react';
+import { Plus, Download, Check } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import {
   Select,
   SelectContent,
@@ -844,7 +845,7 @@ export default function ReferrerAccountPage() {
             <h2 className="text-lg font-semibold text-[#02383B] mb-6">Team Management</h2>
 
           {/* Users Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-[#d4f0b8] hover:bg-transparent">
@@ -922,7 +923,7 @@ export default function ReferrerAccountPage() {
                               className="h-8 w-8 p-0"
                               onClick={() => openDeleteDialog(user.id, `${user.first_name} ${user.surname}`)}
                             >
-                              <Trash2 className="h-4 w-4 text-gray-400 hover:text-red-600" />
+                              <TrashIcon className="text-gray-400 hover:text-red-600" size={16} />
                             </Button>
                           )}
                         </div>
@@ -949,7 +950,7 @@ export default function ReferrerAccountPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-[#c8e6c9] hover:bg-transparent">

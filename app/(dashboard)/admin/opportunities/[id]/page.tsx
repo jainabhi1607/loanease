@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Download, Edit, Pencil, Trash2, CheckCircle2, Circle, X } from 'lucide-react';
+import { ArrowLeft, Download, Edit, Pencil, CheckCircle2, Circle, X } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import {
   Dialog,
   DialogContent,
@@ -27,7 +28,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
-import { AddressAutocomplete, AddressData } from '@/components/address-autocomplete';
 
 interface OpportunityDetails {
   id: string;
@@ -580,13 +580,31 @@ export default function OpportunityDetailPage() {
       const response = await fetch(`/api/admin/opportunities/${params.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'declined', withdrawn_reason: withdrawnReason }),
+        body: JSON.stringify({ status: 'withdrawn', withdrawn_reason: withdrawnReason }),
       });
       if (response.ok) {
         toast({ title: 'Success', description: 'Status updated' });
         setWithdrawnReasonOpen(false);
         setWithdrawnReason('');
         setPendingStatus('');
+        fetchOpportunityDetails();
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to update', variant: 'destructive' });
+    }
+  };
+
+  const handleUnqualifiedReasonConfirm = async () => {
+    try {
+      const response = await fetch(`/api/admin/opportunities/${params.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_unqualified: 1, unqualified_reason: unqualifiedReason }),
+      });
+      if (response.ok) {
+        toast({ title: 'Success', description: 'Marked as unqualified' });
+        setUnqualifiedReasonOpen(false);
+        setUnqualifiedReason('');
         fetchOpportunityDetails();
       }
     } catch (error) {
@@ -792,6 +810,17 @@ export default function OpportunityDetailPage() {
             <Download className="h-4 w-4 mr-1" />
             PDF
           </Button>
+          {opportunity.is_unqualified !== 1 && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setUnqualifiedReasonOpen(true)}
+              className="text-[#00D37F] border-[#00D37F] hover:bg-green-50"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Unqualified
+            </Button>
+          )}
         </div>
       </div>
 
@@ -806,9 +835,15 @@ export default function OpportunityDetailPage() {
         </button>
         <span className="mx-4">|</span>
         <span className="font-medium">External Ref:</span>{' '}
-        <button onClick={() => setExternalRefOpen(true)} className="text-[#00D37F] underline">
-          {opportunity.external_ref || 'Add Ref No'}
-        </button>
+        {opportunity.external_ref ? (
+          <button onClick={() => setExternalRefOpen(true)} className="text-[#00D37F] underline">
+            {opportunity.external_ref}
+          </button>
+        ) : (
+          <button onClick={() => setExternalRefOpen(true)} className="text-[#00D37F] underline">
+            Add
+          </button>
+        )}
       </div>
 
       {/* Tabs */}
@@ -903,21 +938,21 @@ export default function OpportunityDetailPage() {
             <hr className="border-gray-200" />
 
             {/* Opportunity Notes */}
-            <div className="bg-[#f0f9f0] rounded-lg p-6">
-              <h2 className="text-lg font-semibold text-[#02383B] mb-2">Opportunity Notes</h2>
-              <p className="text-sm text-gray-500 mb-4">Please add any notes you feel relevant for the Loanease team regarding this Opportunity</p>
+            <div className="bg-[#EDFFD7] rounded-lg p-6">
+              <h2 className="text-lg font-semibold text-[#02383B]">Opportunity Notes</h2>
+              <p className="text-sm text-[#787274] mt-1 mb-4">Please add any notes you feel relevant for the Loanease team regarding this Opportunity</p>
 
               <Textarea
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder=""
-                className="mb-3 bg-white"
-                rows={3}
+                className="mb-3 bg-white border-0 rounded-lg"
+                rows={4}
               />
               <Button
                 onClick={handleSaveComment}
                 disabled={savingComment || !newComment.trim()}
-                className="bg-[#00D37F] hover:bg-[#00b86d] text-white mb-6"
+                className="bg-[#00D37F] hover:bg-[#00b86e] text-white mb-6"
               >
                 Save
               </Button>
@@ -925,44 +960,46 @@ export default function OpportunityDetailPage() {
               {/* Existing Notes */}
               <div className="space-y-4">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="border-b border-gray-200 pb-4">
+                  <div key={comment.id} className="pb-4 border-b border-[#00D37F]/20 last:border-b-0">
                     <div className="flex items-start justify-between">
-                      <div>
+                      <div className="flex-1">
                         <p className="font-semibold text-[#02383B]">{comment.user_name}</p>
-                        <p className="text-xs text-gray-400">{formatDate(comment.created_at)}</p>
+                        <p className="text-sm text-[#787274]">{formatDate(comment.created_at)}</p>
                         {editCommentId === comment.id ? (
                           <div className="mt-2">
                             <Textarea
                               value={editCommentContent}
                               onChange={(e) => setEditCommentContent(e.target.value)}
                               rows={2}
-                              className="mb-2"
+                              className="mb-2 bg-white"
                             />
                             <div className="flex gap-2">
-                              <Button size="sm" onClick={() => handleEditComment(comment.id)} className="bg-[#00D37F] hover:bg-[#00b86d]">Save</Button>
+                              <Button size="sm" onClick={() => handleEditComment(comment.id)} className="bg-[#00D37F] hover:bg-[#00b86e]">Save</Button>
                               <Button size="sm" variant="outline" onClick={() => setEditCommentId(null)}>Cancel</Button>
                             </div>
                           </div>
                         ) : (
-                          <p className="text-[#00D37F] text-sm mt-1">{comment.content}</p>
+                          <p className="whitespace-pre-wrap text-[#00D37F] mt-1">{comment.content}</p>
                         )}
                       </div>
                       {editCommentId !== comment.id && (
-                        <div className="flex gap-2">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => {
                               setEditCommentId(comment.id);
                               setEditCommentContent(comment.content);
                             }}
-                            className="text-gray-400 hover:text-gray-600"
+                            className="text-gray-400 hover:text-[#02383B] transition-colors"
+                            title="Edit"
                           >
                             <Pencil className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteComment(comment.id)}
-                            className="text-gray-400 hover:text-red-600"
+                            className="text-gray-400 hover:text-red-600 transition-colors"
+                            title="Delete"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <TrashIcon size={16} />
                           </button>
                         </div>
                       )}
@@ -986,60 +1023,72 @@ export default function OpportunityDetailPage() {
 
           {/* Right Sidebar */}
           <div className="space-y-6">
-            {/* Dates Card */}
-            <div className="bg-[#02383B] text-white rounded-lg p-6">
+            {/* Dates Card - Dark teal background */}
+            <div style={{ backgroundColor: '#02383B' }} className="rounded-lg p-6 text-white">
               <div className="space-y-4">
                 <div>
-                  <p className="text-[#00D37F] text-xs uppercase tracking-wide mb-1">Date Created</p>
-                  <p className="font-semibold">{formatDate(opportunity.created_at)}</p>
+                  <p className="text-[#00D37F] text-sm mb-1">Date Created</p>
+                  <p className="font-semibold text-white">{formatDate(opportunity.created_at)}</p>
                 </div>
                 <div>
-                  <p className="text-[#00D37F] text-xs uppercase tracking-wide mb-1">Target Settlement</p>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => setTargetDateOpen(true)} className="font-semibold hover:underline">
-                      {targetDate ? formatDate(targetDate.toISOString()) : '-'}
-                    </button>
-                    {targetDate && (
+                  <p className="text-[#00D37F] text-sm mb-1">Target Settlement</p>
+                  {targetDate ? (
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setTargetDateOpen(true)} className="font-semibold text-white hover:underline">
+                        {formatDate(targetDate.toISOString())}
+                      </button>
                       <button onClick={handleClearTargetDate} className="text-gray-400 hover:text-white">
                         <X className="h-4 w-4" />
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-300 text-sm">A target settlement date has not yet been set.</p>
+                  )}
                 </div>
                 <div>
-                  <p className="text-[#00D37F] text-xs uppercase tracking-wide mb-1">Date Settled</p>
-                  <div className="flex items-center gap-2">
-                    <button onClick={() => setSettledDateOpen(true)} className="font-semibold hover:underline">
-                      {settledDate ? formatDate(settledDate.toISOString()) : '-'}
-                    </button>
-                    {settledDate && (
+                  <p className="text-[#00D37F] text-sm mb-1">Date Settled</p>
+                  {settledDate ? (
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setSettledDateOpen(true)} className="font-semibold text-white hover:underline">
+                        {formatDate(settledDate.toISOString())}
+                      </button>
                       <button onClick={handleClearSettledDate} className="text-gray-400 hover:text-white">
                         <X className="h-4 w-4" />
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <p className="text-gray-300 text-sm">A date settled date has not yet been set</p>
+                  )}
                 </div>
-                <hr className="border-gray-600" />
-                <div>
-                  <p className="text-gray-300 text-sm mb-1">Deal Finalisation Information</p>
-                  <p className="text-sm text-gray-400">
+                <div className="pt-4 border-t border-white/20">
+                  <p className="text-gray-400 text-sm mb-1">Deal Finalisation Information</p>
+                  <p className="text-gray-300 text-sm">
                     {opportunity.deal_finalisation_status ? `Status: ${opportunity.deal_finalisation_status}` : 'No deal finalisation info yet'}
                   </p>
-                  <button
-                    onClick={() => setDealFinalisationOpen(true)}
-                    className="flex items-center gap-1 text-white text-sm mt-2 hover:underline"
-                  >
-                    <Edit className="h-4 w-4" />
-                    Edit
-                  </button>
                 </div>
+                <button
+                  onClick={() => setDealFinalisationOpen(true)}
+                  className="flex items-center gap-1 text-white text-sm hover:text-[#00D37F]"
+                >
+                  <Edit className="h-4 w-4" />
+                  Edit
+                </button>
               </div>
             </div>
 
             {/* Application Progress */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="font-semibold text-[#02383B] mb-2">Application Progress</h3>
-              <p className="text-[#00D37F] text-sm mb-4">{getProgressPercentage(opportunity.status)}% Completed</p>
+            <div style={{ backgroundColor: 'rgb(237, 255, 215)' }} className="rounded-lg p-6">
+              <h3 className="font-semibold text-[#02383B] mb-4">Application Progress</h3>
+              {/* Progress Bar */}
+              <div className="mb-2">
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className="bg-[#00D37F] h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${getProgressPercentage(opportunity.status)}%` }}
+                  />
+                </div>
+              </div>
+              <p className="text-[#00D37F] text-sm mb-4">{getProgressPercentage(opportunity.status)} % completed</p>
 
               <div className="space-y-3">
                 <ProgressItem
@@ -1049,7 +1098,7 @@ export default function OpportunityDetailPage() {
                   onClick={() => handleStatusClick('opportunity')}
                 />
                 <ProgressItem
-                  label="Application Closed"
+                  label="Application Created"
                   completed={isStatusCompleted('application_created', opportunity.status)}
                   active={opportunity.status === 'application_created'}
                   onClick={() => handleStatusClick('application_created')}
@@ -1093,8 +1142,12 @@ export default function OpportunityDetailPage() {
                       Settled
                     </button>
                     <br />
-                    <button onClick={() => handleStatusClick('withdrawn', 'withdrawn')} className={cn(opportunity.status === 'withdrawn' && 'text-[#00D37F] font-medium')}>
+                    <button onClick={() => handleStatusClick('completed_declined', 'completed_declined')} className={cn(opportunity.status === 'completed_declined' && 'text-[#00D37F] font-medium')}>
                       Declined
+                    </button>
+                    <br />
+                    <button onClick={() => handleStatusClick('withdrawn', 'withdrawn')} className={cn(opportunity.status === 'withdrawn' && 'text-[#00D37F] font-medium')}>
+                      Withdrawn
                     </button>
                   </div>
                 </div>
@@ -1298,6 +1351,20 @@ export default function OpportunityDetailPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setWithdrawnReasonOpen(false)}>Cancel</Button>
             <Button onClick={handleWithdrawnReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={unqualifiedReasonOpen} onOpenChange={setUnqualifiedReasonOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mark as Unqualified</DialogTitle>
+            <DialogDescription>Please provide a reason for marking this opportunity as unqualified</DialogDescription>
+          </DialogHeader>
+          <Textarea value={unqualifiedReason} onChange={(e) => setUnqualifiedReason(e.target.value)} rows={3} placeholder="Enter reason..." />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setUnqualifiedReasonOpen(false)}>Cancel</Button>
+            <Button onClick={handleUnqualifiedReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

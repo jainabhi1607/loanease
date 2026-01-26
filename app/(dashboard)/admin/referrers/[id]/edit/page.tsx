@@ -29,6 +29,11 @@ export default function EditReferrerPage() {
     companyName: '',
     tradingName: '',
     companyAddress: '',
+    companyStreetAddress: '',
+    companySuburb: '',
+    companyState: '',
+    companyPostcode: '',
+    companyCountry: 'AU',
     numberOfAdditionalDirectors: 'None',
     additionalDirectors: [] as { id?: string; firstName: string; surname: string; email?: string; phone?: string }[],
     entity: '',
@@ -316,11 +321,27 @@ export default function EditReferrerPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Company Address *</Label>
+                  <Label htmlFor="address" className="text-base font-semibold">Company Address *</Label>
                   <AddressAutocomplete
                     value={formData.companyAddress}
-                    onChange={(value) => setFormData(prev => ({ ...prev, companyAddress: value }))}
-                    placeholder="Start typing address or enter manually"
+                    onChange={(value, addressData) => {
+                      if (addressData) {
+                        setFormData(prev => ({
+                          ...prev,
+                          companyAddress: addressData.fullAddress,
+                          companyStreetAddress: addressData.streetAddress,
+                          companySuburb: addressData.suburb,
+                          companyState: addressData.state,
+                          companyPostcode: addressData.postcode,
+                          companyCountry: addressData.country || 'AU'
+                        }));
+                      }
+                    }}
+                    streetAddress={formData.companyStreetAddress}
+                    suburb={formData.companySuburb}
+                    state={formData.companyState}
+                    postcode={formData.companyPostcode}
+                    country={formData.companyCountry}
                     required
                     disabled={isLoading}
                   />

@@ -121,9 +121,10 @@ export default function AdminLayout({
               <Link href="/admin/dashboard" className="ml-2 xl:ml-0">
                 <Image
                   src="/logo.jpg"
-                  alt="Clue"
-                  width={80}
-                  height={26}
+                  alt="Loanease"
+                  width={200}
+                  height={100}
+                  className="!h-[56px] !w-auto"
                   priority
                 />
               </Link>

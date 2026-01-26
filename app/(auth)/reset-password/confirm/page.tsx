@@ -88,8 +88,8 @@ function ResetPasswordConfirmContent() {
               <Image
                 src="/logo.jpg"
                 alt="Loanease"
-                width={120}
-                height={40}
+                width={172}
+                height={56}
                 priority
               />
             </div>
@@ -137,8 +137,8 @@ function ResetPasswordConfirmContent() {
               <Image
                 src="/logo.jpg"
                 alt="Loanease"
-                width={120}
-                height={40}
+                width={172}
+                height={56}
                 priority
               />
             </div>
@@ -179,8 +179,8 @@ function ResetPasswordConfirmContent() {
             <Image
               src="/logo.jpg"
               alt="Loanease"
-              width={120}
-              height={40}
+              width={172}
+              height={56}
               priority
             />
           </div>

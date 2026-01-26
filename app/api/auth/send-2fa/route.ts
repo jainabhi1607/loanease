@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (!emailResult.success) {
-      console.error('Error sending 2FA email:', emailResult.error);
+      console.error('Error sending 2FA email');
       // Still return success - code is in database even if email fails
     }
 

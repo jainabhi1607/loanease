@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
       );
 
       if (!emailResult.success) {
-        console.error('Error sending invitation email:', emailResult.error);
+        console.error('Error sending invitation email');
         return NextResponse.json({
           error: 'Failed to send invitation email'
         }, { status: 500 });

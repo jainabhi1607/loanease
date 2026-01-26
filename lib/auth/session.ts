@@ -53,7 +53,7 @@ export async function set2FAVerifiedCookie(userId: string): Promise<void> {
 
   cookieStore.set(TWO_FA_VERIFIED_COOKIE, userId, {
     ...COOKIE_OPTIONS,
-    maxAge: 24 * 60 * 60, // 24 hours
+    maxAge: 7 * 24 * 60 * 60, // 7 days - match refresh token duration
   });
 }
 
@@ -96,14 +96,16 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
 export async function getCurrentUserFromRequest(request: NextRequest): Promise<JWTPayload | null> {
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
 
-  if (!accessToken) {
-    const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
-    if (!refreshToken) return null;
-
-    return verifyRefreshToken(refreshToken);
+  if (accessToken) {
+    const user = await verifyAccessToken(accessToken);
+    if (user) return user;
   }
 
-  return verifyAccessToken(accessToken);
+  // Access token missing or expired - try refresh token
+  const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
+  if (!refreshToken) return null;
+
+  return verifyRefreshToken(refreshToken);
 }
 
 /**

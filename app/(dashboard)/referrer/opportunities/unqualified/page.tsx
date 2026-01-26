@@ -151,7 +151,7 @@ function UnqualifiedOpportunitiesContent() {
             <p className="text-[#787274]">No unqualified opportunities found</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden">
             <table className="w-full">
               <thead className="border-b border-orange-200">
                 <tr>

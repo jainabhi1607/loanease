@@ -690,7 +690,7 @@ function OpportunitiesContent() {
             ) : null}
           </div>
         ) : (
-          <div className="overflow-x-auto p-10">
+          <div className="overflow-hidden p-10">
             <Table>
               <TableHeader>
                 <TableRow className="border-b border-gray-200">

@@ -217,7 +217,7 @@ export default function LoginHistoryPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>

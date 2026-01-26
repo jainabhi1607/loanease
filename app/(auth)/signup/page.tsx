@@ -92,9 +92,11 @@ export default function SignupPage() {
     companyName: '',
     tradingName: '',
     companyAddress: '',
+    companyStreetAddress: '',
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
+    companyCountry: 'AU',
     
     // Additional Directors
     numberOfAdditionalDirectors: 'None',
@@ -630,20 +632,22 @@ export default function SignupPage() {
                   value={formData.companyAddress}
                   onChange={(value: string, addressData?: AddressData) => {
                     if (addressData) {
-                      // Full address data from autocomplete or manual entry
                       setFormData(prev => ({
                         ...prev,
                         companyAddress: addressData.fullAddress,
+                        companyStreetAddress: addressData.streetAddress,
                         companySuburb: addressData.suburb,
                         companyState: addressData.state,
-                        companyPostcode: addressData.postcode
+                        companyPostcode: addressData.postcode,
+                        companyCountry: addressData.country || 'AU'
                       }));
-                    } else {
-                      // Just updating the text (typing)
-                      setFormData(prev => ({ ...prev, companyAddress: value }));
                     }
                   }}
-                  placeholder="Start typing address or enter manually"
+                  streetAddress={formData.companyStreetAddress}
+                  suburb={formData.companySuburb}
+                  state={formData.companyState}
+                  postcode={formData.companyPostcode}
+                  country={formData.companyCountry}
                   required
                   disabled={isLoading}
                 />

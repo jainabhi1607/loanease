@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, UserPlus, Shield, Users, ShieldCheck, Clock, Send, Mail, Edit, Trash2, AlertTriangle } from 'lucide-react';
+import { ChevronLeft, UserPlus, Shield, Users, ShieldCheck, Clock, Send, Mail, Edit, AlertTriangle } from 'lucide-react';
+import { TrashIcon } from '@/components/icons/TrashIcon';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -315,7 +316,7 @@ export default function UserManagementPage() {
                 <p className="text-sm mt-2">Click &quot;Add Administrator&quot; to add your first admin user.</p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -396,7 +397,7 @@ export default function UserManagementPage() {
                                     setDeleteConfirmOpen(true);
                                   }}
                                 >
-                                  <Trash2 className="h-4 w-4" />
+                                  <TrashIcon size={16} />
                                 </Button>
                               </>
                             ) : (
@@ -418,7 +419,7 @@ export default function UserManagementPage() {
                                       setDeleteConfirmOpen(true);
                                     }}
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <TrashIcon size={16} />
                                   </Button>
                                 )}
                               </>

@@ -273,7 +273,7 @@ export default function ReferrerApplicationsPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow className="bg-[#EDFFD7] border-y border-[#d4f0b8]">
