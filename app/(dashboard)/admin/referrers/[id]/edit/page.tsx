@@ -65,6 +65,11 @@ export default function EditReferrerPage() {
         companyName: referrer.organisation?.company_name || '',
         tradingName: referrer.organisation?.trading_name || '',
         companyAddress: referrer.organisation?.address || '',
+        companyStreetAddress: referrer.organisation?.street_address || '',
+        companySuburb: referrer.organisation?.suburb || '',
+        companyState: referrer.organisation?.state || '',
+        companyPostcode: referrer.organisation?.postcode || '',
+        companyCountry: referrer.organisation?.country || 'AU',
         numberOfAdditionalDirectors: String(referrer.directors?.filter((d: any) => !d.is_primary).length || 0),
         additionalDirectors: referrer.directors?.filter((d: any) => !d.is_primary).map((d: any) => ({
           id: d.id,
