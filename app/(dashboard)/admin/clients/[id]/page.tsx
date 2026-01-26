@@ -31,6 +31,8 @@ interface Client {
   industry: string;
   company_address: string;
   referrer_group: string;
+  abn?: string;
+  time_in_business?: string;
 }
 
 interface Opportunity {

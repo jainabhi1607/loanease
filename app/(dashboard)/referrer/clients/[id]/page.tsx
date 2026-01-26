@@ -26,6 +26,8 @@ interface Client {
   email: string;
   industry: string;
   company_address: string;
+  abn?: string;
+  time_in_business?: string;
 }
 
 interface Opportunity {
