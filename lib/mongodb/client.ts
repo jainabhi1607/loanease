@@ -31,23 +31,42 @@ export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db
   const MONGODB_URI = process.env.MONGODB_URI;
   const MONGODB_DB = process.env.MONGODB_DB || 'loanease';
 
+  console.log('MongoDB connection attempt:', {
+    hasURI: !!MONGODB_URI,
+    uriLength: MONGODB_URI?.length || 0,
+    uriPrefix: MONGODB_URI?.substring(0, 20) || 'NOT SET',
+    database: MONGODB_DB
+  });
+
   if (!MONGODB_URI) {
+    console.error('MONGODB_URI is not defined!');
     throw new Error('Please define the MONGODB_URI environment variable');
   }
 
   if (!cached.promise) {
     const opts = {
       maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
     };
 
-    cached.promise = MongoClient.connect(MONGODB_URI, opts).then((client) => {
-      const db = client.db(MONGODB_DB);
-      cached.client = client;
-      cached.db = db;
-      return { client, db };
-    });
+    cached.promise = MongoClient.connect(MONGODB_URI, opts)
+      .then((client) => {
+        console.log('MongoDB connected successfully');
+        const db = client.db(MONGODB_DB);
+        cached.client = client;
+        cached.db = db;
+        return { client, db };
+      })
+      .catch((error) => {
+        console.error('MongoDB connection failed:', {
+          message: error.message,
+          code: error.code,
+          name: error.name
+        });
+        cached.promise = null; // Reset so we can retry
+        throw error;
+      });
   }
 
   return cached.promise;
