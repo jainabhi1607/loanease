@@ -1553,7 +1553,27 @@ export default function OpportunityDetailPage() {
             </div>
             <div>
               <Label>Industry</Label>
-              <Input value={clientIndustry} onChange={(e) => setClientIndustry(e.target.value)} />
+              <Select value={clientIndustry} onValueChange={setClientIndustry}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select industry" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="arts_and_lifestyle">Arts and Lifestyle</SelectItem>
+                  <SelectItem value="building_and_trade">Building and Trade</SelectItem>
+                  <SelectItem value="financial_services_and_insurance">Financial Services and Insurance</SelectItem>
+                  <SelectItem value="hair_and_beauty">Hair and Beauty</SelectItem>
+                  <SelectItem value="health">Health</SelectItem>
+                  <SelectItem value="hospitality">Hospitality</SelectItem>
+                  <SelectItem value="manufacturing">Manufacturing</SelectItem>
+                  <SelectItem value="agriculture_farming_and_mining">Agriculture, Farming and Mining</SelectItem>
+                  <SelectItem value="real_estate_and_property_management">Real Estate and Property Management</SelectItem>
+                  <SelectItem value="services">Services</SelectItem>
+                  <SelectItem value="professional_services">Professional Services</SelectItem>
+                  <SelectItem value="retail">Retail</SelectItem>
+                  <SelectItem value="transport_and_automotive">Transport and Automotive</SelectItem>
+                  <SelectItem value="wholesaling">Wholesaling</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label>Brief Overview</Label>
