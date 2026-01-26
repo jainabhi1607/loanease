@@ -121,6 +121,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             entityName: data.client_entity_name || '',
             entityType: data.entity_type || '',
             companyAddress: data.client_address || '',
+            companyStreetAddress: data.client_street_address || '',
+            companySuburb: data.client_suburb || '',
+            companyState: data.client_state || '',
+            companyPostcode: data.client_postcode || '',
+            companyCountry: data.client_country || 'AU',
             abn: data.client_abn || '',
             timeInBusiness: data.client_time_in_business || '',
             industry: data.client_industry || data.industry || '',
@@ -137,6 +142,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             loanPurpose: data.loan_purpose || '',
             assetType: data.asset_type || '',
             assetAddress: data.asset_address || '',
+            assetStreetAddress: data.asset_street_address || '',
+            assetSuburb: data.asset_suburb || '',
+            assetState: data.asset_state || '',
+            assetPostcode: data.asset_postcode || '',
+            assetCountry: data.asset_country || 'AU',
           });
 
           setFinancialDetails({

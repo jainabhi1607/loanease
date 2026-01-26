@@ -153,6 +153,11 @@ export default function AddOpportunityPage() {
           loanPurpose: data.loanPurpose || '',
           assetType: data.assetType || '',
           assetAddress: data.assetAddress || '',
+          assetStreetAddress: data.assetStreetAddress || '',
+          assetSuburb: data.assetSuburb || '',
+          assetState: data.assetState || '',
+          assetPostcode: data.assetPostcode || '',
+          assetCountry: data.assetCountry || 'AU',
         });
 
         // Auto-fill financial details
