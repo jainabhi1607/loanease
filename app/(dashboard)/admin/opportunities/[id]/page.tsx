@@ -658,6 +658,99 @@ export default function OpportunityDetailPage() {
     }
   };
 
+  const handleSaveClientDetails = async () => {
+    try {
+      const response = await fetch(`/api/admin/opportunities/${params.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_entity_type: clientEntityType,
+          client_entity_name: clientEntityName,
+          client_contact_name: clientContactName,
+          client_mobile: clientMobile,
+          client_email: clientEmail,
+          client_address: clientAddress,
+          client_abn: clientAbn,
+          client_time_in_business: clientTimeInBusiness,
+          client_industry: clientIndustry,
+          client_brief_overview: clientBriefOverview,
+        }),
+      });
+      if (response.ok) {
+        toast({ title: 'Success', description: 'Client details updated' });
+        setClientDetailsOpen(false);
+        fetchOpportunityDetails();
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to update client details', variant: 'destructive' });
+    }
+  };
+
+  const handleSaveLoanDetails = async () => {
+    try {
+      const response = await fetch(`/api/admin/opportunities/${params.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          loan_asset_type: loanAssetType,
+          loan_asset_address: loanAssetAddress,
+          loan_amount: loanAmount,
+          loan_property_value: loanPropertyValue,
+          loan_type: loanType,
+          loan_purpose: loanPurpose,
+          lender: lender,
+        }),
+      });
+      if (response.ok) {
+        toast({ title: 'Success', description: 'Loan details updated' });
+        setLoanDetailsOpen(false);
+        fetchOpportunityDetails();
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to update loan details', variant: 'destructive' });
+    }
+  };
+
+  const handleSaveFinancialDetails = async () => {
+    // Calculate ICR and LVR
+    const totalIncome = (netProfit || 0) + (amortisation || 0) + (depreciation || 0) + (existingInterest || 0) + (rentalExpense || 0) + (proposedRentalIncome || 0);
+    const proposedInterest = (loanAmount * INTEREST_RATE) / 100;
+    const totalInterest = (existingInterest || 0) + proposedInterest;
+    const calculatedIcr = totalInterest > 0 ? totalIncome / totalInterest : 0;
+    const calculatedLvr = loanPropertyValue > 0 ? (loanAmount / loanPropertyValue) * 100 : 0;
+
+    try {
+      const response = await fetch(`/api/admin/opportunities/${params.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          rental_income: rentalIncomeFunding,
+          net_profit: netProfit || 0,
+          amortisation: amortisation || 0,
+          depreciation: depreciation || 0,
+          existing_interest: existingInterest || 0,
+          rental_expense: rentalExpense || 0,
+          proposed_rental_income: proposedRentalIncome || 0,
+          existing_liabilities: existingLiabilities,
+          additional_security: additionalSecurity,
+          smsf_structure: smsfStructure,
+          ato_liabilities: atoLiabilities,
+          credit_issues: creditIssues,
+          icr: calculatedIcr,
+          lvr: calculatedLvr,
+          additional_notes: additionalNotes,
+        }),
+      });
+      if (response.ok) {
+        toast({ title: 'Success', description: 'Financial details updated' });
+        setFinancialDetailsOpen(false);
+        fetchOpportunityDetails();
+      }
+    } catch (error) {
+      toast({ title: 'Error', description: 'Failed to update financial details', variant: 'destructive' });
+    }
+  };
+
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
     return format(new Date(dateString), 'd MMM yyyy');
@@ -874,7 +967,16 @@ export default function OpportunityDetailPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Client Details */}
             <div>
-              <h2 className="text-lg font-semibold text-[#02383B] mb-4">Client Details</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#02383B]">Client Details</h2>
+                <button
+                  onClick={() => setClientDetailsOpen(true)}
+                  className="text-gray-400 hover:text-[#02383B] transition-colors"
+                  title="Edit Client Details"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              </div>
               <div className="space-y-3">
                 <DetailRow label="Borrowing Entity Type" value={formatEntityType(opportunity.client_entity_type || '')} />
                 <DetailRow label="Borrowing Entity Name" value={opportunity.client_entity_name || '-'} />
@@ -896,7 +998,16 @@ export default function OpportunityDetailPage() {
 
             {/* Loan Details */}
             <div>
-              <h2 className="text-lg font-semibold text-[#02383B] mb-4">Loan Details</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#02383B]">Loan Details</h2>
+                <button
+                  onClick={() => setLoanDetailsOpen(true)}
+                  className="text-gray-400 hover:text-[#02383B] transition-colors"
+                  title="Edit Loan Details"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              </div>
               <div className="space-y-3">
                 <DetailRow label="Type of Asset" value={formatAssetType(opportunity.loan_asset_type || '')} />
                 <DetailRow label="Asset Address" value={opportunity.loan_asset_address || '-'} />
@@ -912,7 +1023,16 @@ export default function OpportunityDetailPage() {
 
             {/* Financial Details */}
             <div>
-              <h2 className="text-lg font-semibold text-[#02383B] mb-4">Financial Details</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-[#02383B]">Financial Details</h2>
+                <button
+                  onClick={() => setFinancialDetailsOpen(true)}
+                  className="text-gray-400 hover:text-[#02383B] transition-colors"
+                  title="Edit Financial Details"
+                >
+                  <Pencil className="h-4 w-4" />
+                </button>
+              </div>
               <div className="space-y-3">
                 <DetailRow label="Will the property be funded solely from rental income?" value={formatYesNo(opportunity.rental_income)} />
                 <DetailRow label="Net Profit Before Tax" value={formatCurrency(opportunity.net_profit)} />
@@ -1365,6 +1485,283 @@ export default function OpportunityDetailPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setUnqualifiedReasonOpen(false)}>Cancel</Button>
             <Button onClick={handleUnqualifiedReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Client Details Edit Dialog */}
+      <Dialog open={clientDetailsOpen} onOpenChange={setClientDetailsOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Client Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Borrowing Entity Type</Label>
+                <Select value={clientEntityType} onValueChange={setClientEntityType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select entity type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="private_company">Private Company</SelectItem>
+                    <SelectItem value="sole_trader">Sole Trader</SelectItem>
+                    <SelectItem value="smsf_trust">SMSF Trust</SelectItem>
+                    <SelectItem value="trust">Trust</SelectItem>
+                    <SelectItem value="partnership">Partnership</SelectItem>
+                    <SelectItem value="individual">Individual</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Borrowing Entity Name</Label>
+                <Input value={clientEntityName} onChange={(e) => setClientEntityName(e.target.value)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Borrower Contact</Label>
+                <Input value={clientContactName} onChange={(e) => setClientContactName(e.target.value)} />
+              </div>
+              <div>
+                <Label>Mobile</Label>
+                <Input value={clientMobile} onChange={(e) => setClientMobile(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} />
+            </div>
+            <div>
+              <Label>Company Address</Label>
+              <Input value={clientAddress} onChange={(e) => setClientAddress(e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>ABN</Label>
+                <Input value={clientAbn} onChange={(e) => setClientAbn(e.target.value)} />
+              </div>
+              <div>
+                <Label>Time in Business</Label>
+                <Input value={clientTimeInBusiness} onChange={(e) => setClientTimeInBusiness(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <Label>Industry</Label>
+              <Input value={clientIndustry} onChange={(e) => setClientIndustry(e.target.value)} />
+            </div>
+            <div>
+              <Label>Brief Overview</Label>
+              <Textarea value={clientBriefOverview} onChange={(e) => setClientBriefOverview(e.target.value)} rows={3} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setClientDetailsOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveClientDetails} className="bg-[#00D37F] hover:bg-[#00b86d]">Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Loan Details Edit Dialog */}
+      <Dialog open={loanDetailsOpen} onOpenChange={setLoanDetailsOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Loan Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Type of Asset</Label>
+              <Select value={loanAssetType} onValueChange={setLoanAssetType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select asset type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="commercial_property">Commercial Property</SelectItem>
+                  <SelectItem value="residential_property">Residential Property</SelectItem>
+                  <SelectItem value="vacant_land">Vacant Land</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Asset Address</Label>
+              <Input value={loanAssetAddress} onChange={(e) => setLoanAssetAddress(e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Loan Amount</Label>
+                <Input type="number" value={loanAmount} onChange={(e) => setLoanAmount(Number(e.target.value))} />
+              </div>
+              <div>
+                <Label>Estimated Property Value</Label>
+                <Input type="number" value={loanPropertyValue} onChange={(e) => setLoanPropertyValue(Number(e.target.value))} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Loan Type</Label>
+                <Select value={loanType} onValueChange={setLoanType}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select loan type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="construction">Construction</SelectItem>
+                    <SelectItem value="lease_doc">Lease Doc</SelectItem>
+                    <SelectItem value="low_doc">Low Doc</SelectItem>
+                    <SelectItem value="private_short_term">Private Short Term</SelectItem>
+                    <SelectItem value="unsure">Unsure</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Loan Purpose</Label>
+                <Select value={loanPurpose} onValueChange={setLoanPurpose}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select loan purpose" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="purchase">Purchase</SelectItem>
+                    <SelectItem value="refinance">Refinance</SelectItem>
+                    <SelectItem value="equity_release">Equity Release</SelectItem>
+                    <SelectItem value="construction">Construction</SelectItem>
+                    <SelectItem value="renovation">Renovation</SelectItem>
+                    <SelectItem value="commercial_equipment">Commercial Equipment</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label>Lender</Label>
+              <Input value={lender} onChange={(e) => setLender(e.target.value)} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLoanDetailsOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveLoanDetails} className="bg-[#00D37F] hover:bg-[#00b86d]">Save</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Financial Details Edit Dialog */}
+      <Dialog open={financialDetailsOpen} onOpenChange={setFinancialDetailsOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Financial Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label>Will the property be funded solely from rental income?</Label>
+              <Select value={rentalIncomeFunding} onValueChange={setRentalIncomeFunding}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Net Profit Before Tax</Label>
+                <Input type="number" value={netProfit || ''} onChange={(e) => setNetProfit(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+              <div>
+                <Label>Amortisation</Label>
+                <Input type="number" value={amortisation || ''} onChange={(e) => setAmortisation(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Depreciation</Label>
+                <Input type="number" value={depreciation || ''} onChange={(e) => setDepreciation(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+              <div>
+                <Label>Existing Interest Costs</Label>
+                <Input type="number" value={existingInterest || ''} onChange={(e) => setExistingInterest(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Rental Expense</Label>
+                <Input type="number" value={rentalExpense || ''} onChange={(e) => setRentalExpense(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+              <div>
+                <Label>Proposed Rental Income (Annual)</Label>
+                <Input type="number" value={proposedRentalIncome || ''} onChange={(e) => setProposedRentalIncome(e.target.value ? Number(e.target.value) : undefined)} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Does your business have any existing liabilities?</Label>
+                <Select value={existingLiabilities} onValueChange={setExistingLiabilities}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Additional property security?</Label>
+                <Select value={additionalSecurity} onValueChange={setAdditionalSecurity}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Is this an SMSF structure?</Label>
+                <Select value={smsfStructure} onValueChange={setSmsfStructure}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Any ATO / tax liabilities?</Label>
+                <Select value={atoLiabilities} onValueChange={setAtoLiabilities}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="yes">Yes</SelectItem>
+                    <SelectItem value="no">No</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label>Any credit file issues?</Label>
+              <Select value={creditIssues} onValueChange={setCreditIssues}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Additional Notes</Label>
+              <Textarea value={additionalNotes} onChange={(e) => setAdditionalNotes(e.target.value)} rows={3} />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setFinancialDetailsOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveFinancialDetails} className="bg-[#00D37F] hover:bg-[#00b86d]">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
