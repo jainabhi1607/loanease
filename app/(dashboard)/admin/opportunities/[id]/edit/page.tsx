@@ -224,6 +224,11 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             loanPurpose: opp.loan_purpose || '',
             assetType: opp.loan_asset_type || '',
             assetAddress: opp.loan_asset_address || '',
+            assetStreetAddress: opp.asset_street_address || '',
+            assetSuburb: opp.asset_suburb || '',
+            assetState: opp.asset_state || '',
+            assetPostcode: opp.asset_postcode || '',
+            assetCountry: opp.asset_country || 'AU',
           });
 
           // Set financial details
