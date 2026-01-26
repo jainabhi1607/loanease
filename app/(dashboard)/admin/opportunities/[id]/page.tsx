@@ -816,6 +816,26 @@ export default function OpportunityDetailPage() {
     return purposes[purpose] || purpose || '-';
   };
 
+  const formatIndustry = (industry: string) => {
+    const industries: { [key: string]: string } = {
+      'arts_and_lifestyle': 'Arts and Lifestyle',
+      'building_and_trade': 'Building and Trade',
+      'financial_services_and_insurance': 'Financial Services and Insurance',
+      'hair_and_beauty': 'Hair and Beauty',
+      'health': 'Health',
+      'hospitality': 'Hospitality',
+      'manufacturing': 'Manufacturing',
+      'agriculture_farming_and_mining': 'Agriculture, Farming and Mining',
+      'real_estate_and_property_management': 'Real Estate and Property Management',
+      'services': 'Services',
+      'professional_services': 'Professional Services',
+      'retail': 'Retail',
+      'transport_and_automotive': 'Transport and Automotive',
+      'wholesaling': 'Wholesaling',
+    };
+    return industries[industry] || industry || '-';
+  };
+
   const formatYesNo = (value: string | undefined) => {
     if (!value) return '-';
     return value.toLowerCase() === 'yes' ? 'Yes' : 'No';
@@ -991,7 +1011,7 @@ export default function OpportunityDetailPage() {
                 <DetailRow label="Company Address" value={opportunity.client_address || '-'} />
                 <DetailRow label="ABN" value={opportunity.client_abn || '-'} />
                 <DetailRow label="Time in business" value={opportunity.client_time_in_business || '-'} />
-                <DetailRow label="Industry" value={opportunity.client_industry || '-'} />
+                <DetailRow label="Industry" value={formatIndustry(opportunity.client_industry || '')} />
                 <div className="pt-2">
                   <p className="text-sm text-gray-500 mb-1">Brief Overview</p>
                   <p className="text-sm text-[#00D37F]">{opportunity.client_brief_overview || '-'}</p>
