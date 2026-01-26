@@ -65,7 +65,8 @@
       "Bash(del:*)",
       "Bash(copy \"H:\\\\coxy\\\\cluefinance\\\\app\\\\logo.jpg\" \"H:\\\\coxy\\\\cluefinance\\\\public\\\\logo.jpg\")",
       "Bash(if not exist \"H:\\\\coxy\\\\loanease\\\\lib\\\\mongodb\" mkdir \"H:\\\\coxy\\\\loanease\\\\lib\\\\mongodb\")",
-      "Bash(cd /d H:coxyloanease)"
+      "Bash(cd /d H:coxyloanease)",
+      "WebFetch(domain:loanease-app.vercel.app)"
     ],
     "deny": [],
     "ask": []
