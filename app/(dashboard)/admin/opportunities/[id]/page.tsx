@@ -664,22 +664,21 @@ export default function OpportunityDetailPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          client_entity_type: clientEntityType,
-          client_entity_name: clientEntityName,
-          client_contact_name: clientContactName,
-          client_mobile: clientMobile,
-          client_email: clientEmail,
+          entity_type: clientEntityType,
+          abn: clientAbn,
+          time_in_business: clientTimeInBusiness,
+          industry: clientIndustry,
           client_address: clientAddress,
-          client_abn: clientAbn,
-          client_time_in_business: clientTimeInBusiness,
-          client_industry: clientIndustry,
-          client_brief_overview: clientBriefOverview,
+          brief_overview: clientBriefOverview,
         }),
       });
       if (response.ok) {
         toast({ title: 'Success', description: 'Client details updated' });
         setClientDetailsOpen(false);
         fetchOpportunityDetails();
+      } else {
+        const data = await response.json();
+        toast({ title: 'Error', description: data.error || 'Failed to update', variant: 'destructive' });
       }
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to update client details', variant: 'destructive' });
@@ -692,10 +691,10 @@ export default function OpportunityDetailPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          loan_asset_type: loanAssetType,
-          loan_asset_address: loanAssetAddress,
+          asset_type: loanAssetType,
+          asset_address: loanAssetAddress,
           loan_amount: loanAmount,
-          loan_property_value: loanPropertyValue,
+          property_value: loanPropertyValue,
           loan_type: loanType,
           loan_purpose: loanPurpose,
           lender: lender,
@@ -705,6 +704,9 @@ export default function OpportunityDetailPage() {
         toast({ title: 'Success', description: 'Loan details updated' });
         setLoanDetailsOpen(false);
         fetchOpportunityDetails();
+      } else {
+        const data = await response.json();
+        toast({ title: 'Error', description: data.error || 'Failed to update', variant: 'destructive' });
       }
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to update loan details', variant: 'destructive' });
@@ -726,16 +728,16 @@ export default function OpportunityDetailPage() {
         body: JSON.stringify({
           rental_income: rentalIncomeFunding,
           net_profit: netProfit || 0,
-          amortisation: amortisation || 0,
-          depreciation: depreciation || 0,
-          existing_interest: existingInterest || 0,
+          ammortisation: amortisation || 0,
+          deprecition: depreciation || 0,
+          existing_interest_costs: existingInterest || 0,
           rental_expense: rentalExpense || 0,
           proposed_rental_income: proposedRentalIncome || 0,
           existing_liabilities: existingLiabilities,
-          additional_security: additionalSecurity,
+          additional_property: additionalSecurity,
           smsf_structure: smsfStructure,
           ato_liabilities: atoLiabilities,
-          credit_issues: creditIssues,
+          credit_file_issues: creditIssues,
           icr: calculatedIcr,
           lvr: calculatedLvr,
           additional_notes: additionalNotes,
@@ -745,6 +747,9 @@ export default function OpportunityDetailPage() {
         toast({ title: 'Success', description: 'Financial details updated' });
         setFinancialDetailsOpen(false);
         fetchOpportunityDetails();
+      } else {
+        const data = await response.json();
+        toast({ title: 'Error', description: data.error || 'Failed to update', variant: 'destructive' });
       }
     } catch (error) {
       toast({ title: 'Error', description: 'Failed to update financial details', variant: 'destructive' });
