@@ -35,6 +35,14 @@ export async function POST(request: NextRequest) {
   const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown';
   const userAgent = headersList.get('user-agent') || 'unknown';
 
+  // Debug: Log environment variable presence (not values for security)
+  console.log('Login API - Environment check:', {
+    hasMONGODB_URI: !!process.env.MONGODB_URI,
+    hasMONGODB_DB: !!process.env.MONGODB_DB,
+    hasJWT_SECRET: !!process.env.JWT_SECRET,
+    nodeEnv: process.env.NODE_ENV
+  });
+
   try {
     // Parse and validate input
     const body = await request.json();
@@ -244,7 +252,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.error('Login error:', error);
+    // Enhanced error logging for production debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : '';
+
+    console.error('Login error details:', {
+      message: errorMessage,
+      stack: errorStack,
+      type: error?.constructor?.name,
+      timestamp: new Date().toISOString()
+    });
+
+    // Check for specific error types
+    if (errorMessage.includes('MONGODB') || errorMessage.includes('mongo') || errorMessage.includes('connect')) {
+      console.error('MongoDB connection error detected');
+      return NextResponse.json(
+        { error: 'Database connection error. Please try again.' },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
       { error: 'An error occurred during login' },
       { status: 500 }
