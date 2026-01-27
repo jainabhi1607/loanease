@@ -66,7 +66,14 @@
       "Bash(copy \"H:\\\\coxy\\\\cluefinance\\\\app\\\\logo.jpg\" \"H:\\\\coxy\\\\cluefinance\\\\public\\\\logo.jpg\")",
       "Bash(if not exist \"H:\\\\coxy\\\\loanease\\\\lib\\\\mongodb\" mkdir \"H:\\\\coxy\\\\loanease\\\\lib\\\\mongodb\")",
       "Bash(cd /d H:coxyloanease)",
-      "WebFetch(domain:loanease-app.vercel.app)"
+      "WebFetch(domain:loanease-app.vercel.app)",
+      "Bash(npx tsx:*)",
+      "Bash(npx expo start:*)",
+      "Bash(npx expo install react-native-web react-dom @expo/metro-runtime)",
+      "Bash(npx expo install:*)",
+      "Bash(npx expo:*)",
+      "Bash(ipconfig:*)",
+      "Bash(npm ls:*)"
     ],
     "deny": [],
     "ask": []

@@ -81,6 +81,8 @@ export const COLLECTIONS = {
   LOGIN_HISTORY: 'login_history',
   AUTH_USERS: 'auth_users',
   USER_INVITATIONS: 'user_invitations',
+  MOBILE_OTP_CODES: 'mobile_otp_codes',
+  MOBILE_DEVICES: 'mobile_devices',
 } as const;
 
 export type CollectionName = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];
