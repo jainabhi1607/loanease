@@ -2,7 +2,8 @@
  * Root Layout
  * Handles app initialization and navigation setup
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { View, ActivityIndicator, StyleSheet, Image } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -14,17 +15,29 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const { initialize, isLoading } = useAuthStore();
+  const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
     const init = async () => {
       await initialize();
       await SplashScreen.hideAsync();
+      setIsAppReady(true);
     };
     init();
   }, []);
 
-  if (isLoading) {
-    return null; // Keep splash screen visible
+  // Show loading screen during initial app load
+  if (!isAppReady) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={styles.loadingLogo}
+          resizeMode="contain"
+        />
+        <ActivityIndicator size="large" color="#1a8cba" style={styles.loadingSpinner} />
+      </View>
+    );
   }
 
   return (
@@ -74,3 +87,19 @@ export default function RootLayout() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingLogo: {
+    width: 180,
+    height: 140,
+  },
+  loadingSpinner: {
+    marginTop: 20,
+  },
+});

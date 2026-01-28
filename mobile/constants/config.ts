@@ -3,12 +3,16 @@
  */
 
 // API Configuration
-// For mobile device testing, use your computer's local IP address
-const DEV_API_URL = 'http://192.168.1.6:3001/api';
+// For web testing use localhost, for mobile device use your computer's local IP
+import { Platform } from 'react-native';
+
+const DEV_API_URL = Platform.OS === 'web'
+  ? 'http://localhost:3000/api'  // Web browser
+  : 'http://192.168.1.6:3000/api';  // Mobile device - use your local IP
 
 export const API_CONFIG = {
   BASE_URL: __DEV__
-    ? DEV_API_URL  // Development - use network IP for mobile device
+    ? DEV_API_URL  // Development
     : 'https://loanease.com/api',  // Production
 
   TIMEOUT: 30000, // 30 seconds

@@ -11,6 +11,7 @@ import {
   Image,
   TextInput,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path } from 'react-native-svg';
@@ -218,12 +219,16 @@ export default function LoginScreen() {
 
             {/* Login Button */}
             <TouchableOpacity
-              style={styles.loginBtn}
+              style={[styles.loginBtn, isLoading && styles.loginBtnDisabled]}
               onPress={handleEmailLogin}
               disabled={isLoading}
               activeOpacity={0.85}
             >
-              <Text style={styles.loginBtnText}>{isLoading ? 'Please wait...' : 'Login'}</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={styles.loginBtnText}>Login</Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -264,12 +269,16 @@ export default function LoginScreen() {
 
             {/* Login Button */}
             <TouchableOpacity
-              style={[styles.loginBtn, { marginTop: 20 }]}
+              style={[styles.loginBtn, { marginTop: 20 }, isLoading && styles.loginBtnDisabled]}
               onPress={handleMobileLogin}
               disabled={isLoading || otp.length < 6}
               activeOpacity={0.85}
             >
-              <Text style={styles.loginBtnText}>{isLoading ? 'Verifying...' : 'Login'}</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <Text style={styles.loginBtnText}>Login</Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
@@ -305,6 +314,21 @@ export default function LoginScreen() {
           />
         </Svg>
       </View>
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <View style={styles.loadingBox}>
+            <Image
+              source={require('../../assets/logo.png')}
+              style={styles.loadingLogo}
+              resizeMode="contain"
+            />
+            <ActivityIndicator size="large" color="#1a8cba" />
+            <Text style={styles.loadingText}>Signing in...</Text>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -423,6 +447,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  loginBtnDisabled: {
+    opacity: 0.7,
+  },
   loginBtnText: {
     color: '#fff',
     fontSize: 15,
@@ -460,5 +487,31 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 80,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
+  },
+  loadingBox: {
+    alignItems: 'center',
+    padding: 30,
+  },
+  loadingLogo: {
+    width: 150,
+    height: 120,
+    marginBottom: 20,
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+    color: '#1a8cba',
+    fontWeight: '500',
   },
 });

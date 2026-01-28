@@ -78,7 +78,9 @@
       "Bash(npm start)",
       "Bash(ping:*)",
       "Bash(start http://localhost:8081)",
-      "Bash(npm start -- --clear)"
+      "Bash(npm start -- --clear)",
+      "Bash(npm run web:*)",
+      "Bash(netstat:*)"
     ],
     "deny": [],
     "ask": []

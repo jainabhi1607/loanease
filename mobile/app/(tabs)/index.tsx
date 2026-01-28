@@ -20,7 +20,6 @@ import Svg, { Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-nati
 import { useAuthStore } from '../../store/auth';
 import { get } from '../../lib/api';
 import { StatusBadge } from '../../components/ui';
-import { Colors } from '../../constants/colors';
 import { DashboardResponse, Opportunity } from '../../types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -51,30 +50,6 @@ function WaveBackground() {
         fill="rgba(255,255,255,0.08)"
       />
     </Svg>
-  );
-}
-
-// Quick action button component
-function QuickActionButton({
-  icon,
-  label,
-  color,
-  bgColor,
-  onPress,
-}: {
-  icon: string;
-  label: string;
-  color: string;
-  bgColor: string;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity style={styles.quickActionItem} onPress={onPress} activeOpacity={0.7}>
-      <View style={[styles.quickActionCircle, { backgroundColor: bgColor }]}>
-        <Image source={{ uri: icon }} style={styles.quickActionIcon} />
-      </View>
-      <Text style={styles.quickActionLabel}>{label}</Text>
-    </TouchableOpacity>
   );
 }
 
@@ -237,9 +212,6 @@ export default function DashboardScreen() {
               >
                 <Text style={styles.avatarText}>{getInitials()}</Text>
               </LinearGradient>
-              <View style={styles.notificationBadge}>
-                <Text style={styles.notificationText}>2</Text>
-              </View>
             </TouchableOpacity>
           </View>
         </View>
@@ -454,24 +426,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-  notificationBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: '#EF4444',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#fff',
-  },
-  notificationText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#fff',
-  },
 
   // Earnings Card
   earningsCard: {
@@ -539,10 +493,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 8,
-  },
-  quickActionIcon: {
-    width: 28,
-    height: 28,
   },
   quickActionLabel: {
     fontSize: 11,
