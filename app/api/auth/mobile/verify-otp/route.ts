@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { setAuthCookies } from '@/lib/auth/session';
-import { JWTPayload } from '@/lib/auth/jwt';
+import { JWTPayload, generateTokenPair } from '@/lib/auth/jwt';
 import { logSuccessfulLogin, logFailedLogin } from '@/lib/mongodb/repositories/login-history';
 import { updateLastLogin } from '@/lib/mongodb/repositories/users';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
@@ -224,8 +224,11 @@ export async function POST(request: NextRequest) {
       twoFaEnabled: false, // Skip 2FA for OTP login
     };
 
-    // Set auth cookies
+    // Set auth cookies (for web)
     await setAuthCookies(jwtPayload);
+
+    // Generate tokens for mobile app
+    const tokens = await generateTokenPair(jwtPayload);
 
     return NextResponse.json({
       success: true,
@@ -237,6 +240,8 @@ export async function POST(request: NextRequest) {
         role: user.role,
         organisation_id: user.organisation_id,
       },
+      access_token: tokens.accessToken,
+      refresh_token: tokens.refreshToken,
     });
 
   } catch (error) {

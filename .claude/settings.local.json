@@ -73,7 +73,12 @@
       "Bash(npx expo install:*)",
       "Bash(npx expo:*)",
       "Bash(ipconfig:*)",
-      "Bash(npm ls:*)"
+      "Bash(npm ls:*)",
+      "Bash(pushd:*)",
+      "Bash(npm start)",
+      "Bash(ping:*)",
+      "Bash(start http://localhost:8081)",
+      "Bash(npm start -- --clear)"
     ],
     "deny": [],
     "ask": []

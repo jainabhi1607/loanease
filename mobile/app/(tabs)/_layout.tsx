@@ -21,23 +21,30 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.gray[400],
+        tabBarActiveTintColor: '#1a8cba',
+        tabBarInactiveTintColor: '#94A3B8',
         tabBarStyle: {
           backgroundColor: Colors.white,
           borderTopColor: Colors.border,
-          height: 85,
+          borderTopWidth: 1,
+          height: 80,
           paddingTop: 8,
-          paddingBottom: 28,
+          paddingBottom: 24,
+          paddingHorizontal: 0,
+        },
+        tabBarItemStyle: {
+          flex: 1,
+          paddingHorizontal: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '500',
+          fontSize: 10,
+          fontWeight: '600',
+          marginTop: 4,
         },
         headerStyle: {
-          backgroundColor: Colors.teal,
+          backgroundColor: '#02383B',
         },
-        headerTintColor: Colors.white,
+        headerTintColor: '#fff',
         headerTitleStyle: {
           fontWeight: '600',
         },
@@ -47,27 +54,26 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid-outline" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "home" : "home-outline"} size={22} color={color} />
           ),
-          headerTitle: 'Dashboard',
         }}
       />
       <Tabs.Screen
         name="opportunities"
         options={{
-          title: 'Opportunities',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="briefcase-outline" size={size} color={color} />
+          title: 'Leads',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "list" : "list-outline"} size={22} color={color} />
           ),
         }}
       />
       <Tabs.Screen
         name="applications"
         options={{
-          title: 'Applications',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text-outline" size={size} color={color} />
+          title: 'Apps',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "document-text" : "document-text-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -75,8 +81,8 @@ export default function TabsLayout() {
         name="clients"
         options={{
           title: 'Clients',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="people-outline" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "people" : "people-outline"} size={22} color={color} />
           ),
         }}
       />
@@ -84,8 +90,8 @@ export default function TabsLayout() {
         name="account"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? "person" : "person-outline"} size={22} color={color} />
           ),
         }}
       />

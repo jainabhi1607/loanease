@@ -66,10 +66,10 @@ interface StatusBadgeProps {
 
 const StatusLabels: Record<OpportunityStatus, string> = {
   draft: 'Draft',
-  opportunity: 'Opportunity',
-  application_created: 'Application Created',
-  application_submitted: 'Application Submitted',
-  conditionally_approved: 'Conditionally Approved',
+  opportunity: 'New',
+  application_created: 'In Review',
+  application_submitted: 'Submitted',
+  conditionally_approved: 'Conditional',
   approved: 'Approved',
   declined: 'Declined',
   settled: 'Settled',
@@ -176,25 +176,26 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
     alignSelf: 'flex-start',
   },
 
   badgeSm: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 16,
   },
 
   text: {
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
   },
 
   textSm: {
     fontSize: 11,
+    fontWeight: '600',
   },
 
   outcomeDot: {

@@ -27,8 +27,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Check if user is a referrer (referrer_admin or referrer_team)
-    if (userData.role !== 'referrer_admin' && userData.role !== 'referrer_team') {
+    // Check if user is a referrer or admin
+    const allowedRoles = ['referrer_admin', 'referrer_team', 'super_admin', 'admin_team'];
+    if (!allowedRoles.includes(userData.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 

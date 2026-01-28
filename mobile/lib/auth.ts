@@ -30,22 +30,24 @@ export async function loginWithEmail(
     const response = await api.post<LoginResponse>('/auth/login', {
       email,
       password,
+      mobile_app: true, // Tell backend this is mobile app
     });
 
-    if (response.data.success && response.data.access_token && response.data.user) {
+    // API returns data directly, not wrapped in response.data
+    if (response.success && response.access_token && response.user) {
       await storeTokens({
-        accessToken: response.data.access_token,
-        refreshToken: response.data.refresh_token!,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token!,
       });
-      await storeUserData(response.data.user);
+      await storeUserData(response.user);
     }
 
-    return response.data;
+    return response;
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Login failed. Please try again.',
-      attempts_remaining: error.response?.data?.attempts_remaining,
+      error: error.data?.error || error.message || 'Login failed. Please try again.',
+      attempts_remaining: error.data?.attempts_remaining,
     };
   }
 }
@@ -62,11 +64,12 @@ export async function requestMobileOTP(
       mobile,
       device_id: deviceId,
     });
-    return response.data;
+    // API returns data directly
+    return response;
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Failed to send OTP. Please try again.',
+      error: error.data?.error || error.message || 'Failed to send OTP. Please try again.',
     };
   }
 }
@@ -88,20 +91,21 @@ export async function verifyMobileOTP(
       device_id: deviceId,
     });
 
-    if (response.data.success && response.data.access_token && response.data.user) {
+    // API returns data directly
+    if (response.success && response.access_token && response.user) {
       await storeTokens({
-        accessToken: response.data.access_token,
-        refreshToken: response.data.refresh_token!,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token!,
       });
-      await storeUserData(response.data.user);
+      await storeUserData(response.user);
     }
 
-    return response.data;
+    return response;
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Invalid OTP. Please try again.',
-      attempts_remaining: error.response?.data?.attempts_remaining,
+      error: error.data?.error || error.message || 'Invalid OTP. Please try again.',
+      attempts_remaining: error.data?.attempts_remaining,
     };
   }
 }
@@ -117,21 +121,23 @@ export async function verify2FACode(
     const response = await api.post<LoginResponse>('/auth/verify-2fa', {
       code,
       temp_token: tempToken,
+      mobile_app: true,
     });
 
-    if (response.data.success && response.data.access_token && response.data.user) {
+    // API returns data directly
+    if (response.success && response.access_token && response.user) {
       await storeTokens({
-        accessToken: response.data.access_token,
-        refreshToken: response.data.refresh_token!,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token!,
       });
-      await storeUserData(response.data.user);
+      await storeUserData(response.user);
     }
 
-    return response.data;
+    return response;
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Invalid code. Please try again.',
+      error: error.data?.error || error.message || 'Invalid code. Please try again.',
     };
   }
 }
@@ -155,12 +161,12 @@ export async function requestPasswordReset(email: string): Promise<{
   error?: string;
 }> {
   try {
-    const response = await api.post('/auth/request-password-reset', { email });
-    return { success: true, message: response.data.message };
+    const response = await api.post<{ message: string }>('/auth/reset-password/request', { email });
+    return { success: true, message: response.message };
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Failed to send reset email.',
+      error: error.data?.error || error.message || 'Failed to send reset email.',
     };
   }
 }
@@ -173,15 +179,15 @@ export async function resetPassword(
   newPassword: string
 ): Promise<{ success: boolean; message?: string; error?: string }> {
   try {
-    const response = await api.post('/auth/reset-password', {
+    const response = await api.post<{ message: string }>('/auth/reset-password/confirm', {
       token,
       new_password: newPassword,
     });
-    return { success: true, message: response.data.message };
+    return { success: true, message: response.message };
   } catch (error: any) {
     return {
       success: false,
-      error: error.response?.data?.error || 'Failed to reset password.',
+      error: error.data?.error || error.message || 'Failed to reset password.',
     };
   }
 }
@@ -219,9 +225,10 @@ export async function getCurrentUser(): Promise<User | null> {
 export async function refreshUserData(): Promise<User | null> {
   try {
     const response = await api.get<{ user: User }>('/auth/me');
-    if (response.data.user) {
-      await storeUserData(response.data.user);
-      return response.data.user;
+    // API returns data directly
+    if (response.user) {
+      await storeUserData(response.user);
+      return response.user;
     }
     return null;
   } catch {
@@ -238,28 +245,33 @@ export async function hasBiometricSupport(): Promise<{
   available: boolean;
   biometryType: 'fingerprint' | 'facial' | 'iris' | null;
 }> {
-  const compatible = await LocalAuthentication.hasHardwareAsync();
-  if (!compatible) {
+  try {
+    const compatible = await LocalAuthentication.hasHardwareAsync();
+    if (!compatible) {
+      return { available: false, biometryType: null };
+    }
+
+    const enrolled = await LocalAuthentication.isEnrolledAsync();
+    if (!enrolled) {
+      return { available: false, biometryType: null };
+    }
+
+    const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
+    let biometryType: 'fingerprint' | 'facial' | 'iris' | null = null;
+
+    if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
+      biometryType = 'facial';
+    } else if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) {
+      biometryType = 'fingerprint';
+    } else if (types.includes(LocalAuthentication.AuthenticationType.IRIS)) {
+      biometryType = 'iris';
+    }
+
+    return { available: true, biometryType };
+  } catch {
+    // Biometrics not available (e.g., on web)
     return { available: false, biometryType: null };
   }
-
-  const enrolled = await LocalAuthentication.isEnrolledAsync();
-  if (!enrolled) {
-    return { available: false, biometryType: null };
-  }
-
-  const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
-  let biometryType: 'fingerprint' | 'facial' | 'iris' | null = null;
-
-  if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
-    biometryType = 'facial';
-  } else if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) {
-    biometryType = 'fingerprint';
-  } else if (types.includes(LocalAuthentication.AuthenticationType.IRIS)) {
-    biometryType = 'iris';
-  }
-
-  return { available: true, biometryType };
 }
 
 // Authenticate with biometrics
@@ -282,10 +294,11 @@ export async function authenticateWithBiometrics(): Promise<{
       success: false,
       error: result.error || 'Biometric authentication failed',
     };
-  } catch (error: any) {
+  } catch {
+    // Biometrics not available (e.g., on web)
     return {
       success: false,
-      error: error.message || 'Biometric authentication failed',
+      error: 'Biometric authentication not available',
     };
   }
 }
@@ -359,11 +372,12 @@ export async function signup(data: SignupData): Promise<{
 }> {
   try {
     const response = await api.post<{ success: boolean; message?: string }>('/auth/mobile/signup', data);
-    return { success: true, message: response.message };
+    // API returns data directly
+    return { success: response.success !== false, message: response.message };
   } catch (error: any) {
     return {
       success: false,
-      error: error.data?.error || 'Signup failed. Please try again.',
+      error: error.data?.error || error.message || 'Signup failed. Please try again.',
     };
   }
 }
@@ -377,7 +391,8 @@ export async function checkEmailAvailability(email: string): Promise<{
 }> {
   try {
     const response = await api.get<{ available: boolean }>('/auth/check-email', { email });
-    return { available: response.available };
+    // API returns data directly
+    return { available: response.available !== false };
   } catch (error: any) {
     // If API call fails (e.g., network error), assume email is available
     // Server will validate during actual signup

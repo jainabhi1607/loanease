@@ -19,13 +19,15 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-      id: user._id,
-      email: user.email,
-      firstName: user.first_name,
-      lastName: user.surname,
-      role: user.role,
-      organisationId: user.organisation_id,
-      twoFaEnabled: user.two_fa_enabled
+      user: {
+        id: user._id,
+        email: user.email,
+        first_name: user.first_name,
+        surname: user.surname,
+        role: user.role,
+        organisation_id: user.organisation_id,
+        two_fa_enabled: user.two_fa_enabled,
+      }
     });
 
   } catch (error) {

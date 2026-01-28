@@ -92,8 +92,18 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
 
 /**
  * Get the current user from request (for API routes)
+ * Supports both cookies (web) and Bearer tokens (mobile)
  */
 export async function getCurrentUserFromRequest(request: NextRequest): Promise<JWTPayload | null> {
+  // First check Authorization header for Bearer token (mobile app)
+  const authHeader = request.headers.get('Authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice(7);
+    const user = await verifyAccessToken(token);
+    if (user) return user;
+  }
+
+  // Fall back to cookies (web app)
   const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
 
   if (accessToken) {

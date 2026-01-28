@@ -3,10 +3,13 @@
  */
 
 // API Configuration
+// For mobile device testing, use your computer's local IP address
+const DEV_API_URL = 'http://192.168.1.6:3001/api';
+
 export const API_CONFIG = {
   BASE_URL: __DEV__
-    ? 'http://192.168.1.6:3000/api'  // Development
-    : 'https://loanease.com/api',     // Production
+    ? DEV_API_URL  // Development - use network IP for mobile device
+    : 'https://loanease.com/api',  // Production
 
   TIMEOUT: 30000, // 30 seconds
 };

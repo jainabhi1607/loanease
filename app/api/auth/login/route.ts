@@ -3,7 +3,7 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { verifyPassword } from '@/lib/auth/password';
 import { setAuthCookies } from '@/lib/auth/session';
-import { JWTPayload } from '@/lib/auth/jwt';
+import { JWTPayload, generateTokenPair } from '@/lib/auth/jwt';
 import { findUserByEmail, updateLastLogin } from '@/lib/mongodb/repositories/users';
 import { logSuccessfulLogin, logFailedLogin, logBlockedLogin } from '@/lib/mongodb/repositories/login-history';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
@@ -27,7 +27,8 @@ setInterval(() => {
 const loginSchema = z.object({
   email: z.string().email('Invalid email format').toLowerCase(),
   password: z.string().min(1, 'Password is required'),
-  rememberMe: z.boolean().optional()
+  rememberMe: z.boolean().optional(),
+  mobile_app: z.boolean().optional(), // Flag for mobile app to get tokens in response
 });
 
 export async function POST(request: NextRequest) {
@@ -222,19 +223,36 @@ export async function POST(request: NextRequest) {
       twoFaEnabled: user.two_fa_enabled
     };
 
-    // Set auth cookies
+    // Set auth cookies (for web)
     await setAuthCookies(jwtPayload);
 
-    return NextResponse.json({
+    // Generate tokens for mobile app
+    const isMobileApp = validatedData.mobile_app === true;
+    let tokens = null;
+    if (isMobileApp) {
+      tokens = await generateTokenPair(jwtPayload);
+    }
+
+    const responseData: Record<string, unknown> = {
       success: true,
       user: {
         id: user._id,
         email: user.email,
         role: user.role,
         twoFAEnabled: user.two_fa_enabled,
-        firstName: user.first_name
+        first_name: user.first_name,
+        surname: user.surname,
+        organisation_id: user.organisation_id,
       }
-    });
+    };
+
+    // Include tokens for mobile app
+    if (tokens) {
+      responseData.access_token = tokens.accessToken;
+      responseData.refresh_token = tokens.refreshToken;
+    }
+
+    return NextResponse.json(responseData);
 
   } catch (error) {
     if (error instanceof z.ZodError) {
