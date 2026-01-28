@@ -41,8 +41,8 @@ export function Input({
 
   const inputContainerStyles = [
     styles.inputContainer,
-    isFocused && styles.inputContainerFocused,
-    error && styles.inputContainerError,
+    isFocused ? styles.inputContainerFocused : undefined,
+    error ? styles.inputContainerError : undefined,
   ];
 
   return (
@@ -60,8 +60,8 @@ export function Input({
         <TextInput
           style={[
             styles.input,
-            leftIcon && styles.inputWithLeftIcon,
-            (rightIcon || secureTextEntry) && styles.inputWithRightIcon,
+            leftIcon ? styles.inputWithLeftIcon : undefined,
+            (rightIcon || secureTextEntry) ? styles.inputWithRightIcon : undefined,
           ]}
           placeholderTextColor={Colors.gray[400]}
           onFocus={() => setIsFocused(true)}

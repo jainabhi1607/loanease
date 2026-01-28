@@ -112,11 +112,11 @@ export default function Verify2FAScreen() {
           {code.map((digit, index) => (
             <TextInput
               key={index}
-              ref={(ref) => (inputRefs.current[index] = ref)}
+              ref={(ref) => { inputRefs.current[index] = ref; }}
               style={[
                 styles.codeInput,
-                digit && styles.codeInputFilled,
-                error && styles.codeInputError,
+                digit ? styles.codeInputFilled : null,
+                error ? styles.codeInputError : null,
               ]}
               value={digit}
               onChangeText={(value) => handleCodeChange(value, index)}

@@ -166,6 +166,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const userId = user._id.toString();
+
     // Check if user is active
     if (!user.is_active) {
       return NextResponse.json(
@@ -178,18 +180,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Log successful login
-    await logSuccessfulLogin(user._id, user.email, ip, userAgent);
-    await updateLastLogin(user._id, ip);
+    await logSuccessfulLogin(userId, user.email, ip, userAgent);
+    await updateLastLogin(userId, ip);
 
     await createAuditLog({
       table_name: 'auth',
-      record_id: user._id,
+      record_id: userId,
       action: 'mobile_otp_login_success',
       field_name: 'mobile',
       old_value: null,
       new_value: maskMobile(mobile),
       description: 'User logged in via mobile OTP',
-      user_id: user._id,
+      user_id: userId,
       ip_address: ip,
       user_agent: userAgent,
       created_at: new Date().toISOString(),
@@ -198,10 +200,10 @@ export async function POST(request: NextRequest) {
     // Register/update device if device_id provided
     if (device_id) {
       await db.collection(COLLECTIONS.MOBILE_DEVICES).updateOne(
-        { device_id: device_id, user_id: user._id },
+        { device_id: device_id, user_id: userId },
         {
           $set: {
-            user_id: user._id,
+            user_id: userId,
             device_id: device_id,
             last_active_at: new Date(),
             updated_at: new Date(),
@@ -217,7 +219,7 @@ export async function POST(request: NextRequest) {
 
     // Create JWT payload
     const jwtPayload: JWTPayload = {
-      userId: user._id,
+      userId: userId,
       email: user.email,
       role: user.role,
       organisationId: user.organisation_id,

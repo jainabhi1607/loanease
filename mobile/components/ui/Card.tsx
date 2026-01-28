@@ -30,14 +30,8 @@ export function Card({
   onPress,
   rightAction,
 }: CardProps) {
-  const Container = onPress ? TouchableOpacity : View;
-
-  return (
-    <Container
-      style={[styles.card, style]}
-      onPress={onPress}
-      activeOpacity={onPress ? 0.7 : 1}
-    >
+  const content = (
+    <>
       {(title || rightAction) && (
         <View style={styles.header}>
           <View style={styles.headerText}>
@@ -50,8 +44,22 @@ export function Card({
       <View style={[styles.content, !title && styles.contentNoHeader]}>
         {children}
       </View>
-    </Container>
+    </>
   );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={[styles.card, style]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return <View style={[styles.card, style]}>{content}</View>;
 }
 
 /**
@@ -80,14 +88,8 @@ export function StatCard({
   onPress,
   style,
 }: StatCardProps) {
-  const Container = onPress ? TouchableOpacity : View;
-
-  return (
-    <Container
-      style={[styles.statCard, style]}
-      onPress={onPress}
-      activeOpacity={onPress ? 0.7 : 1}
-    >
+  const content = (
+    <>
       <View style={styles.statHeader}>
         {icon && (
           <View style={[styles.statIcon, { backgroundColor: `${iconColor}15` }]}>
@@ -115,8 +117,22 @@ export function StatCard({
       </View>
       <Text style={styles.statValue}>{value}</Text>
       <Text style={styles.statTitle}>{title}</Text>
-    </Container>
+    </>
   );
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        style={[styles.statCard, style]}
+        onPress={onPress}
+        activeOpacity={0.7}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  return <View style={[styles.statCard, style]}>{content}</View>;
 }
 
 /**

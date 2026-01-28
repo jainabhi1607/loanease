@@ -82,7 +82,6 @@ export async function POST(request: NextRequest) {
     const organisation = await createOrganisation({
       _id: orgId,
       company_name: data.entity_name,
-      entity_name: data.entity_name,
       trading_name: data.trading_name || null,
       abn: cleanABN,
       address: data.address,

@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     // Generate new token pair
     const newPayload: JWTPayload = {
-      userId: user._id,
+      userId: user._id.toString(),
       email: user.email,
       role: user.role,
       organisationId: user.organisation_id,

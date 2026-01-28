@@ -241,7 +241,7 @@ export default function AddOpportunityScreen() {
             <Button
               title="Continue"
               onPress={() => setStep((step + 1) as Step)}
-              style={[styles.navButton, step === 1 && styles.fullButton]}
+              style={step === 1 ? { ...styles.navButton, ...styles.fullButton } : styles.navButton}
             />
           ) : (
             <View style={styles.submitButtons}>

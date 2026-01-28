@@ -20,7 +20,7 @@ import Svg, { Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-nati
 import { useAuthStore } from '../../store/auth';
 import { get } from '../../lib/api';
 import { StatusBadge } from '../../components/ui';
-import { DashboardResponse, DashboardOpportunity } from '../../types';
+import { DashboardResponse, DashboardOpportunity, OpportunityStatus } from '../../types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -88,7 +88,7 @@ function LeadItem({
 }: {
   name: string;
   subtitle: string;
-  status: string;
+  status: OpportunityStatus;
   avatarLetter: string;
   onPress: () => void;
 }) {

@@ -142,15 +142,16 @@ export async function POST(request: NextRequest) {
     });
 
     // Log OTP request
+    const userId = user._id.toString();
     await createAuditLog({
       table_name: 'auth',
-      record_id: user._id,
+      record_id: userId,
       action: 'mobile_otp_requested',
       field_name: 'mobile',
       old_value: null,
       new_value: maskMobile(mobile),
       description: 'OTP requested for mobile login',
-      user_id: user._id,
+      user_id: userId,
       ip_address: ip,
       user_agent: userAgent,
       created_at: new Date().toISOString(),
