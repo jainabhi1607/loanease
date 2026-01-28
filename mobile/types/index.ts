@@ -225,9 +225,25 @@ export interface DashboardStats {
   conversionRatio: string;
 }
 
+// Dashboard opportunity is a simplified version returned by the API
+export interface DashboardOpportunity {
+  id: string;
+  opportunity_id: string;
+  status: OpportunityStatus;
+  created_at: string;
+  loan_amount: number;
+  loan_type: string;
+  borrowing_entity: string;
+  contact_name: string;
+}
+
 export interface DashboardResponse {
   statistics: DashboardStats;
-  recentOpportunities: Opportunity[];
+  recentOpportunities: DashboardOpportunity[];
+  organization?: {
+    id: string;
+    company_name: string;
+  };
 }
 
 // History/Audit Types

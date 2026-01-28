@@ -20,7 +20,7 @@ import Svg, { Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-nati
 import { useAuthStore } from '../../store/auth';
 import { get } from '../../lib/api';
 import { StatusBadge } from '../../components/ui';
-import { DashboardResponse, Opportunity } from '../../types';
+import { DashboardResponse, DashboardOpportunity } from '../../types';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -121,7 +121,7 @@ export default function DashboardScreen() {
     settledValue: 0,
     conversionRatio: '0%',
   });
-  const [recentOpportunities, setRecentOpportunities] = useState<Opportunity[]>([]);
+  const [recentOpportunities, setRecentOpportunities] = useState<DashboardOpportunity[]>([]);
 
   // Fetch dashboard data
   const fetchDashboard = useCallback(async () => {
@@ -332,12 +332,12 @@ export default function DashboardScreen() {
             <View style={styles.leadsList}>
               {recentOpportunities.slice(0, 5).map((opp) => (
                 <LeadItem
-                  key={opp._id}
-                  name={opp.client?.entity_name || 'Unknown Client'}
+                  key={opp.id}
+                  name={opp.borrowing_entity || opp.contact_name || 'Unknown Client'}
                   subtitle={`${opp.opportunity_id} • ${formatCurrency(opp.loan_amount || 0)}`}
                   status={opp.status}
-                  avatarLetter={(opp.client?.entity_name || 'U').charAt(0).toUpperCase()}
-                  onPress={() => router.push(`/opportunity/${opp._id}`)}
+                  avatarLetter={(opp.borrowing_entity || opp.contact_name || 'U').charAt(0).toUpperCase()}
+                  onPress={() => router.push(`/opportunity/${opp.id}`)}
                 />
               ))}
             </View>
