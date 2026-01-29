@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,23 +25,33 @@ export default function AccountScreen() {
   const isAdmin = user?.role === 'referrer_admin';
 
   // Handle logout
-  const handleLogout = () => {
-    Alert.alert(
-      'Logout',
-      'Are you sure you want to log out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Logout',
-          style: 'destructive',
-          onPress: async () => {
-            setIsLoggingOut(true);
-            await logout();
-            router.replace('/(auth)/login');
+  const handleLogout = async () => {
+    const doLogout = async () => {
+      setIsLoggingOut(true);
+      await logout();
+      router.replace('/(auth)/login');
+    };
+
+    if (Platform.OS === 'web') {
+      // Use window.confirm for web
+      if (window.confirm('Are you sure you want to log out?')) {
+        await doLogout();
+      }
+    } else {
+      // Use Alert.alert for native
+      Alert.alert(
+        'Logout',
+        'Are you sure you want to log out?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Logout',
+            style: 'destructive',
+            onPress: doLogout,
           },
-        },
-      ]
-    );
+        ]
+      );
+    }
   };
 
   // Toggle biometric
