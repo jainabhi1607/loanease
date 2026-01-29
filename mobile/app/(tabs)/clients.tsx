@@ -134,7 +134,7 @@ export default function ClientsScreen() {
       <FlatList
         data={filteredClients}
         renderItem={renderItem}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item, index) => item._id || `client-${index}`}
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

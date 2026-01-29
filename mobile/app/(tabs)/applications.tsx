@@ -9,6 +9,7 @@ import {
   StyleSheet,
   FlatList,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -90,8 +91,6 @@ export default function ApplicationsScreen() {
           iconColor={Colors.warning}
           style={styles.statCard}
         />
-      </View>
-      <View style={styles.statsRow}>
         <StatCard
           title="Approved"
           value={stats.approved}
@@ -135,7 +134,7 @@ export default function ApplicationsScreen() {
     <FlatList
       data={applications}
       renderItem={renderItem}
-      keyExtractor={(item) => item._id}
+      keyExtractor={(item, index) => item._id || `app-${index}`}
       ListHeaderComponent={renderHeader}
       contentContainerStyle={styles.listContent}
       refreshControl={
@@ -146,6 +145,8 @@ export default function ApplicationsScreen() {
   );
 }
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   header: {
     padding: 16,
@@ -153,11 +154,11 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 12,
+    justifyContent: 'space-between',
     marginBottom: 12,
   },
   statCard: {
-    flex: 1,
+    width: (SCREEN_WIDTH - 32 - 24) / 4, // 4 cards with gaps (16px padding on each side + 8px gaps between)
   },
   listContent: {
     backgroundColor: Colors.backgroundSecondary,

@@ -158,7 +158,7 @@ export default function OpportunitiesScreen() {
       <FlatList
         data={filteredOpportunities}
         renderItem={renderItem}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item, index) => item._id || `opp-${index}`}
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
