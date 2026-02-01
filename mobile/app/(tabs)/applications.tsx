@@ -112,10 +112,10 @@ export default function ApplicationsScreen() {
   // Render application item
   const renderItem = ({ item }: { item: Opportunity }) => (
     <ListCard
-      title={item.client?.entity_name || 'Unknown Client'}
+      title={item.borrowing_entity || item.contact_name || 'Unknown Client'}
       subtitle={`${item.opportunity_id} • ${formatCurrency(item.loan_amount || 0)}`}
       rightContent={<StatusBadge status={item.status} size="sm" />}
-      onPress={() => router.push(`/opportunity/${item._id}`)}
+      onPress={() => router.push(`/opportunity/${item.id || item._id}`)}
     />
   );
 
@@ -134,7 +134,7 @@ export default function ApplicationsScreen() {
     <FlatList
       data={applications}
       renderItem={renderItem}
-      keyExtractor={(item, index) => item._id || `app-${index}`}
+      keyExtractor={(item, index) => item.id || item._id || `app-${index}`}
       ListHeaderComponent={renderHeader}
       contentContainerStyle={styles.listContent}
       refreshControl={

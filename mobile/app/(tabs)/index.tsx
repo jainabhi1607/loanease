@@ -119,7 +119,7 @@ export default function DashboardScreen() {
     opportunityValue: 0,
     openApplications: 0,
     settledValue: 0,
-    conversionRatio: '0%',
+    conversionRatio: '0',
   });
   const [recentOpportunities, setRecentOpportunities] = useState<DashboardOpportunity[]>([]);
 
@@ -286,29 +286,29 @@ export default function DashboardScreen() {
           <View style={styles.statsRow}>
             <StatCard
               icon="briefcase-outline"
-              label="Total Leads"
-              value={stats.openOpportunities + stats.openApplications}
+              label="Opportunities"
+              value={stats.openOpportunities}
               color="#1a8cba"
               bgColor="#F0F8FC"
             />
             <StatCard
-              icon="home-outline"
-              label="Approved"
+              icon="document-text-outline"
+              label="Applications"
               value={stats.openApplications}
               color="#00A67E"
               bgColor="#E8FBF5"
             />
             <StatCard
-              icon="time-outline"
-              label="Pending"
-              value={formatCurrency(stats.opportunityValue)}
+              icon="cash-outline"
+              label="Settlements"
+              value={formatCurrency(stats.settledValue)}
               color="#E5A62B"
               bgColor="#FFF9E8"
             />
             <StatCard
-              icon="sync-outline"
-              label="Total"
-              value={formatCurrency(stats.settledValue)}
+              icon="trending-up-outline"
+              label="Conversion"
+              value={`${stats.conversionRatio}%`}
               color="#1a8cba"
               bgColor="#F0F8FC"
             />

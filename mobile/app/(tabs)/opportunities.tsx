@@ -31,8 +31,23 @@ export default function OpportunitiesScreen() {
   // Fetch opportunities
   const fetchOpportunities = useCallback(async () => {
     try {
-      const status = activeTab === 'opportunities' ? 'opportunity' : activeTab;
-      const data = await get<Opportunity[]>(`/referrer/opportunities?status=${status}`);
+      let data: Opportunity[] = [];
+
+      if (activeTab === 'opportunities') {
+        data = await get<Opportunity[]>('/referrer/opportunities?status=opportunity');
+      } else if (activeTab === 'drafts') {
+        data = await get<Opportunity[]>('/referrer/opportunities?status=draft');
+      } else if (activeTab === 'unqualified') {
+        // Unqualified has a separate endpoint with different response format
+        const response = await get<{ opportunities: Opportunity[] }>('/referrer/opportunities/unqualified');
+        // Map client_entity_name to borrowing_entity for consistency
+        data = (response.opportunities || []).map(opp => ({
+          ...opp,
+          borrowing_entity: (opp as any).client_entity_name || '',
+          contact_name: (opp as any).client_contact_name || '',
+        }));
+      }
+
       setOpportunities(data || []);
     } catch (error) {
       console.error('Failed to fetch opportunities:', error);
@@ -59,8 +74,8 @@ export default function OpportunitiesScreen() {
     const query = searchQuery.toLowerCase();
     return (
       opp.opportunity_id?.toLowerCase().includes(query) ||
-      opp.client?.entity_name?.toLowerCase().includes(query) ||
-      opp.client?.contact_first_name?.toLowerCase().includes(query)
+      opp.borrowing_entity?.toLowerCase().includes(query) ||
+      opp.contact_name?.toLowerCase().includes(query)
     );
   });
 
@@ -76,10 +91,10 @@ export default function OpportunitiesScreen() {
   // Render opportunity item
   const renderItem = ({ item }: { item: Opportunity }) => (
     <ListCard
-      title={item.client?.entity_name || 'Unknown Client'}
+      title={item.borrowing_entity || item.contact_name || 'Unknown Client'}
       subtitle={`${item.opportunity_id} • ${formatCurrency(item.loan_amount || 0)}`}
       rightContent={<StatusBadge status={item.status} size="sm" />}
-      onPress={() => router.push(`/opportunity/${item._id}`)}
+      onPress={() => router.push(`/opportunity/${item.id || item._id}`)}
     />
   );
 
@@ -158,7 +173,7 @@ export default function OpportunitiesScreen() {
       <FlatList
         data={filteredOpportunities}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item._id || `opp-${index}`}
+        keyExtractor={(item, index) => item.id || item._id || `opp-${index}`}
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

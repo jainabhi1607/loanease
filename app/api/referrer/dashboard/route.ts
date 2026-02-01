@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Get user details and check role
     const userData = await db.collection(COLLECTIONS.USERS).findOne({ _id: user.userId as any });
 
-    console.log('Referrer Dashboard API - User data:', userData?._id);
+    console.log('Referrer Dashboard API - User data:', userData?._id, 'Role:', userData?.role, 'OrgId:', userData?.organisation_id);
 
     if (!userData) {
       console.log('Referrer Dashboard API - User not found in database');
@@ -34,12 +34,16 @@ export async function GET(request: NextRequest) {
     }
 
     const organisationId = userData.organisation_id;
+    const isAdmin = userData.role === 'super_admin' || userData.role === 'admin_team';
+
+    // Build the organization filter - admins see all data
+    const orgFilter = isAdmin ? {} : { organization_id: organisationId };
 
     // 1. Open Opportunities (status = 'opportunity', exclude unqualified)
     // First get opportunities
     const openOpportunities = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
-        organization_id: organisationId,
+        ...orgFilter,
         status: 'opportunity',
         deleted_at: null
       })
@@ -62,10 +66,10 @@ export async function GET(request: NextRequest) {
     const openOpportunitiesCount = filteredOpenOpps.length;
     const opportunityValue = filteredOpenOpps.reduce((sum: number, opp: any) => sum + (opp.loan_amount || 0), 0);
 
-    // 2. Open Applications (statuses: application_created, application_submitted, conditionally_approved, approved)
+    // 2. Open Applications (only active application statuses, not settled/declined/withdrawn)
     const openApplications = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
-        organization_id: organisationId,
+        ...orgFilter,
         status: { $in: ['application_created', 'application_submitted', 'conditionally_approved', 'approved'] },
         deleted_at: null
       })
@@ -89,7 +93,7 @@ export async function GET(request: NextRequest) {
     // 3. Settled Applications (opportunities with date_settled set)
     const settledApplications = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
-        organization_id: organisationId,
+        ...orgFilter,
         date_settled: { $ne: null },
         deleted_at: null
       })
@@ -114,7 +118,7 @@ export async function GET(request: NextRequest) {
     // 4. Total Opportunities (all opportunities, excluding unqualified)
     const totalOpportunities = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
-        organization_id: organisationId,
+        ...orgFilter,
         deleted_at: null
       })
       .toArray();
@@ -134,15 +138,15 @@ export async function GET(request: NextRequest) {
     });
     const totalOpportunitiesCount = filteredTotalOpps.length;
 
-    // 5. Calculate Conversion Ratio (total opportunities / settled opportunities)
-    const conversionRatio = settledApplicationsCount > 0
-      ? (totalOpportunitiesCount / settledApplicationsCount).toFixed(2)
-      : '0.00';
+    // 5. Calculate Conversion Ratio (settled / total opportunities * 100 = percentage)
+    const conversionRatio = totalOpportunitiesCount > 0
+      ? ((settledApplicationsCount / totalOpportunitiesCount) * 100).toFixed(1)
+      : '0.0';
 
     // 6. Fetch recent opportunities (last 10, exclude unqualified)
     const recentOpportunities = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
-        organization_id: organisationId,
+        ...orgFilter,
         deleted_at: null
       })
       .sort({ created_at: -1 })
@@ -191,8 +195,19 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // Get organization details
-    const organization = await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any });
+    // Get organization details (only for non-admin users)
+    const organization = !isAdmin && organisationId
+      ? await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any })
+      : null;
+
+    console.log('Referrer Dashboard API - Stats:', {
+      isAdmin,
+      openOpportunities: openOpportunitiesCount,
+      openApplications: openApplicationsCount,
+      settledApplications: settledApplicationsCount,
+      settledValue,
+      conversionRatio,
+    });
 
     return NextResponse.json({
       statistics: {

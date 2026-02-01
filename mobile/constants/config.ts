@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 
 const DEV_API_URL = Platform.OS === 'web'
   ? 'http://localhost:3000/api'  // Web browser
-  : 'http://192.168.1.8:3000/api';  // Mobile device - use your local IP
+  : 'http://192.168.1.10:3000/api';  // Mobile device - use your local IP
 
 export const API_CONFIG = {
   BASE_URL: __DEV__

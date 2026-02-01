@@ -115,6 +115,7 @@ export const EntityTypeLabels: Record<EntityType, string> = {
 // Opportunity Types
 export interface Opportunity {
   _id: string;
+  id?: string; // API returns 'id' in list responses
   organization_id: string;
   client_id: string;
   created_by: string;
@@ -134,6 +135,10 @@ export interface Opportunity {
   outcome_level?: OutcomeLevel;
   created_at: string;
   updated_at?: string;
+
+  // Flattened client data from API
+  borrowing_entity?: string;
+  contact_name?: string;
 
   // Joined data
   client?: Client;
