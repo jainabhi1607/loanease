@@ -80,7 +80,10 @@
       "Bash(start http://localhost:8081)",
       "Bash(npm start -- --clear)",
       "Bash(npm run web:*)",
-      "Bash(netstat:*)"
+      "Bash(netstat:*)",
+      "Bash(cmd.exe //c \"taskkill /F /PID 257128\")",
+      "Bash(cmd.exe //c \"taskkill /F /PID 260068\")",
+      "Bash(npx localtunnel --port 8081)"
     ],
     "deny": [],
     "ask": []
