@@ -337,7 +337,7 @@ export default function DashboardScreen() {
                   subtitle={`${opp.opportunity_id} • ${formatCurrency(opp.loan_amount || 0)}`}
                   status={opp.status}
                   avatarLetter={(opp.borrowing_entity || opp.contact_name || 'U').charAt(0).toUpperCase()}
-                  onPress={() => router.push(`/opportunity/${opp.id}`)}
+                  onPress={() => router.push(opp.status === 'draft' ? `/opportunity/edit/${opp.id}` : `/opportunity/${opp.id}`)}
                 />
               ))}
             </View>

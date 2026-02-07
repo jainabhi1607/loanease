@@ -1,24 +1,35 @@
 # CLAUDE.md (Minimized)
 
-> **Loanease**: Commercial loan referral platform connecting referrers with Loanease. Built with Next.js 14+, MongoDB, JWT Auth, Vercel.
+> **Loanease**: Commercial loan referral platform connecting referrers with Loanease. Web app + Mobile app (Expo).
 
 ## Quick Reference
 
 ### Tech Stack
-- **Frontend**: Next.js 14 (App Router), React, TypeScript, Shadcn/ui
+- **Web Frontend**: Next.js 14 (App Router), React, TypeScript, Shadcn/ui
+- **Mobile App**: React Native (Expo SDK 51), Expo Router, TypeScript, Zustand
 - **Backend**: MongoDB (database), JWT + bcrypt (auth), Postmark (email)
 - **Hosting**: Vercel (staging + production)
 
 ### Commands
 ```bash
+# Web App (root)
 npm install         # Install dependencies
-npm run dev         # Development server
+npm run dev         # Development server (localhost:3000)
 npm run build       # Production build
 npm run lint        # Linting
+
+# Mobile App (mobile/)
+cd mobile
+npm install         # Install dependencies
+npx expo start     # Start Expo dev server (localhost:8081)
+npx expo start --web   # Web preview
+npx expo start --ios   # iOS simulator
+npx expo start --android  # Android emulator
 ```
 
 ## Project Structure
 
+### Web App
 ```
 /app
   /api
@@ -42,13 +53,48 @@ npm run lint        # Linting
 /types              # TypeScript types
 ```
 
+### Mobile App
+```
+/mobile
+  /app                    # Expo Router screens (file-based routing)
+    /(auth)              # Auth: login, signup, forgot-password, otp-verification, verify-2fa
+    /(tabs)              # Tab navigation: dashboard, opportunities, applications, clients, account
+    /opportunity
+      /[id].tsx          # Opportunity detail (read-only for non-drafts)
+      /add.tsx           # Create new opportunity (multi-step form)
+      /edit/[id].tsx     # Edit draft opportunity (4-step form with progress)
+    /client/[id].tsx     # Client detail
+    /_layout.tsx         # Root layout (Stack navigator)
+  /components
+    /cards               # Card components
+    /forms               # Form components
+    /ui                  # Base UI (Button, Input, Card, Badge, CircularProgress)
+  /lib
+    /api.ts              # Fetch-based API client with JWT auth + token refresh
+    /auth.ts             # Auth functions (login, OTP, 2FA, biometric, signup)
+    /storage.ts          # Secure token storage (expo-secure-store / localStorage)
+  /store/auth.ts         # Zustand auth state management
+  /types/index.ts        # TypeScript types (mirrors web app)
+  /constants
+    /config.ts           # API URLs, auth config, OTP config
+    /colors.ts           # Brand color palette + status colors
+  /assets                # Logo, splash screen images
+```
+
 ## Authentication System
 
-### JWT-Based Auth
+### JWT-Based Auth (Web)
 - **Access Token**: 15-minute expiry, stored in `cf_access_token` cookie
 - **Refresh Token**: 7-day expiry, stored in `cf_refresh_token` cookie
 - **2FA Cookie**: `cf_2fa_verified` cookie for 2FA session tracking
 - **Password Hashing**: bcrypt with 12 rounds
+
+### Mobile Auth
+- **Token Storage**: `expo-secure-store` (native) / `localStorage` (web)
+- **Token Keys**: `loanease_access_token`, `loanease_refresh_token`, `loanease_user_data`
+- **OTP Login**: `POST /auth/mobile/request-otp`, `POST /auth/mobile/verify-otp`
+- **Biometric**: Face ID / Touch ID via `expo-local-authentication`
+- **Auto-refresh**: 401 → refresh token → retry request (with queue for concurrent requests)
 
 ### Auth Flow
 1. Login → Verify password with bcrypt → Issue JWT tokens
@@ -60,6 +106,8 @@ npm run lint        # Linting
 - `lib/auth/jwt.ts` - JWT generation/verification using `jose` library
 - `lib/auth/password.ts` - bcrypt hash/verify functions
 - `lib/auth/session.ts` - Cookie management, getCurrentUserFromRequest()
+- `mobile/lib/auth.ts` - Mobile auth (login, OTP, 2FA, biometric, signup)
+- `mobile/lib/storage.ts` - Secure token storage abstraction
 
 ### JWT Payload Structure
 ```typescript
@@ -169,6 +217,53 @@ Draft → Opportunity → Application → Settled/Declined/Withdrawn
 - View opportunities, clients, applications (read-only)
 - Can only access Profile tab on account page
 
+## Mobile App Features
+
+### Referrer-Only Portal
+The mobile app is for referrers only (not admin). Accessed via Expo Go during development.
+
+### Screens & Navigation
+- **Tab Navigation**: Dashboard, Leads (opportunities), Apps (applications), Clients, Account
+- **Dashboard**: KPI stats, loan pipeline, quick actions, recent opportunities
+- **Opportunities**: Tabs for Opportunities / Drafts / Unqualified with search & FAB
+- **Draft Edit**: Tapping a draft → 4-step edit form (Client → Loan → Financial → Review)
+- **Opportunity Detail**: Read-only view with Overview / Notes / History tabs
+- **Add Opportunity**: Multi-step create form with Save Draft / Submit
+
+### Draft Edit Flow (`mobile/app/opportunity/edit/[id].tsx`)
+- **Step 1 - Client**: Entity name, type (dropdown), contact name, email, mobile, ABN, address
+- **Step 2 - Loan**: Amount, property value, loan type (dropdown), purpose, asset type (dropdown), address, overview
+- **Step 3 - Financial**: Net profit, amortisation, depreciation, interest costs, rental (numeric-only with decimal), risk indicator toggles (yes/no)
+- **Step 4 - Review**: Summary cards with edit shortcuts, additional notes, Save Draft / Submit
+- Progress bar with tappable step circles, prev/next navigation
+- Toast notifications on save/submit, navigates to listing on success
+- Header: Dark teal (`#02383B`) background with centered "Edit Opportunity" + CF ID subtitle
+
+### Mobile API Integration
+- **Base URL (dev)**: `http://192.168.1.10:3000/api` (mobile) / `http://localhost:3000/api` (web)
+- **Base URL (prod)**: `https://loanease.com/api`
+- Uses same backend API as web app (`/api/referrer/*` endpoints)
+- `GET /referrer/opportunities/{id}` - Fetch opportunity for editing
+- `PATCH /referrer/opportunities/{id}` - Update draft (all fields) or non-draft (external_ref, created_by only)
+- `GET /referrer/opportunities?status=draft|opportunity` - List by status
+- `POST /referrer/opportunities/create` - Create new opportunity
+
+### Mobile UI Components (`mobile/components/ui/`)
+- `Button` - Primary/outline/ghost variants with loading state
+- `Input` - Text input with label, error, icons; `PhoneInput` (+61 prefix); `CurrencyInput` ($ prefix)
+- `Card` / `ListCard` - Content cards and tappable list items
+- `Badge` / `StatusBadge` - Status badges with color mapping
+- `CircularProgress` - Progress indicator
+
+### Mobile State Management
+- **Zustand** store for auth: `isAuthenticated`, `user`, `isLoading`, `initialize()`
+- Token persistence via `expo-secure-store`
+
+### Mobile Brand Colors (`mobile/constants/colors.ts`)
+- Primary green: `#00D37F`, Dark teal: `#02383B`
+- Status colors mapped in `StatusColors` (draft=gray, opportunity=blue, settled=green, etc.)
+- Header accent: `#1a8cba` (blue teal)
+
 ## API Patterns
 
 ### Authentication Check
@@ -184,6 +279,15 @@ export async function GET(request: NextRequest) {
 
   // user.userId, user.email, user.role, user.organisationId
 }
+```
+
+### Mobile API Client (`mobile/lib/api.ts`)
+```typescript
+import { get, post, patch, del } from '../lib/api';
+
+// Auto-attaches JWT Bearer token, handles 401 refresh
+const data = await get<Opportunity[]>('/referrer/opportunities?status=draft');
+await patch(`/referrer/opportunities/${id}`, payload);
 ```
 
 ### MongoDB Queries
@@ -233,11 +337,18 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 - **useSearchParams()**: Wrap in `<Suspense>` boundary
 - Next.js 15 params are async - must `await params` in route handlers
 
+### Mobile-Specific Issues
+- **Expo Go URL**: `exp://192.168.1.10:8081` (phone must be on same Wi-Fi)
+- **Metro Bundler**: Runs on `localhost:8081`, config in `mobile/metro.config.js`
+- **`shadow*` deprecation warning**: React Native Web warns about shadow props, use `boxShadow` for web
+- **react-native-svg version**: May warn about version mismatch, fix with `npx expo install react-native-svg`
+- **Platform-specific code**: Use `Platform.OS === 'ios'` for iOS-specific padding/behavior
+
 ## Development Guidelines
 
 ### Code Style
 - TypeScript strict mode
-- Server Components by default
+- Server Components by default (web)
 - Async/await over promises
 
 ### Security Best Practices
@@ -314,21 +425,24 @@ Red: ICR < 1.5 OR LVR > 80
 1. **No payment processing** - Commission tracking is informational only
 2. **Client uniqueness** - Clients are unique per referrer, not globally
 3. **Loan purpose** - Only ONE value allowed per opportunity
-4. **Shared components** - Admin and referrer views use same components
+4. **Shared components** - Admin and referrer views use same components (web)
 5. **String UUIDs** - Always use `as any` for MongoDB _id queries
 6. **JWT properties** - Use `userId` and `organisationId` (not `id` or `organisation_id`)
 7. **ABN handling** - Filter out all-zeros ABN values (display as empty)
 8. **PDF generation** - Use `jspdf` with `autoTable(doc, {...})` syntax
 9. **Agreement PDF** - Shows IP address and Australian timezone (AEDT/AEST)
 10. **Dashboard stats** - Never show fake/hardcoded percentage changes
+11. **Mobile drafts** - Tapping draft opportunity opens edit page, not detail page
+12. **Mobile API** - Same backend endpoints, different auth storage (secure store vs cookies)
 
 ## Branding & Assets
 
 - **App Name**: Loanease
-- **Logo File**: `/logo.jpg` (used in all layouts, emails, PDFs)
+- **Logo File**: `/logo.jpg` (web), `mobile/assets/loanease_logo.png` (mobile)
 - **Company Name**: Loanease (formerly Clue Commercial)
 - **Email Domain**: `loanease.com`
 - **PDF Agreement Party**: LOANEASE PTY LTD
+- **Mobile Bundle ID**: `com.loanease.referrer`
 
 ## Referrer Portal Design
 
@@ -336,10 +450,18 @@ Red: ICR < 1.5 OR LVR > 80
 - Primary green: `#00D37F`
 - Success badge: `#00D169`
 - Dark teal (headings): `#02383B`
+- Blue teal (mobile accent): `#1a8cba`
 - Light green background: `#EDFFD7`
 - Border gray: `#E7EBEF`
 
-**Global Layout**:
+**Web Layout**:
 - Max width: `1290px` with `mx-auto px-4 sm:px-6 lg:px-8`
 - Header height: `85px`
 - Content box padding: `40px` (`p-10`)
+
+**Mobile Layout**:
+- Tab bar: 5 tabs (Dashboard, Leads, Apps, Clients, Account)
+- Edit header: Dark teal `#02383B` with white centered text
+- Cards: White background, 14px border radius, subtle shadow
+- Progress bar: Tappable circles with connecting lines
+- Toast notifications: Animated, green (success) / red (error)

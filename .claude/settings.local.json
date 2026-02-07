@@ -83,7 +83,13 @@
       "Bash(netstat:*)",
       "Bash(cmd.exe //c \"taskkill /F /PID 257128\")",
       "Bash(cmd.exe //c \"taskkill /F /PID 260068\")",
-      "Bash(npx localtunnel --port 8081)"
+      "Bash(npx localtunnel --port 8081)",
+      "Bash(set REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.6)",
+      "Bash(netsh advfirewall firewall add rule:*)",
+      "Bash(npx ngrok:*)",
+      "Bash(npx localtunnel --port 3000)",
+      "Bash(powershell.exe -NoProfile -File - <<'PSEOF'\nGet-NetTCPConnection -LocalPort 8081 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\nWrite-Output \"done\"\nPSEOF)",
+      "Bash(powershell.exe -NoProfile -File - <<'PSEOF'\nGet-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\nWrite-Output \"done\"\nPSEOF)"
     ],
     "deny": [],
     "ask": []

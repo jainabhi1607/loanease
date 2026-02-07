@@ -11,22 +11,52 @@ import {
   RefreshControl,
   TouchableOpacity,
   Dimensions,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { get } from '../../lib/api';
+import { get, post, patch, del } from '../../lib/api';
 import { Card, StatusBadge, OutcomeBadge } from '../../components/ui';
 import { Colors } from '../../constants/colors';
-import { EntityTypeLabels, LoanTypeLabels, AssetTypeLabels } from '../../types';
+import { LoanTypeLabels, AssetTypeLabels } from '../../types';
+
+const EntityTypeStringLabels: { [key: string]: string } = {
+  'private_company': 'Private Company',
+  'sole_trader': 'Sole Trader',
+  'smsf_trust': 'SMSF Trust',
+  'trust': 'Trust',
+  'partnership': 'Partnership',
+  'individual': 'Individual',
+  '1': 'Private Company',
+  '2': 'Sole Trader',
+  '3': 'SMSF Trust',
+  '4': 'Trust',
+  '5': 'Partnership',
+  '6': 'Individual',
+};
+import { useAuthStore } from '../../store/auth';
 
 type Tab = 'overview' | 'notes' | 'history';
 
+interface HistoryEntry {
+  id: string;
+  date: string;
+  time: string;
+  action: string;
+  description: string;
+  user_name: string;
+}
+
 interface Note {
-  _id: string;
+  id: string;
   content: string;
+  created_by?: string;
   created_by_name?: string;
   created_at: string;
-  is_public?: number;
+  is_public?: boolean;
 }
 
 interface OpportunityData {
@@ -68,9 +98,11 @@ interface OpportunityData {
   proposed_rental_income?: number;
   rental_income?: string;
   existing_liabilities?: number;
+  additional_security?: number;
   additional_property?: number;
   smsf_structure?: number;
   ato_liabilities?: number;
+  credit_issues?: number;
   credit_file_issues?: number;
 
   // Calculations
@@ -109,8 +141,18 @@ export default function OpportunityDetailScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [opportunity, setOpportunity] = useState<OpportunityData | null>(null);
   const [notes, setNotes] = useState<Note[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+
+  // Notes CRUD state
+  const [newNoteText, setNewNoteText] = useState('');
+  const [isAddingNote, setIsAddingNote] = useState(false);
+  const [savingNote, setSavingNote] = useState(false);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editNoteText, setEditNoteText] = useState('');
+
+  const user = useAuthStore((state) => state.user);
 
   // Fetch opportunity
   const fetchOpportunity = useCallback(async () => {
@@ -130,24 +172,37 @@ export default function OpportunityDetailScreen() {
   const fetchNotes = useCallback(async () => {
     if (!id) return;
     try {
-      const data = await get<{ notes: Note[] }>(`/referrer/opportunities/${id}/notes`);
-      setNotes(data.notes || []);
+      const data = await get<Note[]>(`/referrer/opportunities/${id}/notes`);
+      setNotes(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to fetch notes:', error);
+    }
+  }, [id]);
+
+  // Fetch history
+  const fetchHistory = useCallback(async () => {
+    if (!id) return;
+    try {
+      const data = await get<{ history: HistoryEntry[] }>(`/referrer/opportunities/${id}/history`);
+      setHistory(data.history || []);
+    } catch (error) {
+      console.error('Failed to fetch history:', error);
     }
   }, [id]);
 
   useEffect(() => {
     fetchOpportunity();
     fetchNotes();
-  }, [fetchOpportunity, fetchNotes]);
+    fetchHistory();
+  }, [fetchOpportunity, fetchNotes, fetchHistory]);
 
   // Handle refresh
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     fetchOpportunity();
     fetchNotes();
-  }, [fetchOpportunity, fetchNotes]);
+    fetchHistory();
+  }, [fetchOpportunity, fetchNotes, fetchHistory]);
 
   // Format currency
   const formatCurrency = (value?: number) => {
@@ -187,10 +242,11 @@ export default function OpportunityDetailScreen() {
     });
   };
 
-  // Get yes/no value
-  const getYesNo = (value?: number) => {
-    if (value === 1) return 'Yes';
-    if (value === 0) return 'No';
+  // Get yes/no value - handles number (1/0), string ("1"/"0"), boolean
+  const getYesNo = (value?: number | string | boolean | null) => {
+    if (value === undefined || value === null) return '-';
+    if (value === 1 || value === '1' || value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')) return 'Yes';
+    if (value === 0 || value === '0' || value === false || (typeof value === 'string' && value.toLowerCase() === 'no')) return 'No';
     return '-';
   };
 
@@ -362,7 +418,7 @@ export default function OpportunityDetailScreen() {
             <DetailRow label="Entity Name" value={opportunity.client_entity_name || '-'} />
             <DetailRow
               label="Entity Type"
-              value={opportunity.entity_type ? EntityTypeLabels[opportunity.entity_type as 1|2|3|4|5|6] : '-'}
+              value={opportunity.entity_type ? EntityTypeStringLabels[String(opportunity.entity_type)] || String(opportunity.entity_type) : '-'}
             />
             <DetailRow label="Contact Name" value={opportunity.client_contact_name || `${opportunity.contact_first_name || ''} ${opportunity.contact_last_name || ''}`.trim() || '-'} />
             <DetailRow label="Email" value={opportunity.client_email || '-'} />
@@ -429,10 +485,10 @@ export default function OpportunityDetailScreen() {
             {/* Risk Indicators */}
             <Text style={styles.subSectionTitle}>Risk Indicators</Text>
             <DetailRow label="Existing Liabilities" value={getYesNo(opportunity.existing_liabilities)} />
-            <DetailRow label="Additional Security" value={getYesNo(opportunity.additional_property)} />
+            <DetailRow label="Additional Security" value={getYesNo(opportunity.additional_security ?? opportunity.additional_property)} />
             <DetailRow label="SMSF Structure" value={getYesNo(opportunity.smsf_structure)} />
             <DetailRow label="ATO Liabilities" value={getYesNo(opportunity.ato_liabilities)} />
-            <DetailRow label="Credit Issues" value={getYesNo(opportunity.credit_file_issues)} />
+            <DetailRow label="Credit Issues" value={getYesNo(opportunity.credit_issues ?? opportunity.credit_file_issues)} />
           </Card>
 
           {/* Additional Info */}
@@ -467,43 +523,198 @@ export default function OpportunityDetailScreen() {
         <Card>
           <View style={styles.notesHeader}>
             <Text style={styles.notesTitle}>Notes</Text>
-            <TouchableOpacity style={styles.addNoteButton}>
-              <Ionicons name="add-circle-outline" size={24} color={Colors.primary} />
-            </TouchableOpacity>
+            {!isAddingNote && (
+              <TouchableOpacity
+                style={styles.addNoteButton}
+                onPress={() => { setIsAddingNote(true); setNewNoteText(''); }}
+              >
+                <Ionicons name="add-circle-outline" size={24} color={Colors.primary} />
+              </TouchableOpacity>
+            )}
           </View>
+
+          {/* Add Note Form */}
+          {isAddingNote && (
+            <View style={styles.noteForm}>
+              <TextInput
+                style={styles.noteInput}
+                placeholder="Write a note..."
+                placeholderTextColor={Colors.gray[400]}
+                value={newNoteText}
+                onChangeText={setNewNoteText}
+                multiline
+                numberOfLines={3}
+                textAlignVertical="top"
+                autoFocus
+              />
+              <View style={styles.noteFormActions}>
+                <TouchableOpacity
+                  style={styles.noteFormCancel}
+                  onPress={() => { setIsAddingNote(false); setNewNoteText(''); }}
+                >
+                  <Text style={styles.noteFormCancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.noteFormSave, (!newNoteText.trim() || savingNote) && styles.noteFormSaveDisabled]}
+                  disabled={!newNoteText.trim() || savingNote}
+                  onPress={async () => {
+                    if (!newNoteText.trim() || !id) return;
+                    setSavingNote(true);
+                    try {
+                      await post(`/referrer/opportunities/${id}/notes`, { content: newNoteText.trim() });
+                      setNewNoteText('');
+                      setIsAddingNote(false);
+                      fetchNotes();
+                    } catch (error) {
+                      Alert.alert('Error', 'Failed to add note');
+                    } finally {
+                      setSavingNote(false);
+                    }
+                  }}
+                >
+                  <Text style={styles.noteFormSaveText}>{savingNote ? 'Saving...' : 'Save'}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
 
           {notes.length > 0 ? (
             notes.map((note) => (
-              <View key={note._id} style={styles.noteItem}>
-                <View style={styles.noteHeader}>
-                  <Text style={styles.noteAuthor}>{note.created_by_name || 'Unknown'}</Text>
-                  <Text style={styles.noteDate}>{formatDateTime(note.created_at)}</Text>
-                </View>
-                <Text style={styles.noteContent}>{note.content}</Text>
-                {note.is_public === 1 && (
-                  <View style={styles.publicBadge}>
-                    <Ionicons name="globe-outline" size={12} color={Colors.primary} />
-                    <Text style={styles.publicText}>Public</Text>
+              <View key={note.id} style={styles.noteItem}>
+                {editingNoteId === note.id ? (
+                  /* Edit Mode */
+                  <View>
+                    <TextInput
+                      style={styles.noteInput}
+                      value={editNoteText}
+                      onChangeText={setEditNoteText}
+                      multiline
+                      numberOfLines={3}
+                      textAlignVertical="top"
+                      autoFocus
+                    />
+                    <View style={styles.noteFormActions}>
+                      <TouchableOpacity
+                        style={styles.noteFormCancel}
+                        onPress={() => { setEditingNoteId(null); setEditNoteText(''); }}
+                      >
+                        <Text style={styles.noteFormCancelText}>Cancel</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.noteFormSave, !editNoteText.trim() && styles.noteFormSaveDisabled]}
+                        disabled={!editNoteText.trim()}
+                        onPress={async () => {
+                          if (!editNoteText.trim() || !id) return;
+                          try {
+                            await patch(`/referrer/opportunities/${id}/notes/${note.id}`, { content: editNoteText.trim() });
+                            setEditingNoteId(null);
+                            setEditNoteText('');
+                            fetchNotes();
+                          } catch (error) {
+                            Alert.alert('Error', 'Failed to update note');
+                          }
+                        }}
+                      >
+                        <Text style={styles.noteFormSaveText}>Update</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
+                ) : (
+                  /* View Mode */
+                  <>
+                    <View style={styles.noteHeader}>
+                      <Text style={styles.noteAuthor}>{note.created_by_name || 'Unknown'}</Text>
+                      <View style={styles.noteActions}>
+                        <Text style={styles.noteDate}>{formatDateTime(note.created_at)}</Text>
+                        {(user?.id === note.created_by || user?.role === 'referrer_admin') && (
+                          <View style={styles.noteIconRow}>
+                            <TouchableOpacity
+                              style={styles.noteIconBtn}
+                              onPress={() => { setEditingNoteId(note.id); setEditNoteText(note.content); }}
+                            >
+                              <Ionicons name="pencil-outline" size={16} color={Colors.primary} />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.noteIconBtn}
+                              onPress={() => {
+                                Alert.alert('Delete Note', 'Are you sure you want to delete this note?', [
+                                  { text: 'Cancel', style: 'cancel' },
+                                  {
+                                    text: 'Delete',
+                                    style: 'destructive',
+                                    onPress: async () => {
+                                      try {
+                                        await del(`/referrer/opportunities/${id}/notes/${note.id}`);
+                                        fetchNotes();
+                                      } catch (error) {
+                                        Alert.alert('Error', 'Failed to delete note');
+                                      }
+                                    },
+                                  },
+                                ]);
+                              }}
+                            >
+                              <Ionicons name="trash-outline" size={16} color={Colors.error} />
+                            </TouchableOpacity>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                    <Text style={styles.noteContent}>{note.content}</Text>
+                    {note.is_public && (
+                      <View style={styles.publicBadge}>
+                        <Ionicons name="globe-outline" size={12} color={Colors.primary} />
+                        <Text style={styles.publicText}>Public</Text>
+                      </View>
+                    )}
+                  </>
                 )}
               </View>
             ))
           ) : (
-            <View style={styles.emptyState}>
-              <Ionicons name="chatbubble-outline" size={48} color={Colors.gray[300]} />
-              <Text style={styles.emptyText}>No notes yet</Text>
-            </View>
+            !isAddingNote && (
+              <View style={styles.emptyState}>
+                <Ionicons name="chatbubble-outline" size={48} color={Colors.gray[300]} />
+                <Text style={styles.emptyText}>No notes yet</Text>
+              </View>
+            )
           )}
         </Card>
       )}
 
       {activeTab === 'history' && (
         <Card>
-          <Text style={styles.notesTitle}>Activity History</Text>
-          <View style={styles.emptyState}>
-            <Ionicons name="time-outline" size={48} color={Colors.gray[300]} />
-            <Text style={styles.emptyText}>History will appear here</Text>
+          <View style={styles.notesHeader}>
+            <Text style={styles.notesTitle}>Activity History</Text>
           </View>
+
+          {history.length > 0 ? (
+            history.map((entry, index) => (
+              <View key={entry.id} style={styles.historyItem}>
+                <View style={styles.historyTimeline}>
+                  <View style={[
+                    styles.historyDot,
+                    index === 0 && styles.historyDotLatest,
+                  ]} />
+                  {index < history.length - 1 && <View style={styles.historyLine} />}
+                </View>
+                <View style={styles.historyContent}>
+                  <Text style={styles.historyDescription}>{entry.description}</Text>
+                  <View style={styles.historyMeta}>
+                    <Ionicons name="person-outline" size={12} color={Colors.gray[400]} />
+                    <Text style={styles.historyMetaText}>{entry.user_name}</Text>
+                    <Ionicons name="time-outline" size={12} color={Colors.gray[400]} style={{ marginLeft: 8 }} />
+                    <Text style={styles.historyMetaText}>{formatDate(entry.date)} {entry.time}</Text>
+                  </View>
+                </View>
+              </View>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Ionicons name="time-outline" size={48} color={Colors.gray[300]} />
+              <Text style={styles.emptyText}>No history yet</Text>
+            </View>
+          )}
         </Card>
       )}
     </ScrollView>
@@ -781,6 +992,52 @@ const styles = StyleSheet.create({
   addNoteButton: {
     padding: 4,
   },
+  noteForm: {
+    backgroundColor: Colors.gray[50],
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.primary,
+  },
+  noteInput: {
+    fontSize: 14,
+    color: Colors.gray[900],
+    minHeight: 80,
+    padding: 0,
+    lineHeight: 20,
+  },
+  noteFormActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 12,
+  },
+  noteFormCancel: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: Colors.gray[200],
+  },
+  noteFormCancelText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.gray[700],
+  },
+  noteFormSave: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: Colors.primary,
+  },
+  noteFormSaveDisabled: {
+    opacity: 0.5,
+  },
+  noteFormSaveText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#fff',
+  },
   noteItem: {
     backgroundColor: Colors.gray[50],
     borderRadius: 10,
@@ -790,6 +1047,7 @@ const styles = StyleSheet.create({
   noteHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     marginBottom: 8,
   },
   noteAuthor: {
@@ -797,9 +1055,21 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.gray[800],
   },
+  noteActions: {
+    alignItems: 'flex-end',
+    gap: 4,
+  },
   noteDate: {
     fontSize: 12,
     color: Colors.gray[500],
+  },
+  noteIconRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 4,
+  },
+  noteIconBtn: {
+    padding: 4,
   },
   noteContent: {
     fontSize: 14,
@@ -815,6 +1085,55 @@ const styles = StyleSheet.create({
   publicText: {
     fontSize: 11,
     color: Colors.primary,
+  },
+
+  // History
+  historyItem: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  historyTimeline: {
+    width: 24,
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  historyDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: Colors.gray[300],
+    marginTop: 4,
+  },
+  historyDotLatest: {
+    backgroundColor: Colors.primary,
+  },
+  historyLine: {
+    width: 2,
+    flex: 1,
+    backgroundColor: Colors.gray[200],
+    marginTop: 4,
+  },
+  historyContent: {
+    flex: 1,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    marginBottom: 8,
+  },
+  historyDescription: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.gray[800],
+    marginBottom: 6,
+  },
+  historyMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  historyMetaText: {
+    fontSize: 12,
+    color: Colors.gray[500],
   },
 
   // Empty State

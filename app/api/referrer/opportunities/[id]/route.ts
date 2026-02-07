@@ -64,11 +64,20 @@ export async function GET(
         )
       : null;
 
+    // Normalize risk indicator value: handles 0/1, "yes"/"no", true/false → 1 or 0
+    const normalizeYesNo = (val: any): number | null => {
+      if (val === null || val === undefined) return null;
+      if (val === 1 || val === '1' || val === true || (typeof val === 'string' && val.toLowerCase() === 'yes')) return 1;
+      if (val === 0 || val === '0' || val === false || (typeof val === 'string' && val.toLowerCase() === 'no')) return 0;
+      return null;
+    };
+
     // Format response - merge opportunity_details into main object
-    const formattedOpportunity = {
+    const formattedOpportunity: any = {
       ...opportunity,
       id: opportunity._id,
       ...details,
+      entity_type: opportunity.entity_type || details.entity_type || null,
       client_entity_name: client?.entity_name || '',
       client_contact_name: `${client?.contact_first_name || ''} ${client?.contact_last_name || ''}`.trim(),
       contact_first_name: client?.contact_first_name || '',
@@ -84,14 +93,16 @@ export async function GET(
       created_by_name: creatorUser ? `${creatorUser.first_name} ${creatorUser.surname}` : 'Unknown',
     };
 
-    console.log('Referrer API - Returning opportunity with fields:', {
-      entity_type: formattedOpportunity.entity_type,
-      client_industry: formattedOpportunity.client_industry,
-      industry: opportunity.industry,
-      client_time_in_business: formattedOpportunity.client_time_in_business,
-      client_address: formattedOpportunity.client_address,
-      client_abn: formattedOpportunity.client_abn
-    });
+    // Set risk indicators AFTER spread to guarantee they override any spread values
+    // DB stores: additional_property, credit_file_issues (integers 0/1)
+    // API returns both field name variants for compatibility
+    formattedOpportunity.existing_liabilities = normalizeYesNo(details.existing_liabilities ?? opportunity.existing_liabilities);
+    formattedOpportunity.additional_security = normalizeYesNo(details.additional_property ?? details.additional_security ?? opportunity.additional_property ?? opportunity.additional_security);
+    formattedOpportunity.additional_property = normalizeYesNo(details.additional_property ?? details.additional_security ?? opportunity.additional_property ?? opportunity.additional_security);
+    formattedOpportunity.smsf_structure = normalizeYesNo(details.smsf_structure ?? opportunity.smsf_structure);
+    formattedOpportunity.ato_liabilities = normalizeYesNo(details.ato_liabilities ?? opportunity.ato_liabilities);
+    formattedOpportunity.credit_issues = normalizeYesNo(details.credit_file_issues ?? details.credit_issues ?? opportunity.credit_file_issues ?? opportunity.credit_issues);
+    formattedOpportunity.credit_file_issues = normalizeYesNo(details.credit_file_issues ?? details.credit_issues ?? opportunity.credit_file_issues ?? opportunity.credit_issues);
 
     // Remove MongoDB _id and nested objects to avoid duplication
     delete formattedOpportunity._id;

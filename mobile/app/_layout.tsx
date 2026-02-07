@@ -77,6 +77,16 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+          name="opportunity/edit/[id]"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Edit Opportunity',
+          }}
+        />
+        <Stack.Screen
           name="client/[id]"
           options={{
             title: 'Client Details',

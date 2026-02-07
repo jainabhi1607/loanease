@@ -3,6 +3,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Pencil, ThumbsUp } from 'lucide-react';
 
+// Normalize risk indicator: handles 0/1, "yes"/"no", "0"/"1", true/false
+const formatRiskIndicator = (val: any): string => {
+  if (val === null || val === undefined) return '-';
+  if (val === 1 || val === '1' || val === true || (typeof val === 'string' && val.toLowerCase() === 'yes')) return 'Yes';
+  if (val === 0 || val === '0' || val === false || (typeof val === 'string' && val.toLowerCase() === 'no')) return 'No';
+  return '-';
+};
+
+// Check if risk indicator is "No" (handles 0, '0', 'No', 'no', false)
+const isRiskNo = (val: any): boolean => {
+  if (val === 0 || val === '0' || val === false) return true;
+  if (typeof val === 'string' && val.toLowerCase() === 'no') return true;
+  return false;
+};
+
 interface OpportunityFinancialDetailsProps {
   opportunity: any;
   formatCurrency: (amount?: number) => string;
@@ -98,23 +113,23 @@ export function OpportunityFinancialDetails({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">Does your business and/or the borrowing entity have any existing liabilities?</p>
-              <p className="font-medium">{opportunity.existing_liabilities || 'No'}</p>
+              <p className="font-medium">{formatRiskIndicator(opportunity.existing_liabilities)}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">Are you looking to offer up additional property security to support your equity position?</p>
-              <p className="font-medium">{opportunity.additional_security || 'No'}</p>
+              <p className="font-medium">{formatRiskIndicator(opportunity.additional_security ?? opportunity.additional_property)}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">Is the application an SMSF structure?</p>
-              <p className="font-medium">{opportunity.smsf_structure || 'No'}</p>
+              <p className="font-medium">{formatRiskIndicator(opportunity.smsf_structure)}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">Do you have any existing or overdue ATO / tax liabilities?</p>
-              <p className="font-medium">{opportunity.ato_liabilities || 'No'}</p>
+              <p className="font-medium">{formatRiskIndicator(opportunity.ato_liabilities)}</p>
             </div>
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-500">Do you have any credit file issues e.g. paid or unpaid defaults?</p>
-              <p className="font-medium">{opportunity.credit_issues || 'No'}</p>
+              <p className="font-medium">{formatRiskIndicator(opportunity.credit_issues ?? opportunity.credit_file_issues)}</p>
             </div>
           </div>
         </div>
@@ -131,9 +146,9 @@ export function OpportunityFinancialDetails({
         {opportunity.icr && opportunity.lvr && (
           <div className={`p-4 rounded-lg ${
             opportunity.icr >= 2 && opportunity.lvr <= 65 &&
-            opportunity.existing_liabilities === 'No' &&
-            opportunity.ato_liabilities === 'No' &&
-            opportunity.credit_issues === 'No'
+            isRiskNo(opportunity.existing_liabilities) &&
+            isRiskNo(opportunity.ato_liabilities) &&
+            isRiskNo(opportunity.credit_issues ?? opportunity.credit_file_issues)
               ? 'bg-gradient-to-br from-green-50 to-green-100'
               : opportunity.icr >= 2 && opportunity.lvr <= 80
               ? 'bg-gradient-to-br from-yellow-50 to-yellow-100'
@@ -142,9 +157,9 @@ export function OpportunityFinancialDetails({
             <div className="flex items-center gap-2">
               <ThumbsUp className={`h-5 w-5 ${
                 opportunity.icr >= 2 && opportunity.lvr <= 65 &&
-                opportunity.existing_liabilities === 'No' &&
-                opportunity.ato_liabilities === 'No' &&
-                opportunity.credit_issues === 'No'
+                isRiskNo(opportunity.existing_liabilities) &&
+                isRiskNo(opportunity.ato_liabilities) &&
+                isRiskNo(opportunity.credit_issues ?? opportunity.credit_file_issues)
                   ? 'text-green-600'
                   : opportunity.icr >= 2 && opportunity.lvr <= 80
                   ? 'text-yellow-600'
@@ -152,18 +167,18 @@ export function OpportunityFinancialDetails({
               }`} />
               <p className={`font-semibold ${
                 opportunity.icr >= 2 && opportunity.lvr <= 65 &&
-                opportunity.existing_liabilities === 'No' &&
-                opportunity.ato_liabilities === 'No' &&
-                opportunity.credit_issues === 'No'
+                isRiskNo(opportunity.existing_liabilities) &&
+                isRiskNo(opportunity.ato_liabilities) &&
+                isRiskNo(opportunity.credit_issues ?? opportunity.credit_file_issues)
                   ? 'text-green-700'
                   : opportunity.icr >= 2 && opportunity.lvr <= 80
                   ? 'text-yellow-700'
                   : 'text-red-700'
               }`}>
                 {opportunity.icr >= 2 && opportunity.lvr <= 65 &&
-                 opportunity.existing_liabilities === 'No' &&
-                 opportunity.ato_liabilities === 'No' &&
-                 opportunity.credit_issues === 'No'
+                 isRiskNo(opportunity.existing_liabilities) &&
+                 isRiskNo(opportunity.ato_liabilities) &&
+                 isRiskNo(opportunity.credit_issues ?? opportunity.credit_file_issues)
                   ? 'Deal looks good'
                   : opportunity.icr >= 2 && opportunity.lvr <= 80
                   ? 'Needs confirmation'

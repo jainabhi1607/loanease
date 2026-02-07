@@ -4,6 +4,14 @@ import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { sendStatusChangeEmails } from '@/lib/email/postmark';
 import { v4 as uuidv4 } from 'uuid';
 
+// Convert DB risk indicator value (0/1, "yes"/"no", true/false) to display string
+const toYesNo = (val: any): string => {
+  if (val === null || val === undefined) return 'No';
+  if (val === 1 || val === '1' || val === true || (typeof val === 'string' && val.toLowerCase() === 'yes')) return 'Yes';
+  if (val === 0 || val === '0' || val === false || (typeof val === 'string' && val.toLowerCase() === 'no')) return 'No';
+  return 'No';
+};
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -149,21 +157,11 @@ export async function GET(
       existing_interest: details.existing_interest_costs || 0,
       rental_expense: details.rental_expense || 0,
       proposed_rental_income: details.proposed_rental_income || 0,
-      existing_liabilities: details.existing_liabilities !== null && details.existing_liabilities !== undefined
-        ? (details.existing_liabilities === 1 ? 'Yes' : 'No')
-        : 'No',
-      additional_security: details.additional_property !== null && details.additional_property !== undefined
-        ? (details.additional_property === 1 ? 'Yes' : 'No')
-        : 'No',
-      smsf_structure: details.smsf_structure !== null && details.smsf_structure !== undefined
-        ? (details.smsf_structure === 1 ? 'Yes' : 'No')
-        : 'No',
-      ato_liabilities: details.ato_liabilities !== null && details.ato_liabilities !== undefined
-        ? (details.ato_liabilities === 1 ? 'Yes' : 'No')
-        : 'No',
-      credit_issues: details.credit_file_issues !== null && details.credit_file_issues !== undefined
-        ? (details.credit_file_issues === 1 ? 'Yes' : 'No')
-        : 'No',
+      existing_liabilities: toYesNo(details.existing_liabilities),
+      additional_security: toYesNo(details.additional_property),
+      smsf_structure: toYesNo(details.smsf_structure),
+      ato_liabilities: toYesNo(details.ato_liabilities),
+      credit_issues: toYesNo(details.credit_file_issues),
       icr: opp.icr || 0,
       lvr: opp.lvr || 0,
 

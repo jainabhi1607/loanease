@@ -836,9 +836,11 @@ export default function OpportunityDetailPage() {
     return industries[industry] || industry || '-';
   };
 
-  const formatYesNo = (value: string | undefined) => {
-    if (!value) return '-';
-    return value.toLowerCase() === 'yes' ? 'Yes' : 'No';
+  const formatYesNo = (value: any) => {
+    if (value === null || value === undefined) return '-';
+    if (value === 1 || value === '1' || value === true || (typeof value === 'string' && value.toLowerCase() === 'yes')) return 'Yes';
+    if (value === 0 || value === '0' || value === false || (typeof value === 'string' && value.toLowerCase() === 'no')) return 'No';
+    return '-';
   };
 
   const getProgressPercentage = (status: string) => {

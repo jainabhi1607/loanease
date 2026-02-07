@@ -89,14 +89,18 @@ export default function OpportunitiesScreen() {
   };
 
   // Render opportunity item
-  const renderItem = ({ item }: { item: Opportunity }) => (
-    <ListCard
-      title={item.borrowing_entity || item.contact_name || 'Unknown Client'}
-      subtitle={`${item.opportunity_id} • ${formatCurrency(item.loan_amount || 0)}`}
-      rightContent={<StatusBadge status={item.status} size="sm" />}
-      onPress={() => router.push(`/opportunity/${item.id || item._id}`)}
-    />
-  );
+  const renderItem = ({ item }: { item: Opportunity }) => {
+    const oppId = item.id || item._id;
+    const isDraft = item.status === 'draft';
+    return (
+      <ListCard
+        title={item.borrowing_entity || item.contact_name || 'Unknown Client'}
+        subtitle={`${item.opportunity_id} • ${formatCurrency(item.loan_amount || 0)}`}
+        rightContent={<StatusBadge status={item.status} size="sm" />}
+        onPress={() => router.push(isDraft ? `/opportunity/edit/${oppId}` : `/opportunity/${oppId}`)}
+      />
+    );
+  };
 
   // Empty state
   const renderEmpty = () => (
