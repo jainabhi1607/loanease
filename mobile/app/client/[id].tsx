@@ -8,8 +8,6 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
-  Linking,
-  TouchableOpacity,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -46,6 +44,8 @@ export default function ClientDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [client, setClient] = useState<Client | null>(null);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [totalFinanceAmount, setTotalFinanceAmount] = useState(0);
+  const [upcomingSettlements, setUpcomingSettlements] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -71,6 +71,8 @@ export default function ClientDetailScreen() {
         created_at: '',
       };
       setClient(mapped);
+      setTotalFinanceAmount(data.total_finance_amount || 0);
+      setUpcomingSettlements(data.upcoming_settlements || 0);
 
       // Map opportunities
       const opps: Opportunity[] = (data.opportunities || []).map((o) => ({
@@ -109,25 +111,9 @@ export default function ClientDetailScreen() {
     return parts.length > 0 ? parts.join(' ') : '-';
   };
 
-  // Get initials
-  const getInitials = () => {
-    const first = client?.contact_first_name?.[0] || client?.entity_name?.[0] || 'U';
-    const last = client?.contact_last_name?.[0] || '';
-    return (first + last).toUpperCase();
-  };
-
-  // Handle phone call
-  const handleCall = () => {
-    if (client?.contact_phone) {
-      Linking.openURL(`tel:${client.contact_phone}`);
-    }
-  };
-
-  // Handle email
-  const handleEmail = () => {
-    if (client?.contact_email) {
-      Linking.openURL(`mailto:${client.contact_email}`);
-    }
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return `$${amount.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   // Detail row component
@@ -154,46 +140,20 @@ export default function ClientDetailScreen() {
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{getInitials()}</Text>
-        </View>
-        <Text style={styles.entityName}>{client.entity_name || 'Unknown'}</Text>
-        {client.entity_type && (
-          <Badge
-            label={EntityTypeLabels[client.entity_type]}
-            variant="info"
-            style={styles.typeBadge}
-          />
-        )}
+      {/* Total Finance Amount */}
+      <View style={styles.financeCard}>
+        <Text style={styles.financeLabel}>Total Finance Amount</Text>
+        <Text style={styles.financeAmount}>{formatCurrency(totalFinanceAmount)}</Text>
       </View>
 
-      {/* Quick Actions */}
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleCall}
-          disabled={!client.contact_phone}
-        >
-          <Ionicons name="call-outline" size={24} color={Colors.primary} />
-          <Text style={styles.actionText}>Call</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleEmail}
-          disabled={!client.contact_email}
-        >
-          <Ionicons name="mail-outline" size={24} color={Colors.primary} />
-          <Text style={styles.actionText}>Email</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => router.push('/opportunity/add')}
-        >
-          <Ionicons name="add-outline" size={24} color={Colors.primary} />
-          <Text style={styles.actionText}>New Referral</Text>
-        </TouchableOpacity>
+      {/* Upcoming Settlements */}
+      <View style={styles.settlementsCard}>
+        <Text style={styles.settlementsLabel}>Upcoming Settlements</Text>
+        <Text style={styles.settlementsValue}>
+          {upcomingSettlements > 0
+            ? `${upcomingSettlements} upcoming settlement${upcomingSettlements !== 1 ? 's' : ''}`
+            : 'There are currently no upcoming settlements.'}
+        </Text>
       </View>
 
       {/* Contact Information */}
@@ -217,8 +177,8 @@ export default function ClientDetailScreen() {
 
       {/* Related Opportunities */}
       <Card title="Opportunities" rightAction={
-        client.opportunities_count ? (
-          <Badge label={`${client.opportunities_count}`} variant="info" size="sm" />
+        opportunities.length > 0 ? (
+          <Badge label={`${opportunities.length}`} variant="info" size="sm" />
         ) : undefined
       }>
         {opportunities.length > 0 ? (
@@ -253,48 +213,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 24,
+
+  // Total Finance Amount card
+  financeCard: {
+    backgroundColor: '#02383B',
+    borderRadius: 14,
+    padding: 20,
+    marginBottom: 12,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: Colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
+  financeLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: 'rgba(255,255,255,0.7)',
+    marginBottom: 8,
   },
-  avatarText: {
+  financeAmount: {
     fontSize: 28,
     fontWeight: '700',
     color: Colors.white,
   },
-  entityName: {
-    fontSize: 22,
+
+  // Upcoming Settlements card
+  settlementsCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 14,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  settlementsLabel: {
+    fontSize: 14,
     fontWeight: '700',
-    color: Colors.teal,
-    textAlign: 'center',
+    color: '#0F172A',
+    marginBottom: 6,
   },
-  typeBadge: {
-    marginTop: 8,
+  settlementsValue: {
+    fontSize: 13,
+    color: Colors.gray[500],
+    lineHeight: 20,
   },
-  actions: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 24,
-    marginBottom: 24,
-  },
-  actionButton: {
-    alignItems: 'center',
-    padding: 12,
-  },
-  actionText: {
-    fontSize: 12,
-    color: Colors.primary,
-    marginTop: 4,
-  },
+
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
