@@ -71,9 +71,11 @@ export default function RootLayout() {
         <Stack.Screen
           name="opportunity/add"
           options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
             title: 'New Opportunity',
-            headerBackTitle: 'Cancel',
-            presentation: 'modal',
           }}
         />
         <Stack.Screen

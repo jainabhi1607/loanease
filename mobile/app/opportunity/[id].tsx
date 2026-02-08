@@ -15,6 +15,8 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -115,6 +117,7 @@ interface OpportunityData {
   additional_notes?: string;
   external_ref?: string;
   referrer_group?: string;
+  created_by?: string;
   created_by_name?: string;
   target_settlement_date?: string;
   date_settled?: string;
@@ -151,6 +154,16 @@ export default function OpportunityDetailScreen() {
   const [savingNote, setSavingNote] = useState(false);
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editNoteText, setEditNoteText] = useState('');
+
+  // External Ref & Team Member edit state
+  const [externalRefModalVisible, setExternalRefModalVisible] = useState(false);
+  const [externalRefValue, setExternalRefValue] = useState('');
+  const [teamMemberModalVisible, setTeamMemberModalVisible] = useState(false);
+  const [referrerUsers, setReferrerUsers] = useState<{ id: string; first_name: string; surname: string }[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false);
+  const [isSavingField, setIsSavingField] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const user = useAuthStore((state) => state.user);
 
@@ -203,6 +216,66 @@ export default function OpportunityDetailScreen() {
     fetchNotes();
     fetchHistory();
   }, [fetchOpportunity, fetchNotes, fetchHistory]);
+
+  // Fetch referrer users for team member dropdown
+  const fetchReferrerUsers = useCallback(async () => {
+    setIsLoadingUsers(true);
+    try {
+      const data = await get<{ users: { id: string; first_name: string; surname: string }[]; currentUserId: string }>('/referrer/users');
+      setReferrerUsers(data.users || []);
+    } catch (error) {
+      console.error('Failed to fetch referrer users:', error);
+    } finally {
+      setIsLoadingUsers(false);
+    }
+  }, []);
+
+  // Open External Ref modal
+  const openExternalRefModal = () => {
+    setExternalRefValue(opportunity?.external_ref || '');
+    setExternalRefModalVisible(true);
+  };
+
+  // Save External Ref
+  const handleSaveExternalRef = async () => {
+    if (!id) return;
+    setIsSavingField(true);
+    try {
+      await patch(`/referrer/opportunities/${id}`, { external_ref: externalRefValue });
+      setExternalRefModalVisible(false);
+      fetchOpportunity();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update external reference');
+    } finally {
+      setIsSavingField(false);
+    }
+  };
+
+  // Open Team Member modal
+  const openTeamMemberModal = () => {
+    fetchReferrerUsers();
+    setSelectedUserId(opportunity?.created_by || '');
+    setDropdownOpen(false);
+    setTeamMemberModalVisible(true);
+  };
+
+  // Save Team Member
+  const handleSaveTeamMember = async () => {
+    if (!id || !selectedUserId) {
+      Alert.alert('Error', 'Please select a team member');
+      return;
+    }
+    setIsSavingField(true);
+    try {
+      await patch(`/referrer/opportunities/${id}`, { created_by: selectedUserId });
+      setTeamMemberModalVisible(false);
+      fetchOpportunity();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to update team member');
+    } finally {
+      setIsSavingField(false);
+    }
+  };
 
   // Format currency
   const formatCurrency = (value?: number) => {
@@ -294,14 +367,12 @@ export default function OpportunityDetailScreen() {
       {/* Header Card */}
       <View style={styles.headerCard}>
         <View style={styles.headerTop}>
-          <View>
-            <Text style={styles.dealId}>{opportunity.opportunity_id}</Text>
-            <Text style={styles.entityName}>
-              {opportunity.client_entity_name || 'Unknown Client'}
-            </Text>
-          </View>
+          <Text style={styles.dealId}>{opportunity.opportunity_id}</Text>
           <StatusBadge status={opportunity.status as any} />
         </View>
+        <Text style={styles.entityName}>
+          {opportunity.client_entity_name || 'Unknown Client'}
+        </Text>
 
         {/* Quick Info Row */}
         <View style={styles.quickInfoRow}>
@@ -325,6 +396,50 @@ export default function OpportunityDetailScreen() {
           )}
         </View>
       </View>
+
+      {/* External Ref / Referrer Group / Team Member Row */}
+      {opportunity.is_unqualified !== 1 && opportunity.status !== 'draft' && (
+        <View style={styles.infoRow}>
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>External Ref</Text>
+            <View style={styles.infoValueRow}>
+              <Text style={styles.infoValue} numberOfLines={1}>
+                {opportunity.external_ref || '-'}
+              </Text>
+              {(user?.role === 'referrer_admin' || user?.role === 'referrer_team') && (
+                <TouchableOpacity onPress={openExternalRefModal} style={styles.infoEditBtn}>
+                  <Ionicons name="pencil-outline" size={14} color={Colors.primary} />
+                  <Text style={styles.infoEditText}>
+                    {opportunity.external_ref ? 'Edit' : 'Add'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          <View style={styles.infoItemDivider} />
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Referrer Group</Text>
+            <Text style={styles.infoValue} numberOfLines={1}>
+              {opportunity.referrer_group || '-'}
+            </Text>
+          </View>
+          <View style={styles.infoItemDivider} />
+          <View style={styles.infoItem}>
+            <Text style={styles.infoLabel}>Team Member</Text>
+            <View style={styles.infoValueRow}>
+              <Text style={styles.infoValue} numberOfLines={1}>
+                {opportunity.created_by_name || '-'}
+              </Text>
+              {(user?.role === 'referrer_admin') && (
+                <TouchableOpacity onPress={openTeamMemberModal} style={styles.infoEditBtn}>
+                  <Ionicons name="pencil-outline" size={14} color={Colors.primary} />
+                  <Text style={styles.infoEditText}>Edit</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
+      )}
 
       {/* Application Progress */}
       {opportunity.status !== 'draft' && (
@@ -717,6 +832,137 @@ export default function OpportunityDetailScreen() {
           )}
         </Card>
       )}
+      {/* External Ref Edit Modal */}
+      <Modal
+        visible={externalRefModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setExternalRefModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit External Reference</Text>
+            <Text style={styles.modalDescription}>
+              Add or update the external reference for this opportunity
+            </Text>
+            <TextInput
+              style={styles.modalInput}
+              value={externalRefValue}
+              onChangeText={setExternalRefValue}
+              placeholder="Enter external reference"
+              placeholderTextColor={Colors.gray[400]}
+              autoFocus
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setExternalRefModalVisible(false)}
+                disabled={isSavingField}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalSaveBtn, isSavingField && styles.modalSaveBtnDisabled]}
+                onPress={handleSaveExternalRef}
+                disabled={isSavingField}
+              >
+                <Text style={styles.modalSaveText}>
+                  {isSavingField ? 'Saving...' : 'Save'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Team Member Edit Modal */}
+      <Modal
+        visible={teamMemberModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setTeamMemberModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Team Member</Text>
+            <Text style={styles.modalDescription}>
+              Select the team member for this opportunity
+            </Text>
+            {isLoadingUsers ? (
+              <ActivityIndicator size="small" color={Colors.primary} style={{ marginVertical: 20 }} />
+            ) : (
+              <View style={styles.dropdownContainer}>
+                <Text style={styles.dropdownLabel}>Select Referrer User</Text>
+                <TouchableOpacity
+                  style={styles.dropdownTrigger}
+                  onPress={() => setDropdownOpen(!dropdownOpen)}
+                >
+                  <Text style={[
+                    styles.dropdownTriggerText,
+                    !selectedUserId && styles.dropdownPlaceholder,
+                  ]}>
+                    {selectedUserId
+                      ? referrerUsers.find(u => u.id === selectedUserId)
+                        ? `${referrerUsers.find(u => u.id === selectedUserId)!.first_name} ${referrerUsers.find(u => u.id === selectedUserId)!.surname}`
+                        : 'Select'
+                      : 'Select a team member'}
+                  </Text>
+                  <Ionicons
+                    name={dropdownOpen ? 'chevron-up' : 'chevron-down'}
+                    size={18}
+                    color={Colors.gray[500]}
+                  />
+                </TouchableOpacity>
+                {dropdownOpen && (
+                  <ScrollView style={styles.dropdownList} nestedScrollEnabled>
+                    {referrerUsers.map((u) => (
+                      <TouchableOpacity
+                        key={u.id}
+                        style={[
+                          styles.dropdownItem,
+                          selectedUserId === u.id && styles.dropdownItemSelected,
+                        ]}
+                        onPress={() => {
+                          setSelectedUserId(u.id);
+                          setDropdownOpen(false);
+                        }}
+                      >
+                        <Text style={[
+                          styles.dropdownItemText,
+                          selectedUserId === u.id && styles.dropdownItemTextSelected,
+                        ]}>
+                          {u.first_name} {u.surname}
+                        </Text>
+                        {selectedUserId === u.id && (
+                          <Ionicons name="checkmark" size={18} color={Colors.primary} />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                )}
+              </View>
+            )}
+            <View style={styles.modalActions}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setTeamMemberModalVisible(false)}
+                disabled={isSavingField}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalSaveBtn, (isSavingField || !selectedUserId) && styles.modalSaveBtnDisabled]}
+                onPress={handleSaveTeamMember}
+                disabled={isSavingField || !selectedUserId}
+              >
+                <Text style={styles.modalSaveText}>
+                  {isSavingField ? 'Updating...' : 'Update'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -751,19 +997,19 @@ const styles = StyleSheet.create({
   headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 16,
+    alignItems: 'center',
+    marginBottom: 4,
   },
   dealId: {
     fontSize: 13,
     fontWeight: '500',
     color: Colors.gray[500],
-    marginBottom: 4,
   },
   entityName: {
     fontSize: 22,
     fontWeight: '700',
     color: Colors.teal,
+    marginBottom: 16,
   },
   quickInfoRow: {
     flexDirection: 'row',
@@ -783,6 +1029,179 @@ const styles = StyleSheet.create({
   quickInfoValue: {
     fontSize: 16,
     fontWeight: '700',
+    color: Colors.gray[900],
+  },
+
+  // Info Row (External Ref / Referrer Group / Team Member)
+  infoRow: {
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  infoItem: {
+    paddingVertical: 8,
+  },
+  infoItemDivider: {
+    height: 1,
+    backgroundColor: Colors.border,
+  },
+  infoLabel: {
+    fontSize: 11,
+    color: Colors.gray[500],
+    marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+  },
+  infoValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.gray[900],
+    flexShrink: 1,
+  },
+  infoEditBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 2,
+    paddingHorizontal: 8,
+  },
+  infoEditText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.primary,
+  },
+
+  // Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.teal,
+    marginBottom: 6,
+  },
+  modalDescription: {
+    fontSize: 13,
+    color: Colors.gray[500],
+    marginBottom: 20,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 14,
+    color: Colors.gray[900],
+    backgroundColor: Colors.gray[50],
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 20,
+  },
+  modalCancelBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: Colors.gray[100],
+  },
+  modalCancelText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.gray[700],
+  },
+  modalSaveBtn: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: Colors.teal,
+  },
+  modalSaveBtnDisabled: {
+    opacity: 0.5,
+  },
+  modalSaveText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  dropdownContainer: {
+    marginBottom: 4,
+  },
+  dropdownLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: Colors.gray[600],
+    marginBottom: 8,
+  },
+  dropdownTrigger: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    backgroundColor: Colors.gray[50],
+  },
+  dropdownTriggerText: {
+    fontSize: 14,
+    color: Colors.gray[900],
+    flex: 1,
+  },
+  dropdownPlaceholder: {
+    color: Colors.gray[400],
+  },
+  dropdownList: {
+    maxHeight: 180,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 10,
+    marginTop: 6,
+    backgroundColor: Colors.white,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  dropdownItemSelected: {
+    backgroundColor: `${Colors.primary}10`,
+  },
+  dropdownItemText: {
+    fontSize: 14,
+    color: Colors.gray[700],
+  },
+  dropdownItemTextSelected: {
+    fontWeight: '600',
     color: Colors.gray[900],
   },
 
