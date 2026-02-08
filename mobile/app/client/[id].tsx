@@ -18,6 +18,30 @@ import { Card, ListCard, StatusBadge, Badge } from '../../components/ui';
 import { Colors } from '../../constants/colors';
 import { Client, Opportunity, EntityTypeLabels } from '../../types';
 
+interface ClientDetailResponse {
+  client: {
+    id: string;
+    entity: number | string;
+    entity_name: string;
+    borrower_contact: string;
+    mobile: string;
+    email: string;
+    industry: string;
+    company_address: string;
+  };
+  total_finance_amount: number;
+  upcoming_settlements: number;
+  opportunities: {
+    id: string;
+    opportunity_id: string;
+    date_created: string;
+    borrowing_entity: string;
+    referrer_name: string;
+    loan_amount: number;
+    status: string;
+  }[];
+}
+
 export default function ClientDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const [client, setClient] = useState<Client | null>(null);
@@ -29,9 +53,38 @@ export default function ClientDetailScreen() {
   const fetchClient = useCallback(async () => {
     if (!id) return;
     try {
-      const data = await get<Client>(`/referrer/clients/${id}`);
-      setClient(data);
-      // In a real app, would fetch related opportunities too
+      const data = await get<ClientDetailResponse>(`/referrer/clients/${id}`);
+      const c = data.client;
+      // Map API fields to Client type
+      const contactParts = (c.borrower_contact || '').split(' ');
+      const mapped: Client = {
+        _id: c.id,
+        organisation_id: '',
+        entity_name: c.entity_name || '-',
+        entity_type: (typeof c.entity === 'number' && c.entity >= 1 && c.entity <= 6 ? c.entity : undefined) as any,
+        contact_first_name: contactParts[0] || '',
+        contact_last_name: contactParts.slice(1).join(' ') || '',
+        contact_phone: c.mobile !== '-' ? c.mobile : '',
+        contact_email: c.email !== '-' ? c.email : '',
+        address: c.company_address !== '-' ? c.company_address : '',
+        industry: c.industry !== '-' ? c.industry : '',
+        created_at: '',
+      };
+      setClient(mapped);
+
+      // Map opportunities
+      const opps: Opportunity[] = (data.opportunities || []).map((o) => ({
+        _id: o.id,
+        organization_id: '',
+        client_id: c.id,
+        created_by: '',
+        opportunity_id: o.opportunity_id,
+        status: o.status as any,
+        loan_amount: o.loan_amount,
+        created_at: o.date_created,
+        borrowing_entity: o.borrowing_entity,
+      }));
+      setOpportunities(opps);
     } catch (error) {
       console.error('Failed to fetch client:', error);
     } finally {

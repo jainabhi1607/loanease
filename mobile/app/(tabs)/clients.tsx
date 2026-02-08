@@ -28,8 +28,8 @@ export default function ClientsScreen() {
   // Fetch clients
   const fetchClients = useCallback(async () => {
     try {
-      const data = await get<Client[]>('/referrer/clients');
-      setClients(data || []);
+      const data = await get<{ clients: Client[] }>('/referrer/clients');
+      setClients(data.clients || []);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
     } finally {
