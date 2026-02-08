@@ -45,7 +45,8 @@ function Verify2FAContent() {
         const userData = await response.json();
 
         // If session email doesn't match the URL email, redirect to login
-        if (userData.email?.toLowerCase() !== email.toLowerCase()) {
+        const sessionEmail = userData.user?.email || userData.email;
+        if (sessionEmail?.toLowerCase() !== email.toLowerCase()) {
           // Logout and redirect
           await fetch('/api/auth/logout', { method: 'POST' });
           document.cookie = 'cf_2fa_verified=; path=/; max-age=0';
