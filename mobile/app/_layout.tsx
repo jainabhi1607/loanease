@@ -95,6 +95,16 @@ export default function RootLayout() {
             headerBackTitle: 'Back',
           }}
         />
+        <Stack.Screen
+          name="pre-assessment"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Pre-Assessment Tool',
+          }}
+        />
       </Stack>
     </>
   );

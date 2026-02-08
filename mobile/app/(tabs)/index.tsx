@@ -237,7 +237,7 @@ export default function DashboardScreen() {
         <View style={styles.quickActions}>
           <TouchableOpacity
             style={styles.quickActionItem}
-            onPress={() => {}}
+            onPress={() => router.push('/pre-assessment')}
             activeOpacity={0.7}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: '#E8F4FC' }]}>

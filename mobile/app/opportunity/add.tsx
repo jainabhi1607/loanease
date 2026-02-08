@@ -18,7 +18,7 @@ import {
   Animated,
   ActivityIndicator,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Input, PhoneInput, CurrencyInput } from '../../components/ui';
 import { Colors } from '../../constants/colors';
@@ -90,6 +90,23 @@ interface ClientRecord {
 
 // ─── Component ──────────────────────────────────────────────────
 export default function AddOpportunityScreen() {
+  const params = useLocalSearchParams<{
+    fromPreAssessment?: string;
+    loanAmount?: string;
+    estimatedPropertyValue?: string;
+    fundedFromRental?: string;
+    proposedRentalIncome?: string;
+    netProfitBeforeTax?: string;
+    amortisation?: string;
+    depreciation?: string;
+    existingInterestCosts?: string;
+    rentalExpense?: string;
+    existingLiabilities?: string;
+    additionalSecurity?: string;
+    smsf?: string;
+    existingATO?: string;
+  }>();
+
   const [step, setStep] = useState<Step>(0);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -197,6 +214,36 @@ export default function AddOpportunityScreen() {
       setIsLoadingUsers(false);
     };
     load();
+  }, []);
+
+  // Pre-fill from pre-assessment data
+  useEffect(() => {
+    if (params.fromPreAssessment === 'true') {
+      setHasMoreInfo(true);
+      if (params.loanAmount) setLoanAmount(params.loanAmount);
+      if (params.estimatedPropertyValue) setPropertyValue(params.estimatedPropertyValue);
+      if (params.fundedFromRental === 'yes' || params.fundedFromRental === 'no') {
+        setFundedFromRental(params.fundedFromRental);
+      }
+      if (params.proposedRentalIncome) setProposedRentalIncome(params.proposedRentalIncome);
+      if (params.netProfitBeforeTax) setNetProfit(params.netProfitBeforeTax);
+      if (params.amortisation) setAmmortisation(params.amortisation);
+      if (params.depreciation) setDeprecition(params.depreciation);
+      if (params.existingInterestCosts) setExistingInterestCosts(params.existingInterestCosts);
+      if (params.rentalExpense) setRentalExpense(params.rentalExpense);
+      if (params.existingLiabilities === 'yes' || params.existingLiabilities === 'no') {
+        setExistingLiabilities(params.existingLiabilities);
+      }
+      if (params.additionalSecurity === 'yes' || params.additionalSecurity === 'no') {
+        setAdditionalSecurity(params.additionalSecurity);
+      }
+      if (params.smsf === 'yes' || params.smsf === 'no') {
+        setSmsfStructure(params.smsf);
+      }
+      if (params.existingATO === 'yes' || params.existingATO === 'no') {
+        setAtoLiabilities(params.existingATO);
+      }
+    }
   }, []);
 
   // Fetch clients when switching to existing
