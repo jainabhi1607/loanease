@@ -217,9 +217,8 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderRightColor: Colors.gray[200],
     marginRight: 2,
-    height: '100%',
+    alignSelf: 'stretch',
     justifyContent: 'center',
-    paddingVertical: 12,
   },
 
   countryCodeText: {

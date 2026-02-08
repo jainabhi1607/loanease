@@ -584,49 +584,40 @@ export default function AddOpportunityScreen() {
 
       {clientType === 'new' ? (
         <>
-          <View style={styles.row}>
-            <View style={styles.halfField}>
-              <Input
-                label="First Name"
-                placeholder="Director First Name"
-                value={firstName}
-                onChangeText={setFirstName}
-                required
-              />
-            </View>
-            <View style={styles.halfField}>
-              <Input
-                label="Last Name"
-                placeholder="Director Surname"
-                value={lastName}
-                onChangeText={setLastName}
-                required
-              />
-            </View>
-          </View>
+          <Input
+            label="First Name"
+            placeholder="Director First Name"
+            value={firstName}
+            onChangeText={setFirstName}
+            required
+          />
 
-          <View style={styles.row}>
-            <View style={styles.halfField}>
-              <PhoneInput
-                label="Mobile"
-                placeholder="412 345 678"
-                value={mobile}
-                onChangeText={setMobile}
-                required
-              />
-            </View>
-            <View style={styles.halfField}>
-              <Input
-                label="Email"
-                placeholder="Contact Email"
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                required
-              />
-            </View>
-          </View>
+          <Input
+            label="Last Name"
+            placeholder="Director Surname"
+            value={lastName}
+            onChangeText={setLastName}
+            required
+          />
+
+          <PhoneInput
+            label="Mobile"
+            placeholder="98765 43210"
+            value={mobile}
+            onChangeText={setMobile}
+            countryCode="+91"
+            required
+          />
+
+          <Input
+            label="Email"
+            placeholder="Contact Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            required
+          />
 
           <Input
             label="ABN / GST No."
@@ -637,24 +628,19 @@ export default function AddOpportunityScreen() {
             maxLength={11}
           />
 
-          <View style={styles.row}>
-            <View style={styles.halfField}>
-              <SelectField
-                label="Entity Type"
-                value={entityType}
-                onSelect={setEntityType}
-                options={ENTITY_TYPE_OPTIONS_WEB}
-              />
-            </View>
-            <View style={styles.halfField}>
-              <Input
-                label="Entity Name"
-                placeholder="Entity Name"
-                value={entityName}
-                onChangeText={setEntityName}
-              />
-            </View>
-          </View>
+          <SelectField
+            label="Entity Type"
+            value={entityType}
+            onSelect={setEntityType}
+            options={ENTITY_TYPE_OPTIONS_WEB}
+          />
+
+          <Input
+            label="Entity Name"
+            placeholder="Entity Name"
+            value={entityName}
+            onChangeText={setEntityName}
+          />
 
           <Input
             label="Time in Business"
@@ -1201,6 +1187,9 @@ const styles = StyleSheet.create({
     maxHeight: 200,
     textAlignVertical: 'top',
     flex: 1,
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingHorizontal: 14,
   },
 
   // Required asterisk
