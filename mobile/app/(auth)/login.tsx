@@ -1,7 +1,7 @@
 /**
  * Login Screen - Exact replica of design
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -41,13 +41,31 @@ export default function LoginScreen() {
 
   const {
     loginEmail,
+    loginBiometric,
     requestOTP,
     verifyOTP,
     isLoading,
     error,
     clearError,
     requires2FA,
+    biometricAvailable,
+    biometricEnabled,
   } = useAuthStore();
+
+  // Attempt biometric login on mount if available and enabled
+  useEffect(() => {
+    if (biometricAvailable && biometricEnabled) {
+      handleBiometricLogin();
+    }
+  }, [biometricAvailable, biometricEnabled]);
+
+  const handleBiometricLogin = async () => {
+    clearError();
+    const success = await loginBiometric();
+    if (success) {
+      router.replace('/(tabs)');
+    }
+  };
 
   const validateEmailForm = (): boolean => {
     let isValid = true;
@@ -98,8 +116,8 @@ export default function LoginScreen() {
     if (!validateMobileForm()) return;
 
     const formattedMobile = mobile.startsWith('0')
-      ? `+61${mobile.slice(1)}`
-      : mobile.startsWith('+') ? mobile : `+61${mobile}`;
+      ? `+91${mobile.slice(1)}`
+      : mobile.startsWith('+') ? mobile : `+91${mobile}`;
 
     const deviceId = `device_${Date.now()}`;
     await requestOTP(formattedMobile, deviceId);
@@ -281,6 +299,19 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
           </View>
+        )}
+
+        {/* Biometric Login */}
+        {biometricAvailable && biometricEnabled && (
+          <TouchableOpacity
+            style={styles.biometricBtn}
+            onPress={handleBiometricLogin}
+            disabled={isLoading}
+            activeOpacity={0.7}
+          >
+            <Ionicons name="finger-print-outline" size={22} color="#1a8cba" />
+            <Text style={styles.biometricText}>Login with Biometrics</Text>
+          </TouchableOpacity>
         )}
 
         {/* Sign Up */}
@@ -465,6 +496,22 @@ const styles = StyleSheet.create({
   getOtpText: {
     color: '#fff',
     fontSize: 12,
+    fontWeight: '600',
+  },
+  biometricBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 16,
+    paddingVertical: 12,
+    borderWidth: 1.5,
+    borderColor: '#1a8cba',
+    borderRadius: 8,
+  },
+  biometricText: {
+    color: '#1a8cba',
+    fontSize: 14,
     fontWeight: '600',
   },
   signupRow: {

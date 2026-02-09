@@ -105,6 +105,46 @@ export default function RootLayout() {
             title: 'Pre-Assessment Tool',
           }}
         />
+        <Stack.Screen
+          name="account/edit-profile"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Edit Profile',
+          }}
+        />
+        <Stack.Screen
+          name="account/change-password"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Change Password',
+          }}
+        />
+        <Stack.Screen
+          name="account/company-details"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Company Details',
+          }}
+        />
+        <Stack.Screen
+          name="account/team"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Team Management',
+          }}
+        />
       </Stack>
     </>
   );

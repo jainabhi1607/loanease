@@ -86,13 +86,13 @@ export default function AccountScreen() {
           title="Edit Profile"
           subtitle="Update your personal information"
           leftIcon={<Ionicons name="person-outline" size={24} color={Colors.gray[500]} />}
-          onPress={() => {}}
+          onPress={() => router.push('/account/edit-profile' as any)}
         />
         <ListCard
           title="Change Password"
           subtitle="Update your password"
           leftIcon={<Ionicons name="lock-closed-outline" size={24} color={Colors.gray[500]} />}
-          onPress={() => {}}
+          onPress={() => router.push('/account/change-password' as any)}
         />
         {biometricAvailable && (
           <ListCard
@@ -118,19 +118,19 @@ export default function AccountScreen() {
               title="Company Details"
               subtitle="View and edit company information"
               leftIcon={<Ionicons name="business-outline" size={24} color={Colors.gray[500]} />}
-              onPress={() => {}}
+              onPress={() => router.push('/account/company-details' as any)}
             />
             <ListCard
               title="Team Management"
               subtitle="Manage team members"
               leftIcon={<Ionicons name="people-outline" size={24} color={Colors.gray[500]} />}
-              onPress={() => {}}
+              onPress={() => router.push('/account/team' as any)}
             />
             <ListCard
               title="Commission Structure"
               subtitle="View commission split"
               leftIcon={<Ionicons name="cash-outline" size={24} color={Colors.gray[500]} />}
-              onPress={() => {}}
+              onPress={() => router.push('/account/company-details' as any)}
             />
           </Card>
 
