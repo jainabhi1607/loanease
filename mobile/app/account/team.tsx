@@ -16,6 +16,7 @@ import {
   Platform,
   Alert,
   KeyboardAvoidingView,
+  FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/auth';
@@ -68,9 +69,15 @@ export default function TeamScreen() {
   const [state, setState] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [showRolePicker, setShowRolePicker] = useState(false);
-  const [showStatePicker, setShowStatePicker] = useState(false);
+  const [showStateModal, setShowStateModal] = useState(false);
+  const [stateSearch, setStateSearch] = useState('');
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const filteredStates = StateOptions.filter(s =>
+    s.label.toLowerCase().includes(stateSearch.toLowerCase()) ||
+    s.value.toLowerCase().includes(stateSearch.toLowerCase())
+  );
 
   useEffect(() => {
     if (toast) {
@@ -110,7 +117,8 @@ export default function TeamScreen() {
     setIsActive(true);
     setErrors({});
     setShowRolePicker(false);
-    setShowStatePicker(false);
+    setShowStateModal(false);
+    setStateSearch('');
   };
 
   const openAddModal = () => {
@@ -423,7 +431,7 @@ export default function TeamScreen() {
               <Text style={styles.label}>State</Text>
               <TouchableOpacity
                 style={styles.inputBox}
-                onPress={() => { setShowStatePicker(!showStatePicker); setShowRolePicker(false); }}
+                onPress={() => { setShowStateModal(true); setShowRolePicker(false); }}
               >
                 <Text style={[styles.inputField, !state && { color: '#aaa' }]}>
                   {state ? StateOptions.find(s => s.value === state)?.label || state : 'Select state'}
@@ -431,28 +439,6 @@ export default function TeamScreen() {
                 <Ionicons name="chevron-down" size={18} color="#888" />
               </TouchableOpacity>
             </View>
-
-            {showStatePicker && (
-              <View style={styles.pickerOptions}>
-                <TouchableOpacity
-                  style={styles.pickerOption}
-                  onPress={() => { setState(''); setShowStatePicker(false); }}
-                >
-                  <Text style={styles.pickerOptionText}>-- None --</Text>
-                </TouchableOpacity>
-                {StateOptions.map((opt) => (
-                  <TouchableOpacity
-                    key={opt.value}
-                    style={[styles.pickerOption, state === opt.value && styles.pickerOptionActive]}
-                    onPress={() => { setState(opt.value); setShowStatePicker(false); }}
-                  >
-                    <Text style={[styles.pickerOptionText, state === opt.value && styles.pickerOptionTextActive]}>
-                      {opt.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
 
             {/* Status toggle (edit only) */}
             {formMode === 'edit' && (
@@ -482,6 +468,95 @@ export default function TeamScreen() {
             )}
           </ScrollView>
         </KeyboardAvoidingView>
+      </Modal>
+
+      {/* State Picker Modal */}
+      <Modal
+        visible={showStateModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => {
+          setShowStateModal(false);
+          setStateSearch('');
+        }}
+      >
+        <View style={styles.stateModalOverlay}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.stateModalContainer}
+          >
+            <View style={styles.stateModalContent}>
+              <View style={styles.stateModalHeader}>
+                <Text style={styles.stateModalTitle}>Select State</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setShowStateModal(false);
+                    setStateSearch('');
+                  }}
+                  style={styles.stateModalCloseBtn}
+                >
+                  <Ionicons name="close" size={24} color="#666" />
+                </TouchableOpacity>
+              </View>
+
+              {/* Search Input */}
+              <View style={styles.stateSearchBox}>
+                <Ionicons name="search" size={18} color="#888" style={styles.stateSearchIcon} />
+                <TextInput
+                  style={styles.stateSearchInput}
+                  placeholder="Search state..."
+                  placeholderTextColor="#aaa"
+                  value={stateSearch}
+                  onChangeText={setStateSearch}
+                  autoCapitalize="none"
+                />
+                {stateSearch.length > 0 && (
+                  <TouchableOpacity onPress={() => setStateSearch('')}>
+                    <Ionicons name="close-circle" size={18} color="#aaa" />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              {/* State List */}
+              <FlatList
+                data={[{ value: '', label: '-- None --' }, ...filteredStates]}
+                keyExtractor={(item) => item.value || 'none'}
+                style={styles.stateList}
+                keyboardShouldPersistTaps="handled"
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.stateItem,
+                      state === item.value && styles.stateItemActive,
+                    ]}
+                    onPress={() => {
+                      setState(item.value);
+                      setShowStateModal(false);
+                      setStateSearch('');
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.stateItemText,
+                        state === item.value && styles.stateItemTextActive,
+                      ]}
+                    >
+                      {item.label}
+                    </Text>
+                    {state === item.value && (
+                      <Ionicons name="checkmark" size={20} color={Colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={
+                  <View style={styles.stateEmptyList}>
+                    <Text style={styles.stateEmptyListText}>No states found</Text>
+                  </View>
+                }
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </View>
       </Modal>
 
       {/* Toast */}
@@ -719,6 +794,89 @@ const styles = StyleSheet.create({
   pickerOptionTextActive: {
     color: Colors.primary,
     fontWeight: '600',
+  },
+  // State Modal Styles
+  stateModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
+  },
+  stateModalContainer: {
+    maxHeight: '80%',
+  },
+  stateModalContent: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
+  },
+  stateModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  stateModalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: Colors.teal,
+  },
+  stateModalCloseBtn: {
+    padding: 4,
+  },
+  stateSearchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f8fa',
+    marginHorizontal: 16,
+    marginVertical: 12,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    height: 44,
+    borderWidth: 1,
+    borderColor: '#e0e8ed',
+  },
+  stateSearchIcon: {
+    marginRight: 8,
+  },
+  stateSearchInput: {
+    flex: 1,
+    fontSize: 15,
+    color: '#333',
+  },
+  stateList: {
+    maxHeight: 400,
+  },
+  stateItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  stateItemActive: {
+    backgroundColor: `${Colors.primary}10`,
+  },
+  stateItemText: {
+    fontSize: 15,
+    color: Colors.gray[700],
+  },
+  stateItemTextActive: {
+    color: Colors.primary,
+    fontWeight: '600',
+  },
+  stateEmptyList: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  stateEmptyListText: {
+    fontSize: 15,
+    color: Colors.gray[400],
   },
   statusToggle: {
     flexDirection: 'row',

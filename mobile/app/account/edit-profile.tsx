@@ -13,6 +13,9 @@ import {
   ActivityIndicator,
   Platform,
   Alert,
+  Modal,
+  FlatList,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -47,6 +50,12 @@ export default function EditProfileScreen() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [stateSearch, setStateSearch] = useState('');
+
+  const filteredStates = StateOptions.filter(s =>
+    s.label.toLowerCase().includes(stateSearch.toLowerCase()) ||
+    s.value.toLowerCase().includes(stateSearch.toLowerCase())
+  );
 
   useEffect(() => {
     fetchProfile();
@@ -198,27 +207,94 @@ export default function EditProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {showStatePicker && (
-          <View style={styles.pickerOptions}>
-            <TouchableOpacity
-              style={styles.pickerOption}
-              onPress={() => { setState(''); setShowStatePicker(false); }}
+        {/* State Picker Modal */}
+        <Modal
+          visible={showStatePicker}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => {
+            setShowStatePicker(false);
+            setStateSearch('');
+          }}
+        >
+          <View style={styles.modalOverlay}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+              style={styles.modalContainer}
             >
-              <Text style={styles.pickerOptionText}>-- None --</Text>
-            </TouchableOpacity>
-            {StateOptions.map((opt) => (
-              <TouchableOpacity
-                key={opt.value}
-                style={[styles.pickerOption, state === opt.value && styles.pickerOptionActive]}
-                onPress={() => { setState(opt.value); setShowStatePicker(false); }}
-              >
-                <Text style={[styles.pickerOptionText, state === opt.value && styles.pickerOptionTextActive]}>
-                  {opt.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+              <View style={styles.modalContent}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Select State</Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowStatePicker(false);
+                      setStateSearch('');
+                    }}
+                    style={styles.modalCloseBtn}
+                  >
+                    <Ionicons name="close" size={24} color="#666" />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Search Input */}
+                <View style={styles.searchBox}>
+                  <Ionicons name="search" size={18} color="#888" style={styles.searchIcon} />
+                  <TextInput
+                    style={styles.searchInput}
+                    placeholder="Search state..."
+                    placeholderTextColor="#aaa"
+                    value={stateSearch}
+                    onChangeText={setStateSearch}
+                    autoCapitalize="none"
+                  />
+                  {stateSearch.length > 0 && (
+                    <TouchableOpacity onPress={() => setStateSearch('')}>
+                      <Ionicons name="close-circle" size={18} color="#aaa" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+
+                {/* State List */}
+                <FlatList
+                  data={[{ value: '', label: '-- None --' }, ...filteredStates]}
+                  keyExtractor={(item) => item.value || 'none'}
+                  style={styles.stateList}
+                  keyboardShouldPersistTaps="handled"
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={[
+                        styles.stateItem,
+                        state === item.value && styles.stateItemActive,
+                      ]}
+                      onPress={() => {
+                        setState(item.value);
+                        setShowStatePicker(false);
+                        setStateSearch('');
+                      }}
+                    >
+                      <Text
+                        style={[
+                          styles.stateItemText,
+                          state === item.value && styles.stateItemTextActive,
+                        ]}
+                      >
+                        {item.label}
+                      </Text>
+                      {state === item.value && (
+                        <Ionicons name="checkmark" size={20} color={Colors.primary} />
+                      )}
+                    </TouchableOpacity>
+                  )}
+                  ListEmptyComponent={
+                    <View style={styles.emptyList}>
+                      <Text style={styles.emptyListText}>No states found</Text>
+                    </View>
+                  }
+                />
+              </View>
+            </KeyboardAvoidingView>
           </View>
-        )}
+        </Modal>
 
         {/* Save Button */}
         <TouchableOpacity
@@ -303,31 +379,88 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginLeft: 4,
   },
-  pickerOptions: {
-    backgroundColor: Colors.white,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e0e8ed',
-    marginTop: -8,
-    marginBottom: 16,
-    maxHeight: 200,
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
-  pickerOption: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+  modalContainer: {
+    maxHeight: '80%',
+  },
+  modalContent: {
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  pickerOptionActive: {
-    backgroundColor: `${Colors.primary}15`,
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: Colors.teal,
   },
-  pickerOptionText: {
+  modalCloseBtn: {
+    padding: 4,
+  },
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f8fa',
+    marginHorizontal: 16,
+    marginVertical: 12,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    height: 44,
+    borderWidth: 1,
+    borderColor: '#e0e8ed',
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 15,
+    color: '#333',
+  },
+  stateList: {
+    maxHeight: 400,
+  },
+  stateItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  stateItemActive: {
+    backgroundColor: `${Colors.primary}10`,
+  },
+  stateItemText: {
     fontSize: 15,
     color: Colors.gray[700],
   },
-  pickerOptionTextActive: {
+  stateItemTextActive: {
     color: Colors.primary,
     fontWeight: '600',
+  },
+  emptyList: {
+    paddingVertical: 40,
+    alignItems: 'center',
+  },
+  emptyListText: {
+    fontSize: 15,
+    color: Colors.gray[400],
   },
   saveBtn: {
     backgroundColor: Colors.primary,
