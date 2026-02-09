@@ -1,6 +1,6 @@
 # CLAUDE.md (Minimized)
 
-> **Loanease**: Commercial loan referral platform connecting referrers with Loanease. Web app + Mobile app (Expo).
+> **Loanease**: Commercial loan referral platform connecting referrers with Loanease. Web app + Mobile app (Expo). Country: **India** (phone code `+91`).
 
 ## Quick Reference
 
@@ -240,7 +240,7 @@ The mobile app is for referrers only (not admin). Accessed via Expo Go during de
 - Header: Dark teal (`#02383B`) background with centered "Edit Opportunity" + CF ID subtitle
 
 ### Mobile API Integration
-- **Base URL (dev)**: `http://192.168.1.10:3000/api` (mobile) / `http://localhost:3000/api` (web)
+- **Base URL (dev)**: `http://192.168.1.8:3000/api` (mobile) / `http://localhost:3000/api` (web)
 - **Base URL (prod)**: `https://loanease.com/api`
 - Uses same backend API as web app (`/api/referrer/*` endpoints)
 - `GET /referrer/opportunities/{id}` - Fetch opportunity for editing
@@ -250,7 +250,7 @@ The mobile app is for referrers only (not admin). Accessed via Expo Go during de
 
 ### Mobile UI Components (`mobile/components/ui/`)
 - `Button` - Primary/outline/ghost variants with loading state
-- `Input` - Text input with label, error, icons; `PhoneInput` (+61 prefix); `CurrencyInput` ($ prefix)
+- `Input` - Text input with label, error, icons; `PhoneInput` (+91 prefix); `CurrencyInput` ($ prefix)
 - `Card` / `ListCard` - Content cards and tappable list items
 - `Badge` / `StatusBadge` - Status badges with color mapping
 - `CircularProgress` - Progress indicator
@@ -338,7 +338,7 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 - Next.js 15 params are async - must `await params` in route handlers
 
 ### Mobile-Specific Issues
-- **Expo Go URL**: `exp://192.168.1.10:8081` (phone must be on same Wi-Fi)
+- **Expo Go URL**: `exp://192.168.1.8:8081` (phone must be on same Wi-Fi)
 - **Metro Bundler**: Runs on `localhost:8081`, config in `mobile/metro.config.js`
 - **`shadow*` deprecation warning**: React Native Web warns about shadow props, use `boxShadow` for web
 - **react-native-svg version**: May warn about version mismatch, fix with `npx expo install react-native-svg`
@@ -359,7 +359,7 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 5. Use parameterized queries (MongoDB handles this)
 
 ### Database Operations
-- **ICR and LVR**: Auto-calculated in edit dialogs, stored in DB
+- **ICR and LVR**: Auto-calculated in edit dialogs, stored in DB. Display as plain numbers (no `%` sign)
 - **Empty fields**: Display as `-` consistently
 - **Soft deletes**: Use `deleted_at` field, filter with `deleted_at: null`
 - **Settled loans**: Use `date_settled: { $ne: null }` to count settled loans
@@ -430,10 +430,15 @@ Red: ICR < 1.5 OR LVR > 80
 6. **JWT properties** - Use `userId` and `organisationId` (not `id` or `organisation_id`)
 7. **ABN handling** - Filter out all-zeros ABN values (display as empty)
 8. **PDF generation** - Use `jspdf` with `autoTable(doc, {...})` syntax
-9. **Agreement PDF** - Shows IP address and Australian timezone (AEDT/AEST)
+9. **Agreement PDF** - Shows IP address and Indian timezone (IST)
 10. **Dashboard stats** - Never show fake/hardcoded percentage changes
 11. **Mobile drafts** - Tapping draft opportunity opens edit page, not detail page
 12. **Mobile API** - Same backend endpoints, different auth storage (secure store vs cookies)
+13. **Entity types** - Must be sent as integers (use `parseInt()`) not strings
+14. **Phone country code** - Always `+91` (India)
+15. **ICR/LVR display** - Plain numbers only, no `%` sign anywhere
+16. **Dashboard quick actions** - "New Lead" (not "New Referral"), Support opens Contact Us modal
+17. **Referrer clients API** - Returns `opportunities_count` per client
 
 ## Branding & Assets
 

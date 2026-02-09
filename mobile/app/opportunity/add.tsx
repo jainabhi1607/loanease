@@ -393,7 +393,7 @@ export default function AddOpportunityScreen() {
           lastName,
           mobile,
           email,
-          entityType,
+          entityType: entityType ? parseInt(entityType, 10) : undefined,
           entityName,
           abn,
           timeInBusiness,
@@ -968,8 +968,8 @@ export default function AddOpportunityScreen() {
 
           {(icr > 0 || lvr > 0) && (
             <View style={styles.calcRow}>
-              {icr > 0 && <Text style={styles.calcText}>ICR: {icr.toFixed(3)}</Text>}
-              {lvr > 0 && <Text style={styles.calcText}>LVR: {lvr.toFixed(0)}</Text>}
+              {icr > 0 && <Text style={styles.calcText}>ICR: {icr.toFixed(2)}</Text>}
+              {lvr > 0 && <Text style={styles.calcText}>LVR: {lvr.toFixed(2)}</Text>}
             </View>
           )}
 

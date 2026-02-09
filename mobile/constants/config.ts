@@ -46,7 +46,7 @@ export const PAGINATION = {
 
 // Validation
 export const VALIDATION = {
-  PASSWORD_MIN_LENGTH: 8,
+  PASSWORD_MIN_LENGTH: 10,
   MOBILE_REGEX: /^(\+?61|0)4\d{8}$/,
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   ABN_LENGTH: 11,

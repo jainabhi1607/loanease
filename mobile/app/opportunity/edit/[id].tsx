@@ -260,7 +260,7 @@ export default function EditOpportunityScreen() {
   // Format currency for display
   const fmtCurrency = (val: string) => {
     if (!val) return '-';
-    const num = parseInt(val);
+    const num = parseFloat(val);
     return isNaN(num) ? '-' : `$${num.toLocaleString()}`;
   };
 
@@ -461,6 +461,7 @@ export default function EditOpportunityScreen() {
       <PhoneInput
         label="Mobile"
         placeholder="412 345 678"
+        countryCode="+91"
         value={formData.client_mobile}
         onChangeText={(v) => updateField('client_mobile', v)}
       />

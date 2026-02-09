@@ -34,10 +34,23 @@ export async function GET(request: NextRequest) {
       .sort({ created_at: -1 })
       .toArray();
 
+    // Get opportunity counts per client
+    const clientIds = clients.map((c: any) => c._id);
+    const opportunityCounts = await db.collection(COLLECTIONS.OPPORTUNITIES)
+      .find({ client_id: { $in: clientIds as any }, status: { $ne: 'withdrawn' }, deleted_at: null })
+      .project({ client_id: 1 })
+      .toArray();
+
+    const countsMap = new Map<string, number>();
+    opportunityCounts.forEach((opp: any) => {
+      countsMap.set(opp.client_id, (countsMap.get(opp.client_id) || 0) + 1);
+    });
+
     // Map _id to id for consistency
     const formattedClients = clients.map((c: any) => ({
       ...c,
       id: c._id,
+      opportunities_count: countsMap.get(c._id) || 0,
     }));
 
     return NextResponse.json({ clients: formattedClients });
