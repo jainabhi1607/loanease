@@ -969,7 +969,7 @@ export default function AddOpportunityScreen() {
           {(icr > 0 || lvr > 0) && (
             <View style={styles.calcRow}>
               {icr > 0 && <Text style={styles.calcText}>ICR: {icr.toFixed(3)}</Text>}
-              {lvr > 0 && <Text style={styles.calcText}>LVR: {lvr.toFixed(0)}%</Text>}
+              {lvr > 0 && <Text style={styles.calcText}>LVR: {lvr.toFixed(0)}</Text>}
             </View>
           )}
 

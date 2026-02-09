@@ -1074,7 +1074,7 @@ export default function OpportunityDetailPage() {
                 <DetailRow label="Do you have any existing or overdue ATO / tax liabilities?" value={formatYesNo(opportunity.ato_liabilities)} />
                 <DetailRow label="Do you have any credit file issues e.g. paid or unpaid defaults?" value={formatYesNo(opportunity.credit_issues)} />
                 <DetailRow label="ICR" value={opportunity.icr ? opportunity.icr.toFixed(2) : '-'} />
-                <DetailRow label="LVR" value={opportunity.lvr ? `${opportunity.lvr.toFixed(2)}%` : '-'} />
+                <DetailRow label="LVR" value={opportunity.lvr ? `${opportunity.lvr.toFixed(2)}` : '-'} />
                 <div className="pt-2">
                   <p className="text-sm text-gray-500 mb-1">Additional Notes</p>
                   <p className="text-sm">{opportunity.additional_notes || '-'}</p>

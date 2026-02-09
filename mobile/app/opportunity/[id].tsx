@@ -382,7 +382,7 @@ export default function OpportunityDetailScreen() {
           </View>
           <View style={styles.quickInfoItem}>
             <Text style={styles.quickInfoLabel}>LVR</Text>
-            <Text style={styles.quickInfoValue}>{formatPercent(opportunity.lvr)}</Text>
+            <Text style={styles.quickInfoValue}>{opportunity.lvr != null ? opportunity.lvr.toFixed(2) : '-'}</Text>
           </View>
           <View style={styles.quickInfoItem}>
             <Text style={styles.quickInfoLabel}>ICR</Text>
@@ -572,7 +572,7 @@ export default function OpportunityDetailScreen() {
               <View style={styles.metricBox}>
                 <Text style={styles.metricLabel}>LVR</Text>
                 <Text style={[styles.metricValue, { color: (opportunity.lvr || 0) <= 65 ? Colors.success : (opportunity.lvr || 0) <= 80 ? Colors.warning : Colors.error }]}>
-                  {formatPercent(opportunity.lvr)}
+                  {opportunity.lvr != null ? opportunity.lvr.toFixed(2) : '-'}
                 </Text>
               </View>
               {opportunity.outcome_level && (

@@ -373,7 +373,7 @@ export async function POST(request: NextRequest) {
             loanType: formatLoanType(loan_type),
             loanPurpose: formatLoanPurpose(loan_purpose),
             icr: icr ? `${icr.toFixed(2)}` : '-',
-            lvr: lvr ? `${lvr.toFixed(2)}%` : '-',
+            lvr: lvr ? `${lvr.toFixed(2)}` : '-',
           };
 
           await Promise.all(

@@ -89,7 +89,10 @@
       "Bash(npx ngrok:*)",
       "Bash(npx localtunnel --port 3000)",
       "Bash(powershell.exe -NoProfile -File - <<'PSEOF'\nGet-NetTCPConnection -LocalPort 8081 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\nWrite-Output \"done\"\nPSEOF)",
-      "Bash(powershell.exe -NoProfile -File - <<'PSEOF'\nGet-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\nWrite-Output \"done\"\nPSEOF)"
+      "Bash(powershell.exe -NoProfile -File - <<'PSEOF'\nGet-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force -ErrorAction SilentlyContinue }\nWrite-Output \"done\"\nPSEOF)",
+      "Bash(powershell -NoProfile -Command \"Get-NetTCPConnection -LocalPort 8081 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_-Force -ErrorAction SilentlyContinue }; Write-Host ''Port 8081 freed''\")",
+      "Bash(cmd /c \"for /f \"\"tokens=5\"\" %a in \\(''netstat -ano ^| findstr :8081 ^| findstr LISTENING''\\) do @taskkill /F /PID %a 2>nul & echo freed\")",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []

@@ -12,6 +12,8 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  Modal,
+  Linking,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -122,6 +124,7 @@ export default function DashboardScreen() {
     conversionRatio: '0',
   });
   const [recentOpportunities, setRecentOpportunities] = useState<DashboardOpportunity[]>([]);
+  const [showContactModal, setShowContactModal] = useState(false);
 
   // Fetch dashboard data
   const fetchDashboard = useCallback(async () => {
@@ -254,7 +257,7 @@ export default function DashboardScreen() {
             <View style={[styles.quickActionCircle, { backgroundColor: '#E8F4FC' }]}>
               <Ionicons name="add-circle" size={28} color="#1a8cba" />
             </View>
-            <Text style={styles.quickActionLabel}>New Referral</Text>
+            <Text style={styles.quickActionLabel}>New Lead</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -270,7 +273,7 @@ export default function DashboardScreen() {
 
           <TouchableOpacity
             style={styles.quickActionItem}
-            onPress={() => {}}
+            onPress={() => setShowContactModal(true)}
             activeOpacity={0.7}
           >
             <View style={[styles.quickActionCircle, { backgroundColor: '#E8F4FC' }]}>
@@ -363,6 +366,60 @@ export default function DashboardScreen() {
         {/* Bottom spacing */}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      {/* Contact Us Modal */}
+      <Modal
+        visible={showContactModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowContactModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowContactModal(false)}
+        >
+          <TouchableOpacity activeOpacity={1} style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.modalClose}
+              onPress={() => setShowContactModal(false)}
+            >
+              <Ionicons name="close-circle-outline" size={28} color="#334155" />
+            </TouchableOpacity>
+
+            <Text style={styles.modalTitle}>Contact us</Text>
+
+            <Text style={styles.modalSectionTitle}>Chat with us</Text>
+            <Text style={styles.modalText}>For new and existing Opportunities and application enquiries email</Text>
+            <TouchableOpacity
+              style={styles.modalEmailRow}
+              onPress={() => Linking.openURL('mailto:apps@loanease.com')}
+            >
+              <Ionicons name="send-outline" size={16} color="#334155" />
+              <Text style={styles.modalEmailText}>apps@loanease.com</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.modalText}>For all partnership enquiries email</Text>
+            <TouchableOpacity
+              style={styles.modalEmailRow}
+              onPress={() => Linking.openURL('mailto:partners@loanease.com')}
+            >
+              <Ionicons name="send-outline" size={16} color="#334155" />
+              <Text style={styles.modalEmailText}>partners@loanease.com</Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.modalSectionTitle, { marginTop: 20 }]}>Call us</Text>
+            <Text style={styles.modalText}>Call our team Monday to Friday 9.00am to 5.30pm</Text>
+            <TouchableOpacity
+              style={styles.modalEmailRow}
+              onPress={() => Linking.openURL('tel:1300007878')}
+            >
+              <Ionicons name="call-outline" size={16} color="#334155" />
+              <Text style={styles.modalEmailText}>1300 00 78 78</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
@@ -685,5 +742,57 @@ const styles = StyleSheet.create({
 
   bottomSpacer: {
     height: 20,
+  },
+
+  // Contact Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalContent: {
+    backgroundColor: '#FAFFF0',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 400,
+    position: 'relative',
+  },
+  modalClose: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    zIndex: 1,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#02383B',
+    marginBottom: 20,
+  },
+  modalSectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 8,
+  },
+  modalText: {
+    fontSize: 14,
+    color: '#64748B',
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  modalEmailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 16,
+  },
+  modalEmailText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#0F172A',
   },
 });

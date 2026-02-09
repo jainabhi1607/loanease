@@ -424,7 +424,7 @@ export default function PreAssessmentScreen() {
             {outcome.status && (outcome.icr > 0 || outcome.lvr > 0) && (
               <View style={styles.outcomeMetrics}>
                 <Text style={styles.outcomeMetricText}>ICR : {outcome.icr.toFixed(2)}</Text>
-                <Text style={styles.outcomeMetricText}>LVR : {outcome.lvr.toFixed(0)}%</Text>
+                <Text style={styles.outcomeMetricText}>LVR : {outcome.lvr.toFixed(0)}</Text>
               </View>
             )}
 

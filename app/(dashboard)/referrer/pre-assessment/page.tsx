@@ -571,7 +571,7 @@ function PreAssessmentContent() {
             {outcome.status && (outcome.icr > 0 || outcome.lvr > 0) && (
               <div className="flex gap-6 text-sm text-[#787274] mb-2">
                 <p>ICR : {outcome.icr.toFixed(2)}</p>
-                <p>LVR : {outcome.lvr.toFixed(0)}%</p>
+                <p>LVR : {outcome.lvr.toFixed(0)}</p>
               </div>
             )}
             <div className={`p-4 rounded-lg flex items-start gap-3 ${getOutcomeStyles().containerClass}`}>
