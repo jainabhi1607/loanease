@@ -196,6 +196,11 @@ export async function GET(
       term3: details.term3 || 0,
       term4: details.term4 || 0,
 
+      // Reason fields (stored on opportunities table)
+      declined_reason: opp.declined_reason || '',
+      completed_declined_reason: opp.completed_declined_reason || '',
+      withdrawn_reason: opp.withdrawn_reason || '',
+
       // Other
       target_settlement_date: opp.target_settlement_date,
       date_settled: opp.date_settled,

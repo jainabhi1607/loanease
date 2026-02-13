@@ -4,7 +4,12 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Eye, Search } from 'lucide-react';
+import { Eye, Search, ChevronDown, Check } from 'lucide-react';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import {
   Table,
   TableBody,
@@ -26,7 +31,18 @@ interface Application {
   referrer_type: string;
   loan_amount: number;
   status: string;
+  deal_finalisation_status: string | null;
+  completed_declined_reason: string | null;
 }
+
+const FILTER_OPTIONS = [
+  { value: 'all', label: 'All Applications' },
+  { value: 'application_created', label: 'Application Created' },
+  { value: 'application_submitted', label: 'Application Submitted' },
+  { value: 'application_decision', label: 'Application Decision' },
+  { value: 'application_completed', label: 'Application Completed' },
+  { value: 'application_closed', label: 'Application Closed' },
+];
 
 function ApplicationsContent() {
   const router = useRouter();
@@ -36,6 +52,8 @@ function ApplicationsContent() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [filterOpen, setFilterOpen] = useState(false);
   const itemsPerPage = 20;
 
   useEffect(() => {
@@ -130,8 +148,30 @@ function ApplicationsContent() {
     }
   };
 
+  // Filter applications based on status filter
+  const statusFilteredApplications = applications.filter((app) => {
+    switch (statusFilter) {
+      case 'all':
+        return true;
+      case 'application_created':
+        return app.status === 'application_created';
+      case 'application_submitted':
+        return app.status === 'application_submitted';
+      case 'application_decision':
+        return ['conditionally_approved', 'approved'].includes(app.status) ||
+          (app.status === 'declined' && !app.completed_declined_reason);
+      case 'application_completed':
+        return ['settled', 'withdrawn'].includes(app.status) ||
+          (app.status === 'declined' && !!app.completed_declined_reason);
+      case 'application_closed':
+        return !!app.deal_finalisation_status;
+      default:
+        return true;
+    }
+  });
+
   // Filter applications based on search term
-  const filteredApplications = applications.filter((app) => {
+  const filteredApplications = statusFilteredApplications.filter((app) => {
     if (!searchTerm) return true;
 
     const searchLower = searchTerm.toLowerCase();
@@ -178,10 +218,10 @@ function ApplicationsContent() {
     currentPage * itemsPerPage
   );
 
-  // Reset to page 1 when search changes
+  // Reset to page 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, statusFilter]);
 
   if (loading) {
     return (
@@ -209,7 +249,39 @@ function ApplicationsContent() {
       <div className="bg-[#EDFFD7] rounded-lg border border-gray-200">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Active Applications</h2>
+            <div className="flex items-center gap-4">
+              <h2 className="text-lg font-bold text-gray-900">Applications</h2>
+              <span className="text-gray-500 text-sm">({filteredApplications.length})</span>
+              <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center justify-between gap-2 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 hover:border-gray-400 transition-colors min-w-[200px]">
+                    {FILTER_OPTIONS.find(o => o.value === statusFilter)?.label}
+                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 p-1" align="start">
+                  {FILTER_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setStatusFilter(option.value);
+                        setFilterOpen(false);
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left rounded-md hover:bg-gray-100 transition-colors"
+                    >
+                      {statusFilter === option.value ? (
+                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      ) : (
+                        <span className="w-4 flex-shrink-0" />
+                      )}
+                      <span className={statusFilter === option.value ? 'text-green-600 font-medium' : 'text-gray-700'}>
+                        {option.label}
+                      </span>
+                    </button>
+                  ))}
+                </PopoverContent>
+              </Popover>
+            </div>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input

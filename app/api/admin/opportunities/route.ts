@@ -140,7 +140,9 @@ export async function GET(request: NextRequest) {
         referrer_name: referrerName,
         referrer_type: org?.company_name || '',
         loan_amount: opp.loan_amount || 0,
-        status: opp.status || 'draft'
+        status: opp.status || 'draft',
+        deal_finalisation_status: opp.opportunity_details?.deal_finalisation_status || null,
+        completed_declined_reason: opp.completed_declined_reason || null
       };
     });
 

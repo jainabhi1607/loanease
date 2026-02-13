@@ -14,33 +14,49 @@ import {
 } from '@/components/ui/table';
 import {
   Search,
-  Calendar,
-  TrendingUp
+  TrendingUp,
+  ChevronDown,
+  Check
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 import { SortableTableHead, SortDirection } from '@/components/ui/sortable-table-head';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+
+const FILTER_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'date_settled', label: 'Date Settled' },
+  { value: 'closed', label: 'Closed' },
+];
 
 interface Settlement {
   id: string;
   opportunity_id: string;
   entity_name: string;
   referrer_group: string;
-  target_settlement_date: string;
+  target_settlement_date: string | null;
+  date_settled: string | null;
   loan_amount: number;
   lender: string;
   status: string;
+  is_closed: boolean;
 }
 
-function UpcomingSettlementsContent() {
+function SettlementsContent() {
   const router = useRouter();
   const [settlements, setSettlements] = useState<Settlement[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredSettlements, setFilteredSettlements] = useState<Settlement[]>([]);
-  const [sortKey, setSortKey] = useState<string | null>('target_settlement_date');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [sortKey, setSortKey] = useState<string | null>('date_settled');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [filterOpen, setFilterOpen] = useState(false);
   const itemsPerPage = 50;
 
   useEffect(() => {
@@ -48,15 +64,28 @@ function UpcomingSettlementsContent() {
   }, []);
 
   useEffect(() => {
-    // Filter settlements based on search term
-    const filtered = settlements.filter(settlement =>
-      settlement.opportunity_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      settlement.entity_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      settlement.referrer_group.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      settlement.lender.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Apply status filter
+    let filtered = settlements.filter(settlement => {
+      if (statusFilter === 'all') return true;
+      if (statusFilter === 'date_settled') return !!settlement.date_settled;
+      if (statusFilter === 'closed') return settlement.is_closed;
+      return true;
+    });
+
+    // Apply search filter
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      filtered = filtered.filter(settlement =>
+        settlement.opportunity_id.toLowerCase().includes(search) ||
+        settlement.entity_name.toLowerCase().includes(search) ||
+        settlement.referrer_group.toLowerCase().includes(search) ||
+        settlement.lender.toLowerCase().includes(search)
+      );
+    }
+
     setFilteredSettlements(filtered);
-  }, [searchTerm, settlements]);
+    setCurrentPage(1);
+  }, [searchTerm, settlements, statusFilter]);
 
   const fetchSettlements = async () => {
     try {
@@ -69,7 +98,6 @@ function UpcomingSettlementsContent() {
       }
 
       const data = await response.json();
-      console.log('Settlements data:', data.settlements);
 
       setSettlements(data.settlements || []);
       setFilteredSettlements(data.settlements || []);
@@ -80,19 +108,26 @@ function UpcomingSettlementsContent() {
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string, isClosed: boolean) => {
+    if (isClosed) {
+      return <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-100">Closed</Badge>;
+    }
+
     const statusMap: { [key: string]: { label: string; className: string } } = {
+      'settled': { label: 'Settled', className: 'bg-purple-100 text-purple-800 hover:bg-purple-100' },
       'conditionally_approved': { label: 'Conditionally Approved', className: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100' },
       'approved': { label: 'Approved', className: 'bg-green-100 text-green-800 hover:bg-green-100' },
       'application_submitted': { label: 'Application Submitted', className: 'bg-blue-100 text-blue-800 hover:bg-blue-100' },
       'application_created': { label: 'Application Created', className: 'bg-purple-100 text-purple-800 hover:bg-purple-100' },
+      'declined': { label: 'Declined', className: 'bg-red-100 text-red-800 hover:bg-red-100' },
+      'withdrawn': { label: 'Withdrawn', className: 'bg-orange-100 text-orange-800 hover:bg-orange-100' },
     };
 
-    const statusInfo = statusMap[status] || { label: status, className: '' };
+    const statusInfo = statusMap[status] || { label: status?.split('_').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || status, className: 'bg-gray-100 text-gray-800' };
     return <Badge className={statusInfo.className}>{statusInfo.label}</Badge>;
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
     return new Date(dateString).toLocaleDateString('en-AU', {
       day: '2-digit',
@@ -111,26 +146,6 @@ function UpcomingSettlementsContent() {
     }).format(amount);
   };
 
-  const getDaysUntilSettlement = (targetDate: string) => {
-    if (!targetDate) return null;
-    const today = new Date();
-    const target = new Date(targetDate);
-    const diffTime = target.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-      return <span className="text-red-600 font-medium">Overdue by {Math.abs(diffDays)} days</span>;
-    } else if (diffDays === 0) {
-      return <span className="text-orange-600 font-medium">Today</span>;
-    } else if (diffDays <= 7) {
-      return <span className="text-orange-600 font-medium">{diffDays} days</span>;
-    } else if (diffDays <= 30) {
-      return <span className="text-blue-600 font-medium">{diffDays} days</span>;
-    } else {
-      return <span className="text-gray-600">{diffDays} days</span>;
-    }
-  };
-
   const handleSort = (key: string) => {
     if (sortKey === key) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -146,9 +161,9 @@ function UpcomingSettlementsContent() {
     let bValue: any = b[sortKey as keyof Settlement];
 
     // Handle dates
-    if (sortKey === 'target_settlement_date') {
-      aValue = new Date(aValue).getTime();
-      bValue = new Date(bValue).getTime();
+    if (sortKey === 'target_settlement_date' || sortKey === 'date_settled') {
+      aValue = aValue ? new Date(aValue).getTime() : 0;
+      bValue = bValue ? new Date(bValue).getTime() : 0;
     }
 
     // Handle numbers
@@ -160,7 +175,7 @@ function UpcomingSettlementsContent() {
     // Handle strings
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
+      bValue = (bValue || '').toLowerCase();
     }
 
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
@@ -188,9 +203,9 @@ function UpcomingSettlementsContent() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#02383B]">Upcoming Settlements</h1>
+          <h1 className="text-2xl font-bold text-[#02383B]">Settlements</h1>
           <p className="text-gray-500 mt-1">
-            Track opportunities with scheduled settlement dates
+            Applications with Date Settled or marked as Closed
           </p>
         </div>
       </div>
@@ -199,16 +214,47 @@ function UpcomingSettlementsContent() {
       <div className="bg-[#EDFFD7] rounded-lg border border-gray-200">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Active Settlements</h2>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-64"
-              />
+            <h2 className="text-lg font-bold text-gray-900">Settlements</h2>
+            <div className="flex items-center gap-3">
+              <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center justify-between gap-2 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-900 hover:border-gray-400 transition-colors min-w-[160px]">
+                    {FILTER_OPTIONS.find(o => o.value === statusFilter)?.label}
+                    <ChevronDown className="h-4 w-4 text-gray-500" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-1" align="end">
+                  {FILTER_OPTIONS.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setStatusFilter(option.value);
+                        setFilterOpen(false);
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-sm text-left rounded-md hover:bg-gray-100 transition-colors"
+                    >
+                      {statusFilter === option.value ? (
+                        <Check className="h-4 w-4 text-green-600 flex-shrink-0" />
+                      ) : (
+                        <span className="w-4 flex-shrink-0" />
+                      )}
+                      <span className={statusFilter === option.value ? 'text-green-600 font-medium' : 'text-gray-700'}>
+                        {option.label}
+                      </span>
+                    </button>
+                  ))}
+                </PopoverContent>
+              </Popover>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 w-64"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -243,14 +289,13 @@ function UpcomingSettlementsContent() {
                   className="text-[#787274]"
                 />
                 <SortableTableHead
-                  label="Target Settlement"
-                  sortKey="target_settlement_date"
+                  label="Date Settled"
+                  sortKey="date_settled"
                   currentSortKey={sortKey}
                   currentSortDirection={sortDirection}
                   onSort={handleSort}
                   className="text-[#787274]"
                 />
-                <TableHead className="text-[#787274] font-normal">Days Until</TableHead>
                 <SortableTableHead
                   label="Loan Amount"
                   sortKey="loan_amount"
@@ -281,7 +326,7 @@ function UpcomingSettlementsContent() {
               {paginatedSettlements.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={8} className="text-center py-8">
-                    {searchTerm ? 'No settlements found matching your search' : 'No upcoming settlements'}
+                    {searchTerm ? 'No settlements found matching your search' : 'No settlements found'}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -291,11 +336,8 @@ function UpcomingSettlementsContent() {
                     className="border-b border-gray-100 cursor-pointer hover:bg-gray-50"
                     onClick={() => router.push(`/admin/opportunities/${settlement.id}`)}
                   >
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-gray-400" />
-                        <div className="font-medium">{settlement.opportunity_id}</div>
-                      </div>
+                    <TableCell className="font-medium">
+                      {settlement.opportunity_id}
                     </TableCell>
                     <TableCell className="font-semibold">
                       {settlement.entity_name}
@@ -304,10 +346,7 @@ function UpcomingSettlementsContent() {
                       {settlement.referrer_group}
                     </TableCell>
                     <TableCell>
-                      {formatDate(settlement.target_settlement_date)}
-                    </TableCell>
-                    <TableCell>
-                      {getDaysUntilSettlement(settlement.target_settlement_date)}
+                      {formatDate(settlement.date_settled)}
                     </TableCell>
                     <TableCell>
                       {formatCurrency(settlement.loan_amount)}
@@ -316,7 +355,7 @@ function UpcomingSettlementsContent() {
                       {settlement.lender}
                     </TableCell>
                     <TableCell>
-                      {getStatusBadge(settlement.status)}
+                      {getStatusBadge(settlement.status, settlement.is_closed)}
                     </TableCell>
                   </TableRow>
                 ))
@@ -359,7 +398,7 @@ function UpcomingSettlementsContent() {
   );
 }
 
-export default function UpcomingSettlementsPage() {
+export default function SettlementsPage() {
   return (
     <Suspense fallback={
       <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -368,7 +407,7 @@ export default function UpcomingSettlementsPage() {
         </div>
       </div>
     }>
-      <UpcomingSettlementsContent />
+      <SettlementsContent />
     </Suspense>
   );
 }

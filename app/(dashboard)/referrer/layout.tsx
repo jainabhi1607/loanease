@@ -49,9 +49,10 @@ export default function ReferrerLayout({
       const response = await fetch('/api/auth/me');
       if (response.ok) {
         const data = await response.json();
-        setUserRole(data.role);
-        setUserName(data.firstName || null);
-        setUserLastName(data.lastName || null);
+        const user = data.user || data;
+        setUserRole(user.role);
+        setUserName(user.first_name || user.firstName || null);
+        setUserLastName(user.surname || user.lastName || null);
       }
     } catch (error) {
       console.error('Error fetching user data:', error);

@@ -18,11 +18,10 @@ export async function GET(request: NextRequest) {
 
     const db = await getDatabase();
 
-    // Build the match query for opportunities with upcoming settlements
+    // Build the match query for settlements:
+    // Applications that have date_settled set OR deal_finalisation_status set (closed)
     const matchQuery: any = {
-      target_settlement_date: { $ne: null },
-      date_settled: null,
-      status: { $nin: ['withdrawn', 'declined'] },
+      deleted_at: null,
     };
 
     // Filter by organisation for referrers
@@ -34,7 +33,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Use aggregation to join with clients and organisations
+    // Use aggregation to join with clients, organisations, and opportunity_details
     const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
       { $match: matchQuery },
       {
@@ -53,26 +52,49 @@ export async function GET(request: NextRequest) {
           as: 'organisation',
         },
       },
+      {
+        $lookup: {
+          from: COLLECTIONS.OPPORTUNITY_DETAILS,
+          localField: '_id',
+          foreignField: 'opportunity_id',
+          as: 'opportunity_details',
+        },
+      },
       { $unwind: { path: '$client', preserveNullAndEmptyArrays: true } },
       { $unwind: { path: '$organisation', preserveNullAndEmptyArrays: true } },
-      { $sort: { target_settlement_date: 1 } },
+      { $unwind: { path: '$opportunity_details', preserveNullAndEmptyArrays: true } },
+      // Filter: date_settled is set OR deal_finalisation_status is set
+      {
+        $match: {
+          $or: [
+            { date_settled: { $ne: null } },
+            { 'opportunity_details.deal_finalisation_status': { $exists: true, $nin: [null, ''] } },
+          ],
+        },
+      },
+      { $sort: { date_settled: -1, target_settlement_date: -1 } },
     ]).toArray();
 
     // Format the response
-    const settlements = opportunities?.map((opp: any) => ({
-      id: opp._id,
-      opportunity_id: opp.opportunity_id,
-      entity_name: opp.client?.entity_name || '-',
-      referrer_group: opp.organisation?.company_name || '-',
-      target_settlement_date: opp.target_settlement_date,
-      loan_amount: opp.loan_amount,
-      lender: opp.lender || '-',
-      status: opp.status,
-    })) || [];
+    const settlements = opportunities?.map((opp: any) => {
+      const hasDealFinalisation = !!opp.opportunity_details?.deal_finalisation_status;
+      return {
+        id: opp._id,
+        opportunity_id: opp.opportunity_id,
+        entity_name: opp.client?.entity_name || '-',
+        referrer_group: opp.organisation?.company_name || '-',
+        target_settlement_date: opp.target_settlement_date || null,
+        date_settled: opp.date_settled || null,
+        loan_amount: opp.loan_amount,
+        lender: opp.lender || '-',
+        status: opp.status,
+        is_closed: hasDealFinalisation,
+      };
+    }) || [];
 
     return NextResponse.json({ settlements }, { status: 200 });
   } catch (error) {
-    console.error('Error in upcoming settlements API:', error);
+    console.error('Error in settlements API:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

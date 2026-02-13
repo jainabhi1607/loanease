@@ -315,7 +315,7 @@ function ReferrersContent() {
                   currentSortKey={sortKey}
                   currentSortDirection={sortDirection}
                   onSort={handleSort}
-                  className="text-[#787274]"
+                  className="text-[#787274] min-w-[130px]"
                 />
               </TableRow>
             </TableHeader>
@@ -354,7 +354,7 @@ function ReferrersContent() {
                     <TableCell>
                       {getStatusBadge(referrer.status)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-nowrap">
                       {formatDate(referrer.created_at)}
                     </TableCell>
                   </TableRow>

@@ -121,6 +121,9 @@ export default function OpportunityDetailPage() {
   // Check if coming from applications page
   const isFromApplications = searchParams.get('from') === 'applications';
 
+  // User role
+  const [userRole, setUserRole] = useState<string | null>(null);
+
   // Tab state
   const [activeTab, setActiveTab] = useState<'overview' | 'history'>('overview');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -208,6 +211,11 @@ export default function OpportunityDetailPage() {
       fetchOpportunityDetails();
       fetchComments();
     }
+    // Fetch user role
+    fetch('/api/auth/me').then(res => res.ok ? res.json() : null).then(data => {
+      if (data?.user?.role) setUserRole(data.user.role);
+      else if (data?.role) setUserRole(data.role);
+    }).catch(() => {});
   }, [params.id]);
 
   useEffect(() => {
@@ -843,7 +851,16 @@ export default function OpportunityDetailPage() {
     return '-';
   };
 
+  // Check if current declined status is a "completed declined" (has completed_declined_reason)
+  const isCompletedDeclined = opportunity?.status === 'declined' && !!opportunity?.completed_declined_reason;
+  // Check if current declined status is a "decision declined" (has declined_reason but not completed_declined_reason)
+  const isDecisionDeclined = opportunity?.status === 'declined' && !opportunity?.completed_declined_reason;
+
   const getProgressPercentage = (status: string) => {
+    // Completed stage statuses get 100%
+    if (status === 'settled' || status === 'withdrawn') return 100;
+    if (status === 'declined' && isCompletedDeclined) return 100;
+
     const statusOrder: { [key: string]: number } = {
       'draft': 10,
       'opportunity': 20,
@@ -852,12 +869,17 @@ export default function OpportunityDetailPage() {
       'conditionally_approved': 80,
       'approved': 80,
       'declined': 80,
-      'settled': 100,
     };
     return statusOrder[status?.toLowerCase()] || 20;
   };
 
   const isStatusCompleted = (checkStatus: string, currentStatus: string) => {
+    const completedStageStatuses = ['settled', 'withdrawn'];
+    // If current status is a completed stage status or completed declined, all earlier steps are complete
+    if (completedStageStatuses.includes(currentStatus?.toLowerCase()) || isCompletedDeclined) {
+      return true;
+    }
+
     const statusOrder = ['opportunity', 'application_created', 'application_submitted', 'conditionally_approved', 'approved', 'declined', 'settled'];
     const checkIndex = statusOrder.indexOf(checkStatus);
     const currentIndex = statusOrder.indexOf(currentStatus?.toLowerCase());
@@ -1181,30 +1203,54 @@ export default function OpportunityDetailPage() {
                   <p className="text-[#00D37F] text-sm mb-1">Target Settlement</p>
                   {targetDate ? (
                     <div className="flex items-center gap-2">
-                      <button onClick={() => setTargetDateOpen(true)} className="font-semibold text-white hover:underline">
-                        {formatDate(targetDate.toISOString())}
-                      </button>
-                      <button onClick={handleClearTargetDate} className="text-gray-400 hover:text-white">
-                        <X className="h-4 w-4" />
-                      </button>
+                      <p className="font-semibold text-white">{formatDate(targetDate.toISOString())}</p>
+                      {userRole === 'super_admin' && (
+                        <>
+                          <button onClick={() => setTargetDateOpen(true)} className="text-gray-400 hover:text-white">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={handleClearTargetDate} className="text-gray-400 hover:text-white">
+                            <X className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   ) : (
-                    <p className="text-gray-300 text-sm">A target settlement date has not yet been set.</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-gray-300 text-sm">A target settlement date has not yet been set.</p>
+                      {userRole === 'super_admin' && (
+                        <button onClick={() => setTargetDateOpen(true)} className="text-gray-400 hover:text-white">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div>
                   <p className="text-[#00D37F] text-sm mb-1">Date Settled</p>
                   {settledDate ? (
                     <div className="flex items-center gap-2">
-                      <button onClick={() => setSettledDateOpen(true)} className="font-semibold text-white hover:underline">
-                        {formatDate(settledDate.toISOString())}
-                      </button>
-                      <button onClick={handleClearSettledDate} className="text-gray-400 hover:text-white">
-                        <X className="h-4 w-4" />
-                      </button>
+                      <p className="font-semibold text-white">{formatDate(settledDate.toISOString())}</p>
+                      {userRole === 'super_admin' && (
+                        <>
+                          <button onClick={() => setSettledDateOpen(true)} className="text-gray-400 hover:text-white">
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button onClick={handleClearSettledDate} className="text-gray-400 hover:text-white">
+                            <X className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   ) : (
-                    <p className="text-gray-300 text-sm">A date settled date has not yet been set</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-gray-300 text-sm">A date settled date has not yet been set</p>
+                      {userRole === 'super_admin' && (
+                        <button onClick={() => setSettledDateOpen(true)} className="text-gray-400 hover:text-white">
+                          <Pencil className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div className="pt-4 border-t border-white/20">
@@ -1224,20 +1270,20 @@ export default function OpportunityDetailPage() {
             </div>
 
             {/* Application Progress */}
-            <div style={{ backgroundColor: 'rgb(237, 255, 215)' }} className="rounded-lg p-6">
-              <h3 className="font-semibold text-[#02383B] mb-4">Application Progress</h3>
+            <div style={{ backgroundColor: 'rgb(237, 255, 215)' }} className="rounded-xl p-6">
+              <h3 className="font-bold text-[#02383B] text-lg mb-4">Application Progress</h3>
               {/* Progress Bar */}
-              <div className="mb-2">
-                <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="mb-1">
+                <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
-                    className="bg-[#00D37F] h-2 rounded-full transition-all duration-500"
+                    className="bg-[#00D37F] h-2.5 rounded-full transition-all duration-500"
                     style={{ width: `${getProgressPercentage(opportunity.status)}%` }}
                   />
                 </div>
               </div>
-              <p className="text-[#00D37F] text-sm mb-4">{getProgressPercentage(opportunity.status)} % completed</p>
+              <p className="text-[#00D37F] text-sm mb-6">{getProgressPercentage(opportunity.status)} % completed</p>
 
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <ProgressItem
                   label="Opportunity"
                   completed={isStatusCompleted('opportunity', opportunity.status)}
@@ -1259,42 +1305,44 @@ export default function OpportunityDetailPage() {
                 <div>
                   <ProgressItem
                     label="Application Decision"
-                    completed={isStatusCompleted('conditionally_approved', opportunity.status) || isStatusCompleted('approved', opportunity.status) || opportunity.status === 'declined'}
-                    active={['conditionally_approved', 'approved', 'declined'].includes(opportunity.status)}
+                    completed={isStatusCompleted('conditionally_approved', opportunity.status) || isStatusCompleted('approved', opportunity.status) || isDecisionDeclined}
+                    active={['conditionally_approved', 'approved'].includes(opportunity.status) || isDecisionDeclined}
                     onClick={() => {}}
                   />
-                  <div className="ml-6 mt-1 space-y-1 text-sm text-gray-400">
-                    <button onClick={() => handleStatusClick('conditionally_approved')} className={cn(opportunity.status === 'conditionally_approved' && 'text-[#00D37F] font-medium')}>
-                      Conditionally Approved
+                  <div className="ml-8 mt-2 space-y-2">
+                    <button onClick={() => handleStatusClick('conditionally_approved')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', opportunity.status === 'conditionally_approved' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Conditionally Approved</span>
                     </button>
-                    <br />
-                    <button onClick={() => handleStatusClick('approved')} className={cn(opportunity.status === 'approved' && 'text-[#00D37F] font-medium')}>
-                      Approved
+                    <button onClick={() => handleStatusClick('approved')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', opportunity.status === 'approved' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Approved</span>
                     </button>
-                    <br />
-                    <button onClick={() => handleStatusClick('declined', 'decision_declined')} className={cn(opportunity.status === 'declined' && 'text-[#00D37F] font-medium')}>
-                      Declined
+                    <button onClick={() => handleStatusClick('declined', 'decision_declined')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', isDecisionDeclined ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Declined</span>
                     </button>
                   </div>
                 </div>
                 <div>
                   <ProgressItem
                     label="Application Completed"
-                    completed={opportunity.status === 'settled' || opportunity.status === 'withdrawn'}
-                    active={['settled', 'withdrawn'].includes(opportunity.status)}
+                    completed={opportunity.status === 'settled' || opportunity.status === 'withdrawn' || isCompletedDeclined}
+                    active={['settled', 'withdrawn'].includes(opportunity.status) || isCompletedDeclined}
                     onClick={() => {}}
                   />
-                  <div className="ml-6 mt-1 space-y-1 text-sm text-gray-400">
-                    <button onClick={() => handleStatusClick('settled')} className={cn(opportunity.status === 'settled' && 'text-[#00D37F] font-medium')}>
-                      Settled
+                  <div className="ml-8 mt-2 space-y-2">
+                    <button onClick={() => handleStatusClick('settled')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', opportunity.status === 'settled' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Settled</span>
                     </button>
-                    <br />
-                    <button onClick={() => handleStatusClick('completed_declined', 'completed_declined')} className={cn(opportunity.status === 'completed_declined' && 'text-[#00D37F] font-medium')}>
-                      Declined
+                    <button onClick={() => handleStatusClick('completed_declined', 'completed_declined')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', isCompletedDeclined ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Declined</span>
                     </button>
-                    <br />
-                    <button onClick={() => handleStatusClick('withdrawn', 'withdrawn')} className={cn(opportunity.status === 'withdrawn' && 'text-[#00D37F] font-medium')}>
-                      Withdrawn
+                    <button onClick={() => handleStatusClick('withdrawn', 'withdrawn')} className="flex items-center gap-2 w-full text-left">
+                      <Circle className={cn('h-4 w-4', opportunity.status === 'withdrawn' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
+                      <span className="text-sm text-black">Withdrawn</span>
                     </button>
                   </div>
                 </div>
@@ -1830,13 +1878,13 @@ function DetailRow({ label, value, isLink }: { label: string; value: string; isL
 
 function ProgressItem({ label, completed, active, onClick }: { label: string; completed: boolean; active: boolean; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="flex items-center gap-2 w-full text-left">
+    <button onClick={onClick} className="flex items-center gap-2.5 w-full text-left">
       {completed ? (
-        <CheckCircle2 className="h-5 w-5 text-[#00D37F]" />
+        <CheckCircle2 className="h-5 w-5 text-[#00D37F] flex-shrink-0" />
       ) : (
-        <Circle className="h-5 w-5 text-gray-300" />
+        <Circle className="h-5 w-5 text-gray-300 flex-shrink-0" />
       )}
-      <span className={cn('text-sm', completed ? 'text-[#02383B] font-medium' : 'text-gray-400')}>
+      <span className="text-[15px] text-black">
         {label}
       </span>
     </button>

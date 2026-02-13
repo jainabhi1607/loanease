@@ -57,7 +57,8 @@ export default function ReferrerDashboard() {
       const response = await fetch('/api/auth/me');
       if (response.ok) {
         const data = await response.json();
-        setUserData({ firstName: data.firstName, lastName: data.lastName });
+        const user = data.user || data;
+        setUserData({ firstName: user.first_name || user.firstName, lastName: user.surname || user.lastName });
       }
     } catch (error) {
       console.error('Error fetching user data:', error);

@@ -25,7 +25,7 @@ const navigation: NavigationItem[] = [
   { name: 'Dashboard', href: '/admin/dashboard' },
   { name: 'Opportunities', href: '/admin/opportunities' },
   { name: 'Applications', href: '/admin/applications' },
-  { name: 'Upcoming Settlements', href: '/admin/settlements/upcoming' },
+  { name: 'Settlements', href: '/admin/settlements/upcoming' },
   { name: 'Clients', href: '/admin/clients' },
   { name: 'Referrers', href: '/admin/referrers' },
   { name: 'Potential Referrers', href: '/admin/potential-referrers' },
@@ -51,8 +51,9 @@ export default function AdminLayout({
         const response = await fetch('/api/auth/me');
         if (response.ok) {
           const data = await response.json();
-          setUserRole(data.role);
-          setUserName(data.firstName || null);
+          const user = data.user || data;
+          setUserRole(user.role);
+          setUserName(user.first_name || user.firstName || null);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);

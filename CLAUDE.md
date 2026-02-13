@@ -38,7 +38,7 @@ npx expo start --android  # Android emulator
     /auth           # Authentication (login, logout, reset-password, signup, 2fa)
     /settings       # Public settings API (terms, interest-rate)
   /(dashboard)
-    /admin          # Admin portal (dashboard, opportunities, applications, referrers, clients, users, settings)
+    /admin          # Admin portal (dashboard, opportunities, applications, settlements, referrers, clients, users, settings)
     /referrer       # Referrer portal (includes unqualified opportunities page)
   /(auth)           # Auth pages (login, reset-password, signup, register->signup redirect)
   /pre-assessment   # Public pre-assessment tool
@@ -202,6 +202,15 @@ Draft → Opportunity → Application → Settled/Declined/Withdrawn
         Unqualified (separate view)
 ```
 
+### Application Status Details
+- **Application Created** → **Application Submitted** → **Application Decision** → **Application Completed**
+- **Decision Declined** vs **Completed Declined**: Both store `status: 'declined'` in DB. Distinguished by `completed_declined_reason` field:
+  - `declined` + no `completed_declined_reason` = Decision Declined (progress ~60%)
+  - `declined` + has `completed_declined_reason` = Completed Declined (progress 100%)
+- **Application Closed**: `deal_finalisation_status` is set on `opportunity_details`
+- **Settlements page**: Shows applications with `date_settled` set OR `deal_finalisation_status` set
+- **Date Settled / Target Settlement edit**: Super admin only (pencil icon + clear button)
+
 ### 3. User Roles & Access
 
 **Super Admin** (`super_admin`): Full access including Users and Settings
@@ -266,6 +275,15 @@ The mobile app is for referrers only (not admin). Accessed via Expo Go during de
 
 ## API Patterns
 
+### `/api/auth/me` Response Structure
+**IMPORTANT**: Returns `{ user: { role, first_name, surname, ... } }` - must access via `data.user`:
+```typescript
+const data = await response.json();
+const user = data.user || data; // Always use this pattern
+setUserRole(user.role);
+setUserName(user.first_name || user.firstName || null);
+```
+
 ### Authentication Check
 ```typescript
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
@@ -313,6 +331,24 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 - Admins see all data
 - All mutations logged in audit_logs
 
+## Admin Page Features
+
+### Applications Page Filter
+- Popover filter dropdown with 6 options: All Applications, Application Created, Application Submitted, Application Decision, Application Completed, Application Closed
+- Header layout: `Applications (count) [Filter Dropdown] [Search]`
+- Application Closed = `deal_finalisation_status` is set on opportunity_details
+
+### Settlements Page (formerly "Upcoming Settlements")
+- Menu item: "Settlements" (not "Upcoming Settlements")
+- Shows applications with `date_settled` OR `deal_finalisation_status` set
+- Filter: All, Date Settled, Closed
+- API: `app/api/admin/settlements/upcoming/route.ts`
+
+### Referrer Detail Page (`admin/referrers/[id]`)
+- 3 custom tabs: Overview, Opportunities/Applications, Users
+- Overview: Stats cards, two-column layout (General Info + Directors | Agreement + Commission Split)
+- Users tab: Table with Name, Email, Role, Actions columns
+
 ## Common Issues & Solutions
 
 ### MongoDB Type Errors
@@ -324,6 +360,11 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 ### JWT Payload Properties
 - Use `user.userId` not `user.id`
 - Use `user.organisationId` not `user.organisation_id`
+
+### `/api/auth/me` Response
+- Returns `{ user: { role, first_name, surname } }` NOT `{ role, first_name }`
+- Always use `const user = data.user || data;` pattern to safely access fields
+- Failing to do this hides role-based UI (e.g., super_admin Users/Settings tabs)
 
 ### Data Merge Issues
 - **opportunity_id showing UUID instead of CF10020**: Exclude details.opportunity_id before spreading:
@@ -439,6 +480,10 @@ Red: ICR < 1.5 OR LVR > 80
 15. **ICR/LVR display** - Plain numbers only, no `%` sign anywhere
 16. **Dashboard quick actions** - "New Lead" (not "New Referral"), Support opens Contact Us modal
 17. **Referrer clients API** - Returns `opportunities_count` per client
+18. **`/api/auth/me` response** - Returns `{ user: {...} }`, always use `data.user || data` pattern
+19. **Decision vs Completed Declined** - Both `status: 'declined'`, use `completed_declined_reason` to distinguish
+20. **Settlements** - Menu says "Settlements" (not "Upcoming Settlements"), shows date_settled OR closed
+21. **Referrer detail** - 3 tabs: Overview, Opportunities/Applications, Users
 
 ## Branding & Assets
 

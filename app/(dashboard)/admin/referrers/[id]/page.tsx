@@ -3,8 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, TrendingUp, DollarSign, FileText, CheckCircle2, Target, Percent, Plus, User, Mail, RotateCcw, Edit, Download, Eye } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ArrowLeft, Plus, User, Mail, RotateCcw, Edit, Download, Eye, Pencil } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -143,10 +142,11 @@ export default function ViewReferrerPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 50;
   const [downloadingAgreement, setDownloadingAgreement] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'opportunities' | 'users'>('overview');
 
   const fetchInvitations = useCallback(async () => {
     if (!referrer?.organisation_id) return;
-    
+
     try {
       const response = await fetch(`/api/admin/referrers/invite?organisationId=${referrer.organisation_id}`);
       if (response.ok) {
@@ -224,12 +224,12 @@ export default function ViewReferrerPage() {
     const fetchReferrer = async () => {
       try {
         const response = await fetch(`/api/admin/referrers/${params.id}`);
-        
+
         if (!response.ok) {
           console.error('Error fetching referrer');
           return;
         }
-        
+
         const data = await response.json();
         setReferrer(data.referrer);
       } catch (error) {
@@ -238,7 +238,7 @@ export default function ViewReferrerPage() {
         setLoading(false);
       }
     };
-    
+
     fetchReferrer();
   }, [params.id]);
 
@@ -349,7 +349,6 @@ export default function ViewReferrerPage() {
     }
   };
 
-  // Helper function to format loan type
   const formatLoanType = (loanType: string) => {
     if (!loanType) return '-';
     const loanTypeMap: { [key: string]: string } = {
@@ -362,7 +361,6 @@ export default function ViewReferrerPage() {
     return loanTypeMap[loanType] || loanType;
   };
 
-  // Helper function to format status
   const formatStatus = (status: string) => {
     if (!status) return 'draft';
     const statusMap: { [key: string]: string } = {
@@ -379,7 +377,6 @@ export default function ViewReferrerPage() {
     return statusMap[status] || status;
   };
 
-  // Helper function to get status color
   const getStatusColor = (status: string) => {
     const colorMap: { [key: string]: string } = {
       'draft': 'bg-gray-100 text-gray-800',
@@ -408,29 +405,20 @@ export default function ViewReferrerPage() {
     if (!sortKey) return 0;
     let aValue: any = a[sortKey as keyof Opportunity];
     let bValue: any = b[sortKey as keyof Opportunity];
-
-    // Handle dates
     if (sortKey === 'date_created') {
       aValue = new Date(aValue).getTime();
       bValue = new Date(bValue).getTime();
     }
-
-    // Handle numbers
     if (sortKey === 'loan_amount') {
       aValue = Number(aValue) || 0;
       bValue = Number(bValue) || 0;
     }
-
-    // Handle strings
     if (typeof aValue === 'string') {
       aValue = aValue.toLowerCase();
       bValue = bValue ? bValue.toLowerCase() : '';
     }
-
-    // Handle null values
     if (aValue === null || aValue === undefined) aValue = '';
     if (bValue === null || bValue === undefined) bValue = '';
-
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
     if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
     return 0;
@@ -440,7 +428,6 @@ export default function ViewReferrerPage() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedOpportunities = sortedOpportunities.slice(startIndex, endIndex);
-
 
   if (loading) {
     return (
@@ -455,7 +442,7 @@ export default function ViewReferrerPage() {
       <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow p-6">
           <p className="text-gray-500">Referrer not found</p>
-          <Button 
+          <Button
             onClick={() => router.push('/admin/referrers')}
             className="mt-4"
           >
@@ -468,532 +455,386 @@ export default function ViewReferrerPage() {
 
   return (
     <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Back Link */}
+      <button
+        onClick={() => router.push('/admin/referrers')}
+        className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 mb-4"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back
+      </button>
+
       {/* Header */}
-      <div className="mb-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-[#02383B]">{referrer.organisation?.company_name || referrer.company_name}</h1>
         <Button
-          variant="ghost"
-          onClick={() => router.push('/admin/referrers')}
-          className="mb-4 -ml-2"
+          variant="outline"
+          onClick={() => router.push(`/admin/referrers/${params.id}/edit`)}
         >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Referrers
+          Edit Referrer
+          <Pencil className="h-4 w-4 ml-2" />
         </Button>
-        
-        <div className="bg-white rounded-lg shadow px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-[#02383B]">{referrer.company_name}</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                Contact: {referrer.contact_name} • {referrer.email} • {referrer.phone}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                onClick={() => router.push(`/admin/referrers/${params.id}/edit`)}
-              >
-                Edit
-              </Button>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow">
-        <Tabs defaultValue="overview" className="w-full">
-          <div className="border-b">
-            <TabsList className="h-auto p-0 bg-transparent">
-              <TabsTrigger 
-                value="overview" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-              >
-                Overview
-              </TabsTrigger>
-              <TabsTrigger 
-                value="opportunities" 
-                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-6 py-3"
-              >
-                Opportunities / Applications
-              </TabsTrigger>
-            </TabsList>
-          </div>
-          
-          <TabsContent value="overview" className="p-6">
-            {/* Stats Boxes */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <Target className="h-5 w-5 text-blue-500" />
-                  <span className="text-xs text-gray-500">Active</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.open_opportunities}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Open Opportunities</p>
-              </div>
-
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <DollarSign className="h-5 w-5 text-green-500" />
-                  <span className="text-xs text-gray-500">Value</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.opportunities_value.toLocaleString()}`}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Opportunities Value</p>
-              </div>
-
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <FileText className="h-5 w-5 text-orange-500" />
-                  <span className="text-xs text-gray-500">Active</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.open_applications}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Open Applications</p>
-              </div>
-
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <CheckCircle2 className="h-5 w-5 text-purple-500" />
-                  <span className="text-xs text-gray-500">Complete</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.settled_applications}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Settled Applications</p>
-              </div>
-
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <TrendingUp className="h-5 w-5 text-indigo-500" />
-                  <span className="text-xs text-gray-500">Total</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.total_settled_value.toLocaleString()}`}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Total Settled Value</p>
-              </div>
-
-              <div className="bg-white border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <Percent className="h-5 w-5 text-pink-500" />
-                  <span className="text-xs text-gray-500">Rate</span>
-                </div>
-                <div className="text-2xl font-bold">
-                  {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `${stats.conversion_ratio}%`}
-                </div>
-                <p className="text-xs text-gray-600 mt-1">Conversion Ratio</p>
-              </div>
-            </div>
-
-            <div className="flex gap-6">
-              {/* Left Column - 66% width */}
-              <div className="w-2/3 space-y-8">
-                {/* Organisation Details */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Organisation Details</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Company Name</label>
-                      <p className="mt-1">{referrer.organisation?.company_name || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Trading Name</label>
-                      <p className="mt-1">{referrer.organisation?.trading_name || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">ABN / GST No.</label>
-                      <p className="mt-1">{referrer.organisation?.abn || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Entity Type</label>
-                      <p className="mt-1">{referrer.organisation?.entity_type || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Industry Type</label>
-                      <p className="mt-1">{referrer.organisation?.industry_type || ''}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contact Information */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                      <label className="text-sm font-medium text-gray-500">Address</label>
-                      <p className="mt-1">{referrer.organisation?.address || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Phone</label>
-                      <p className="mt-1">{referrer.organisation?.phone || ''}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Primary Contact */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Primary Contact</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">First Name</label>
-                      <p className="mt-1">{referrer.user?.first_name || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Surname</label>
-                      <p className="mt-1">{referrer.user?.surname || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Email</label>
-                      <p className="mt-1">{referrer.user?.email || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">Phone</label>
-                      <p className="mt-1">{referrer.user?.phone || ''}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-gray-500">2FA Enabled</label>
-                      <p className="mt-1">{referrer.user?.two_fa_enabled ? 'Yes' : 'No'}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Additional Directors */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Additional Directors</h3>
-                  {referrer.directors && referrer.directors.length > 0 ? (
-                    <div className="space-y-4">
-                      {referrer.directors.map((director) => (
-                        <div key={director.id} className="border rounded-lg p-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                              <label className="text-sm font-medium text-gray-500">Name</label>
-                              <p className="mt-1">{director.first_name} {director.surname}</p>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-gray-500">Email</label>
-                              <p className="mt-1">{director.email || ''}</p>
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium text-gray-500">Phone</label>
-                              <p className="mt-1">{director.phone || ''}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">There are no additional directors for this organisation</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Right Column - 34% width */}
-              <div className="w-1/3 space-y-6">
-                {/* Users Section */}
-                <div className="bg-white border rounded-lg">
-                  <div className="p-4 border-b flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Users</h3>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      className="h-8"
-                      onClick={() => setInviteDialogOpen(true)}
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Add User
-                    </Button>
-                  </div>
-                  <div className="overflow-hidden">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="pl-4">Name</TableHead>
-                          <TableHead>Role</TableHead>
-                          <TableHead className="text-right pr-4">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {/* Show all users in the organisation */}
-                        {organisationUsers.map((user) => (
-                          <TableRow key={user.id}>
-                            <TableCell className="pl-4">
-                              <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-gray-400" />
-                                <span className="font-medium">
-                                  {user.first_name} {user.surname}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {user.id === referrer.user?.id ? (
-                                <Badge className="bg-[#023838] text-white hover:bg-[#023838]">
-                                  Account Owner
-                                </Badge>
-                              ) : user.role === 'referrer_admin' ? (
-                                <Badge className="bg-[#00D169] text-white hover:bg-[#00D169]">
-                                  Admin
-                                </Badge>
-                              ) : (
-                                <Badge className="bg-[#7161F2] text-white hover:bg-[#7161F2]">
-                                  Team Member
-                                </Badge>
-                              )}
-                            </TableCell>
-                            <TableCell className="text-right pr-4">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => {
-                                  setSelectedUser(user);
-                                  setEditUserDialogOpen(true);
-                                }}
-                              >
-                                <Edit className="h-4 w-4 text-gray-600" />
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                        {/* Show pending invitations */}
-                        {invitations.map((invitation) => (
-                          <TableRow key={invitation.id}>
-                            <TableCell className="pl-4">
-                              <div className="flex items-center gap-2">
-                                <Mail className="h-4 w-4 text-gray-400" />
-                                <span className="text-gray-600">
-                                  {invitation.email}
-                                </span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                                  Invited
-                                </Badge>
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  className="h-6 px-2"
-                                  onClick={() => handleResendInvite(invitation.id, invitation.email)}
-                                  disabled={resendingInvite === invitation.id}
-                                >
-                                  {resendingInvite === invitation.id ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                  ) : (
-                                    <>
-                                      <RotateCcw className="h-3 w-3 mr-1" />
-                                      Resend
-                                    </>
-                                  )}
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </div>
-
-                {/* Referral Agreement Section */}
-                <div className="bg-white border rounded-lg">
-                  <div className="p-4 border-b">
-                    <h3 className="text-lg font-semibold">Referral Agreement</h3>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-sm text-gray-700 mb-4">
-                      Download the referrer agreement for <strong>{referrer.organisation?.company_name || referrer.company_name}</strong> here
-                    </p>
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={handleDownloadAgreement}
-                      disabled={downloadingAgreement}
-                    >
-                      {downloadingAgreement ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      ) : (
-                        <Download className="mr-2 h-4 w-4" />
-                      )}
-                      Download Agreement
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Commission Split Section */}
-                <div className="bg-white border rounded-lg">
-                  <div className="p-4 border-b flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Commission Split</h3>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8"
-                      onClick={() => {
-                        setEditingCommission(commissionSplit || '');
-                        setCommissionDialogOpen(true);
-                      }}
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      {commissionSplit ? 'Edit' : 'Add Custom'}
-                    </Button>
-                  </div>
-                  <div className="p-4">
-                    {commissionSplit ? (
-                      <p className="text-sm text-gray-700 whitespace-pre-wrap">{commissionSplit}</p>
-                    ) : (
-                      <p className="text-sm text-gray-500">
-                        You are currently displaying the default commission split for this Referrer.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="opportunities" className="p-6">
-            {loadingOpportunities ? (
-              <div className="flex items-center justify-center min-h-[200px]">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-              </div>
-            ) : opportunities.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No opportunities found for this referrer</p>
-              </div>
-            ) : (
-              <div className="overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <SortableTableHead
-                        label="Deal ID"
-                        sortKey="deal_id"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Date Created"
-                        sortKey="date_created"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Borrowing Entity"
-                        sortKey="borrowing_entity"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Loan Type"
-                        sortKey="loan_type"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Referrer Name"
-                        sortKey="referrer_name"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Loan Amount"
-                        sortKey="loan_amount"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <SortableTableHead
-                        label="Status"
-                        sortKey="status"
-                        currentSortKey={sortKey}
-                        currentSortDirection={sortDirection}
-                        onSort={handleSort}
-                      />
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedOpportunities.map((opportunity) => (
-                      <TableRow key={opportunity.id}>
-                        <TableCell className="font-medium">{opportunity.deal_id}</TableCell>
-                        <TableCell>
-                          {new Date(opportunity.date_created).toLocaleDateString('en-AU', {
-                            day: 'numeric',
-                            month: 'short',
-                            year: 'numeric'
-                          })}
-                        </TableCell>
-                        <TableCell>{opportunity.borrowing_entity || '-'}</TableCell>
-                        <TableCell>{formatLoanType(opportunity.loan_type)}</TableCell>
-                        <TableCell>{opportunity.referrer_name || '-'}</TableCell>
-                        <TableCell>
-                          {opportunity.loan_amount ? `$${opportunity.loan_amount.toLocaleString()}` : '-'}
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={getStatusColor(opportunity.status)}>
-                            {formatStatus(opportunity.status)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => router.push(`/admin/opportunities/${opportunity.id}`)}
-                            className="bg-[#EDFFD7] border-[#c8d6bf] text-[#787274] hover:bg-[#e0f5c8] hover:border-[#b8c6af]"
-                          >
-                            <Eye className="h-4 w-4 mr-2" />
-                            View
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-
-            {/* Pagination */}
-            {!loadingOpportunities && totalPages > 1 && (
-              <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                <div className="text-sm text-gray-500">
-                  Showing {startIndex + 1} to {Math.min(endIndex, sortedOpportunities.length)} of {sortedOpportunities.length} entries
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </Button>
-                  <div className="flex items-center gap-2 px-3 text-sm text-gray-600">
-                    Page {currentPage} of {totalPages}
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+      <div className="mb-6 border-b">
+        <div className="flex gap-6">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'overview' ? 'border-[#02383B] text-[#02383B]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('opportunities')}
+            className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'opportunities' ? 'border-[#02383B] text-[#02383B]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          >
+            Opportunities / Applications
+          </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`pb-3 text-sm font-medium border-b-2 transition-colors ${activeTab === 'users' ? 'border-[#02383B] text-[#02383B]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          >
+            Users
+          </button>
+        </div>
       </div>
-      
+
+      {/* Overview Tab */}
+      {activeTab === 'overview' && (
+        <>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Open Opportunities</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.open_opportunities}
+              </p>
+            </div>
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Opportunities Value</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.opportunities_value.toLocaleString()}`}
+              </p>
+            </div>
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Open Applications</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.open_applications}
+              </p>
+            </div>
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Settled Applications</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : stats.settled_applications}
+              </p>
+            </div>
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Total Settled Value</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.total_settled_value.toLocaleString()}`}
+              </p>
+            </div>
+            <div className="border rounded-lg p-4">
+              <p className="text-sm text-gray-500 mb-1">Conversion Ratio</p>
+              <p className="text-2xl font-bold text-[#02383B]">
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `${stats.conversion_ratio}%`}
+              </p>
+            </div>
+          </div>
+
+          {/* Two Column Layout */}
+          <div className="flex gap-6">
+            {/* Left Column */}
+            <div className="w-2/3 space-y-6">
+              {/* General Information */}
+              <div className="border rounded-lg p-6">
+                <h3 className="text-lg font-bold text-[#02383B] mb-6">General Information</h3>
+                <div className="divide-y">
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Entity Name</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.company_name || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Referrer Group</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.entity_type || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">First Name</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.user?.first_name || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Last Name</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.user?.surname || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Mobile</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.user?.mobile || referrer.user?.phone || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Email</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.user?.email || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">ABN</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.abn || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Trading Name</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.trading_name || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Address</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.address || '-'}</span>
+                  </div>
+                  <div className="flex py-3">
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Industry Type</span>
+                    <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.industry_type || '-'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Directors */}
+              <div className="bg-[#EDFFD7] rounded-lg p-6">
+                <h3 className="text-lg font-bold text-[#02383B] mb-6">Directors</h3>
+                {referrer.directors && referrer.directors.length > 0 ? (
+                  <div className="divide-y divide-gray-300/40">
+                    {referrer.directors.map((director, index) => (
+                      <div key={director.id} className="flex py-3">
+                        <span className="w-40 text-sm text-gray-500 flex-shrink-0">Director {index + 1}</span>
+                        <span className="text-sm font-medium text-[#02383B]">{director.first_name} {director.surname}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No directors found for this organisation.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="w-1/3 space-y-6">
+              {/* Referral Agreement */}
+              <div className="border rounded-lg p-6">
+                <h3 className="text-lg font-bold text-[#02383B] mb-3">Referral Agreement</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Download the referrer agreement for <strong>{referrer.organisation?.company_name || referrer.company_name}</strong> here
+                </p>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleDownloadAgreement}
+                  disabled={downloadingAgreement}
+                >
+                  {downloadingAgreement ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Download className="mr-2 h-4 w-4" />
+                  )}
+                  Download Agreement
+                </Button>
+              </div>
+
+              {/* Commission Split */}
+              <div className="border rounded-lg p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold text-[#02383B]">Commission Split</h3>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="h-8"
+                    onClick={() => {
+                      setEditingCommission(commissionSplit || '');
+                      setCommissionDialogOpen(true);
+                    }}
+                  >
+                    <Pencil className="h-3 w-3 mr-1" />
+                    {commissionSplit ? 'Edit' : 'Add Custom'}
+                  </Button>
+                </div>
+                {commissionSplit ? (
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">{commissionSplit}</p>
+                ) : (
+                  <p className="text-sm text-gray-500">
+                    You are currently displaying the default commission split for this Referrer.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Opportunities / Applications Tab */}
+      {activeTab === 'opportunities' && (
+        <div className="bg-white rounded-lg border">
+          {loadingOpportunities ? (
+            <div className="flex items-center justify-center min-h-[200px]">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            </div>
+          ) : opportunities.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No opportunities found for this referrer</p>
+            </div>
+          ) : (
+            <div className="overflow-hidden p-6">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <SortableTableHead label="Deal ID" sortKey="deal_id" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Date Created" sortKey="date_created" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Borrowing Entity" sortKey="borrowing_entity" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Loan Type" sortKey="loan_type" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Referrer Name" sortKey="referrer_name" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Loan Amount" sortKey="loan_amount" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <SortableTableHead label="Status" sortKey="status" currentSortKey={sortKey} currentSortDirection={sortDirection} onSort={handleSort} />
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {paginatedOpportunities.map((opportunity) => (
+                    <TableRow key={opportunity.id}>
+                      <TableCell className="font-medium">{opportunity.deal_id}</TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {new Date(opportunity.date_created).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </TableCell>
+                      <TableCell>{opportunity.borrowing_entity || '-'}</TableCell>
+                      <TableCell>{formatLoanType(opportunity.loan_type)}</TableCell>
+                      <TableCell>{opportunity.referrer_name || '-'}</TableCell>
+                      <TableCell>{opportunity.loan_amount ? `$${opportunity.loan_amount.toLocaleString()}` : '-'}</TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(opportunity.status)}>{formatStatus(opportunity.status)}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => router.push(`/admin/opportunities/${opportunity.id}`)}
+                          className="bg-[#EDFFD7] border-[#c8d6bf] text-[#787274] hover:bg-[#e0f5c8] hover:border-[#b8c6af]"
+                        >
+                          <Eye className="h-4 w-4 mr-2" />
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {!loadingOpportunities && totalPages > 1 && (
+            <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="text-sm text-gray-500">
+                Showing {startIndex + 1} to {Math.min(endIndex, sortedOpportunities.length)} of {sortedOpportunities.length} entries
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}>Previous</Button>
+                <div className="flex items-center gap-2 px-3 text-sm text-gray-600">Page {currentPage} of {totalPages}</div>
+                <Button variant="outline" size="sm" onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>Next</Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Users Tab */}
+      {activeTab === 'users' && (
+        <div className="bg-white rounded-lg border">
+          <div className="p-6 border-b flex items-center justify-between">
+            <h3 className="text-lg font-bold text-[#02383B]">Users</h3>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setInviteDialogOpen(true)}
+            >
+              <Plus className="h-3 w-3 mr-1" />
+              Add User
+            </Button>
+          </div>
+          <div className="overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="pl-6">Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead className="text-right pr-6">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {organisationUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="pl-6">
+                      <div className="flex items-center gap-2">
+                        <User className="h-4 w-4 text-gray-400" />
+                        <span className="font-medium">{user.first_name} {user.surname}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-600">{user.email}</TableCell>
+                    <TableCell>
+                      {user.id === referrer.user?.id ? (
+                        <Badge className="bg-[#023838] text-white hover:bg-[#023838]">Account Owner</Badge>
+                      ) : user.role === 'referrer_admin' ? (
+                        <Badge className="bg-[#00D169] text-white hover:bg-[#00D169]">Admin</Badge>
+                      ) : (
+                        <Badge className="bg-[#7161F2] text-white hover:bg-[#7161F2]">Team Member</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right pr-6">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setEditUserDialogOpen(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4 text-gray-600" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {invitations.map((invitation) => (
+                  <TableRow key={invitation.id}>
+                    <TableCell className="pl-6">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-gray-400" />
+                        <span className="text-gray-600">{invitation.email}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-gray-600">{invitation.email}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">Invited</Badge>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-6 px-2"
+                          onClick={() => handleResendInvite(invitation.id, invitation.email)}
+                          disabled={resendingInvite === invitation.id}
+                        >
+                          {resendingInvite === invitation.id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <>
+                              <RotateCcw className="h-3 w-3 mr-1" />
+                              Resend
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </TableCell>
+                    <TableCell />
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
+
       {referrer && (
         <InviteUserDialog
           open={inviteDialogOpen}
