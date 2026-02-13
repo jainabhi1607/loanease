@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 
@@ -180,64 +181,60 @@ export default function ReferrerDashboard() {
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Opportunities Card */}
-          <div className="bg-white rounded-xl shadow-sm p-10 text-center">
-            <div className="flex justify-center mb-4">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="5" y="5" width="30" height="30" rx="4" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <rect x="45" y="5" width="30" height="30" rx="4" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <rect x="5" y="45" width="30" height="30" rx="4" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <rect x="45" y="45" width="30" height="30" rx="4" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <circle cx="20" cy="20" r="4" fill="#00D37F"/>
-                <circle cx="60" cy="20" r="4" fill="#00D37F"/>
-                <circle cx="20" cy="60" r="4" fill="#00D37F"/>
-                <circle cx="60" cy="60" r="4" fill="#00D37F"/>
-              </svg>
+          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
+            <div className="h-[120px] w-full mb-4 flex items-center justify-center">
+              <Image
+                src="/icons/dahsboard-icon-1.png"
+                alt="Opportunities"
+                width={120}
+                height={120}
+                className="object-contain"
+              />
             </div>
             <h2 className="text-4xl font-bold text-[#1a3a3a] mb-1">{stats.openOpportunities}</h2>
             <p className="text-sm text-[#787274] uppercase tracking-wide">Opportunities</p>
           </div>
 
           {/* Applications Card */}
-          <div className="bg-white rounded-xl shadow-sm p-10 text-center">
-            <div className="flex justify-center mb-4">
-              <svg width="60" height="80" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M35 5H10C7.23858 5 5 7.23858 5 10V70C5 72.7614 7.23858 75 10 75H50C52.7614 75 55 72.7614 55 70V25L35 5Z" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <path d="M35 5V25H55" stroke="#1a3a3a" strokeWidth="2" fill="none"/>
-                <line x1="15" y1="40" x2="45" y2="40" stroke="#00D37F" strokeWidth="3"/>
-                <line x1="15" y1="50" x2="45" y2="50" stroke="#00D37F" strokeWidth="3"/>
-                <line x1="15" y1="60" x2="35" y2="60" stroke="#00D37F" strokeWidth="3"/>
-              </svg>
+          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
+            <div className="h-[120px] w-full mb-4 flex items-center justify-center">
+              <Image
+                src="/icons/dahsboard-icon-2.png"
+                alt="Applications"
+                width={120}
+                height={120}
+                className="object-contain"
+              />
             </div>
             <h2 className="text-4xl font-bold text-[#1a3a3a] mb-1">{stats.openApplications}</h2>
             <p className="text-sm text-[#787274] uppercase tracking-wide">Applications</p>
           </div>
 
           {/* Settlements Card */}
-          <div className="bg-white rounded-xl shadow-sm p-10 text-center">
-            <div className="flex justify-center mb-4">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="40" cy="40" r="35" stroke="#1a3a3a" strokeWidth="2" fill="#e8f5e9"/>
-                <circle cx="40" cy="40" r="25" stroke="#00D37F" strokeWidth="2" fill="none"/>
-                <text x="40" y="48" textAnchor="middle" fill="#00D37F" fontSize="28" fontWeight="bold">$</text>
-              </svg>
+          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
+            <div className="h-[120px] w-full mb-4 flex items-center justify-center">
+              <Image
+                src="/icons/dahsboard-icon-3.png"
+                alt="Settlements"
+                width={120}
+                height={120}
+                className="object-contain"
+              />
             </div>
             <h2 className="text-4xl font-bold text-[#1a3a3a] mb-1">{formatCurrency(stats.settledValue)}</h2>
             <p className="text-sm text-[#787274] uppercase tracking-wide">Settlements</p>
           </div>
 
           {/* Conversion Card */}
-          <div className="bg-white rounded-xl shadow-sm p-10 text-center">
-            <div className="flex justify-center mb-4">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 70V15" stroke="#1a3a3a" strokeWidth="2"/>
-                <path d="M10 70H75" stroke="#1a3a3a" strokeWidth="2"/>
-                <path d="M20 55L35 40L50 50L70 25" stroke="#00D37F" strokeWidth="3" fill="none"/>
-                <path d="M60 25H70V35" stroke="#00D37F" strokeWidth="3" fill="none"/>
-                <circle cx="20" cy="55" r="3" fill="#00D37F"/>
-                <circle cx="35" cy="40" r="3" fill="#00D37F"/>
-                <circle cx="50" cy="50" r="3" fill="#00D37F"/>
-                <circle cx="70" cy="25" r="3" fill="#00D37F"/>
-              </svg>
+          <div className="bg-white rounded-xl shadow-sm p-6 text-center">
+            <div className="h-[120px] w-full mb-4 flex items-center justify-center">
+              <Image
+                src="/icons/dahsboard-icon-4.png"
+                alt="Conversion"
+                width={120}
+                height={120}
+                className="object-contain"
+              />
             </div>
             <h2 className="text-4xl font-bold text-[#1a3a3a] mb-1">{stats.conversionRatio}%</h2>
             <p className="text-sm text-[#787274] uppercase tracking-wide">Conversion</p>
