@@ -162,6 +162,9 @@ export default function OpportunityDetailPage() {
   const [withdrawnReason, setWithdrawnReason] = useState('');
   const [unqualifiedReason, setUnqualifiedReason] = useState('');
 
+  // Loan declined reasons from settings
+  const [loanDeclinedReasons, setLoanDeclinedReasons] = useState<string[]>([]);
+
   // Referrer details state
   const [referrerUsers, setReferrerUsers] = useState<any[]>([]);
   const [selectedReferrerUser, setSelectedReferrerUser] = useState('');
@@ -215,6 +218,10 @@ export default function OpportunityDetailPage() {
     fetch('/api/auth/me').then(res => res.ok ? res.json() : null).then(data => {
       if (data?.user?.role) setUserRole(data.user.role);
       else if (data?.role) setUserRole(data.role);
+    }).catch(() => {});
+    // Fetch loan declined reasons from settings
+    fetch('/api/settings/loan-declined-reasons').then(res => res.ok ? res.json() : null).then(data => {
+      if (data?.reasons) setLoanDeclinedReasons(data.reasons);
     }).catch(() => {});
   }, [params.id]);
 
@@ -1512,12 +1519,26 @@ export default function OpportunityDetailPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Decline Reason</DialogTitle>
-            <DialogDescription>Please provide a reason for declining</DialogDescription>
+            <DialogDescription>Please select or provide a reason for declining</DialogDescription>
           </DialogHeader>
-          <Textarea value={declinedReason} onChange={(e) => setDeclinedReason(e.target.value)} rows={3} />
+          <div className="space-y-3">
+            {loanDeclinedReasons.length > 0 && (
+              <Select onValueChange={(val) => setDeclinedReason(val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a reason" />
+                </SelectTrigger>
+                <SelectContent>
+                  {loanDeclinedReasons.map((reason) => (
+                    <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <Textarea value={declinedReason} onChange={(e) => setDeclinedReason(e.target.value)} rows={3} placeholder={loanDeclinedReasons.length > 0 ? "Or enter a custom reason..." : "Enter decline reason..."} />
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeclinedReasonOpen(false)}>Cancel</Button>
-            <Button onClick={handleDeclinedReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
+            <Button onClick={handleDeclinedReasonConfirm} disabled={!declinedReason.trim()} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1526,12 +1547,26 @@ export default function OpportunityDetailPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Decline Reason</DialogTitle>
-            <DialogDescription>Please provide a reason for declining</DialogDescription>
+            <DialogDescription>Please select or provide a reason for declining</DialogDescription>
           </DialogHeader>
-          <Textarea value={completedDeclinedReason} onChange={(e) => setCompletedDeclinedReason(e.target.value)} rows={3} />
+          <div className="space-y-3">
+            {loanDeclinedReasons.length > 0 && (
+              <Select onValueChange={(val) => setCompletedDeclinedReason(val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a reason" />
+                </SelectTrigger>
+                <SelectContent>
+                  {loanDeclinedReasons.map((reason) => (
+                    <SelectItem key={reason} value={reason}>{reason}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            <Textarea value={completedDeclinedReason} onChange={(e) => setCompletedDeclinedReason(e.target.value)} rows={3} placeholder={loanDeclinedReasons.length > 0 ? "Or enter a custom reason..." : "Enter decline reason..."} />
+          </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCompletedDeclinedReasonOpen(false)}>Cancel</Button>
-            <Button onClick={handleCompletedDeclinedReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
+            <Button onClick={handleCompletedDeclinedReasonConfirm} disabled={!completedDeclinedReason.trim()} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,6 +1,7 @@
 import { getDatabase } from '../client';
 import { ObjectId } from 'mongodb';
 import crypto from 'crypto';
+import { getTwoFACodeExpiryMinutes } from './global-settings';
 
 // Two Factor Authentication Codes
 export interface TwoFACode {
@@ -25,8 +26,9 @@ export async function createTwoFACode(userId: string): Promise<TwoFACode> {
   // TEMPORARY: Fixed OTP code for development - will be reverted later
   const code = '998877'; // Math.floor(100000 + Math.random() * 900000).toString();
 
-  // Expires in 10 minutes
-  const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+  // Expires based on DB setting (default 10 minutes)
+  const expiryMinutes = await getTwoFACodeExpiryMinutes();
+  const expiresAt = new Date(Date.now() + expiryMinutes * 60 * 1000).toISOString();
 
   const twoFACode: TwoFACode = {
     _id: new ObjectId().toString(),

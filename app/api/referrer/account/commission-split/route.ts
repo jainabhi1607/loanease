@@ -46,8 +46,7 @@ export async function GET(request: NextRequest) {
       key: 'commission_split'
     });
 
-    const defaultCommissionSplit = setting?.value ||
-      'Loanease will pay 30% (inclusive of GST) of the net upfront commission received by Loanease from the lender (via the aggregator).\n\nThis will be paid typically monthly in arrears as per aggregator / lender payment terms and you will receive your own copy of the commission statement for your records, directly from the aggregator.';
+    const defaultCommissionSplit = setting?.value || '';
 
     return NextResponse.json({
       commission_split: defaultCommissionSplit,
