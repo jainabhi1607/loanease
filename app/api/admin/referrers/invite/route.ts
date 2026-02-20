@@ -5,6 +5,7 @@ import { z } from 'zod';
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
+import { getInvitationExpiryDays } from '@/lib/mongodb/repositories/global-settings';
 
 const inviteSchema = z.object({
   email: z.string().email('Invalid email format').toLowerCase(),
@@ -70,9 +71,10 @@ export async function POST(request: NextRequest) {
     // Generate unique token
     const token = crypto.randomBytes(32).toString('hex');
 
-    // Calculate expiry (7 days from now)
+    // Calculate expiry from settings
+    const invitationExpiryDays = await getInvitationExpiryDays();
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7);
+    expiresAt.setDate(expiresAt.getDate() + invitationExpiryDays);
 
     // Create invitation record
     const invitationId = uuidv4();

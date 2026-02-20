@@ -13,7 +13,7 @@ const registrationSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   phone: z.string().min(1, 'Phone number is required'),
   state: z.string().optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(10, 'Password must be at least 10 characters'),
 });
 
 export async function POST(request: NextRequest) {
@@ -156,7 +156,7 @@ export async function POST(request: NextRequest) {
         await sendHtmlEmail({
           to: invitation.email,
           subject: 'Welcome to Loanease',
-          htmlBody: wrapInBrandedTemplate(content, 'Welcome'),
+          htmlBody: await wrapInBrandedTemplate(content, 'Welcome'),
           from: 'partners@loanease.com',
         });
       }

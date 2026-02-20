@@ -82,7 +82,7 @@ function ResultsContent() {
                 Don&apos;t Let This Opportunity Stall
               </h2>
               <p className="text-gray-700 mb-3">
-                You&apos;ve got early clarity—now keep the momentum going. Register as a Clue Referral Partner to progress your client&apos;s opportunity with full visibility, expert support, and access to our lender network.
+                You&apos;ve got early clarity—now keep the momentum going. Register as a Loanease Referral Partner to progress your client&apos;s opportunity with full visibility, expert support, and access to our lender network.
               </p>
               <p className="text-gray-700 mb-4">
                 Secure the deal. Strengthen the relationship. Start earning—today.

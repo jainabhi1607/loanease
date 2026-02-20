@@ -3,15 +3,16 @@ import { ObjectId } from 'mongodb';
 
 export interface GlobalSetting {
   _id: string;
-  setting_key: string;
-  setting_value: string;
-  setting_type: string;
+  key: string;
+  value: string;
+  description: string | null;
   created_at: string;
+  updated_at: string;
 }
 
-export async function findSettingByKey(key: string): Promise<GlobalSetting | null> {
+export async function findSettingByKey(settingKey: string): Promise<GlobalSetting | null> {
   const db = await getDatabase();
-  return db.collection<GlobalSetting>('global_settings').findOne({ setting_key: key });
+  return db.collection<GlobalSetting>('global_settings').findOne({ key: settingKey });
 }
 
 export async function findAllSettings(): Promise<GlobalSetting[]> {
@@ -22,36 +23,37 @@ export async function findAllSettings(): Promise<GlobalSetting[]> {
 export async function findSettingsByKeys(keys: string[]): Promise<GlobalSetting[]> {
   const db = await getDatabase();
   return db.collection<GlobalSetting>('global_settings')
-    .find({ setting_key: { $in: keys } })
+    .find({ key: { $in: keys } })
     .toArray();
 }
 
-export async function getSettingValue(key: string): Promise<string | null> {
-  const setting = await findSettingByKey(key);
-  return setting?.setting_value || null;
+export async function getSettingValue(settingKey: string): Promise<string | null> {
+  const setting = await findSettingByKey(settingKey);
+  return setting?.value || null;
 }
 
 export async function getSettingsMap(keys: string[]): Promise<Record<string, string>> {
   const settings = await findSettingsByKeys(keys);
   const map: Record<string, string> = {};
   for (const setting of settings) {
-    map[setting.setting_key] = setting.setting_value;
+    map[setting.key] = setting.value;
   }
   return map;
 }
 
-export async function upsertSetting(key: string, value: string, type: string = 'text'): Promise<GlobalSetting> {
+export async function upsertSetting(settingKey: string, value: string): Promise<GlobalSetting> {
   const db = await getDatabase();
   const result = await db.collection<GlobalSetting>('global_settings').findOneAndUpdate(
-    { setting_key: key },
+    { key: settingKey },
     {
       $set: {
-        setting_value: value,
-        setting_type: type
+        value: value,
+        updated_at: new Date().toISOString()
       },
       $setOnInsert: {
         _id: new ObjectId().toString(),
-        setting_key: key,
+        key: settingKey,
+        description: null,
         created_at: new Date().toISOString()
       }
     },
@@ -60,11 +62,11 @@ export async function upsertSetting(key: string, value: string, type: string = '
   return result!;
 }
 
-export async function updateSetting(key: string, value: string): Promise<boolean> {
+export async function updateSetting(settingKey: string, value: string): Promise<boolean> {
   const db = await getDatabase();
   const result = await db.collection('global_settings').updateOne(
-    { setting_key: key },
-    { $set: { setting_value: value } }
+    { key: settingKey },
+    { $set: { value: value, updated_at: new Date().toISOString() } }
   );
   return result.modifiedCount > 0;
 }
@@ -76,7 +78,7 @@ export async function getTermsAndConditions(): Promise<string | null> {
 
 export async function getDefaultInterestRate(): Promise<number> {
   const value = await getSettingValue('default_interest_rate');
-  return value ? parseFloat(value) : 7.5; // Default to 7.5%
+  return value ? parseFloat(value) : 8.5; // Default to 8.5%
 }
 
 export async function getReferrerFees(): Promise<string | null> {
@@ -90,8 +92,8 @@ export async function getDefaultCommissionSplit(): Promise<string | null> {
 // Email template settings
 export async function getEmailTemplate(templateKey: string): Promise<{ subject: string; content: string } | null> {
   const settings = await findSettingsByKeys([`${templateKey}_subject`, `${templateKey}_content`]);
-  const subject = settings.find(s => s.setting_key === `${templateKey}_subject`)?.setting_value;
-  const content = settings.find(s => s.setting_key === `${templateKey}_content`)?.setting_value;
+  const subject = settings.find(s => s.key === `${templateKey}_subject`)?.value;
+  const content = settings.find(s => s.key === `${templateKey}_content`)?.value;
 
   if (!subject && !content) return null;
   return { subject: subject || '', content: content || '' };
@@ -101,4 +103,93 @@ export async function getNewBrokerAlertRecipients(): Promise<string[]> {
   const value = await getSettingValue('new_broker_alert');
   if (!value) return [];
   return value.split('\n').map(email => email.trim()).filter(Boolean);
+}
+
+// Security settings helpers
+export async function getMaxLoginAttempts(): Promise<number> {
+  const value = await getSettingValue('max_login_attempts');
+  return value ? parseInt(value, 10) : 10;
+}
+
+export async function getLockoutDurationMinutes(): Promise<number> {
+  const value = await getSettingValue('lockout_duration_minutes');
+  return value ? parseInt(value, 10) : 60;
+}
+
+export async function getTwoFACodeExpiryMinutes(): Promise<number> {
+  const value = await getSettingValue('two_fa_code_expiry_minutes');
+  return value ? parseInt(value, 10) : 10;
+}
+
+export async function getLoanDeclinedReasons(): Promise<string[]> {
+  const value = await getSettingValue('loan_declined_reasons');
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.map((r: string) => r.trim()).filter(Boolean) : [];
+  } catch {
+    return [];
+  }
+}
+
+// Token/invitation expiry settings
+export async function getPasswordResetExpiryHours(): Promise<number> {
+  const value = await getSettingValue('password_reset_expiry_hours');
+  return value ? parseInt(value, 10) : 1;
+}
+
+export async function getEmailVerificationExpiryHours(): Promise<number> {
+  const value = await getSettingValue('email_verification_expiry_hours');
+  return value ? parseInt(value, 10) : 24;
+}
+
+export async function getInvitationExpiryDays(): Promise<number> {
+  const value = await getSettingValue('invitation_expiry_days');
+  return value ? parseInt(value, 10) : 7;
+}
+
+export async function getMaxInvitationResends(): Promise<number> {
+  const value = await getSettingValue('max_invitation_resends');
+  return value ? parseInt(value, 10) : 5;
+}
+
+// Blocked email domains (disposable/temporary email providers)
+const DEFAULT_BLOCKED_DOMAINS = [
+  'tempmail.com',
+  'throwaway.email',
+  '10minutemail.com',
+  'guerrillamail.com',
+  'mailinator.com',
+  'trashmail.com',
+  'yopmail.com',
+  'temp-mail.org',
+  'maildrop.cc',
+  'mintemail.com',
+];
+
+export async function getBlockedEmailDomains(): Promise<string[]> {
+  const value = await getSettingValue('blocked_email_domains');
+  if (!value) return DEFAULT_BLOCKED_DOMAINS;
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.map((d: string) => d.trim().toLowerCase()).filter(Boolean) : DEFAULT_BLOCKED_DOMAINS;
+  } catch {
+    return DEFAULT_BLOCKED_DOMAINS;
+  }
+}
+
+// Company details settings
+export async function getCompanyPhone(): Promise<string> {
+  const value = await getSettingValue('company_phone');
+  return value || '+91 1300 00 78 78';
+}
+
+export async function getCompanyAddress(): Promise<string> {
+  const value = await getSettingValue('company_address');
+  return value || 'Suite 3, 134 Cambridge Street, Collingwood VIC 3066';
+}
+
+export async function getCompanyEmail(): Promise<string> {
+  const value = await getSettingValue('company_email');
+  return value || 'partners@loanease.com';
 }

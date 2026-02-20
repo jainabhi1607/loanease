@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { findUserByEmail } from '@/lib/mongodb/repositories/users';
+import { getBlockedEmailDomains } from '@/lib/mongodb/repositories/global-settings';
 
 export async function GET(request: NextRequest) {
   try {
@@ -27,21 +28,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Check for disposable email domains
-    const disposableDomains = [
-      'tempmail.com',
-      'throwaway.email',
-      '10minutemail.com',
-      'guerrillamail.com',
-      'mailinator.com',
-      'trashmail.com',
-      'yopmail.com',
-      'temp-mail.org',
-      'maildrop.cc',
-      'mintemail.com'
-    ];
+    const blockedDomains = await getBlockedEmailDomains();
 
     const domain = email.split('@')[1]?.toLowerCase();
-    if (disposableDomains.includes(domain)) {
+    if (blockedDomains.includes(domain)) {
       return NextResponse.json({
         available: false,
         message: 'Disposable email addresses are not allowed',

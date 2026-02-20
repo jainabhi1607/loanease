@@ -4,6 +4,7 @@ import { verify2FACode, deleteUsed2FACodes } from '@/lib/mongodb/repositories/au
 import { findUserById } from '@/lib/mongodb/repositories/users';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { set2FAVerifiedCookie } from '@/lib/auth/session';
+import { getMaxLoginAttempts, getLockoutDurationMinutes } from '@/lib/mongodb/repositories/global-settings';
 
 // In-memory rate limiting (consider Redis for production)
 const attemptStore = new Map<string, { count: number; firstAttempt: number; lockedUntil?: number }>();
@@ -54,6 +55,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Fetch security settings from DB
+    const maxAttempts = await getMaxLoginAttempts();
+    const lockoutMinutes = await getLockoutDurationMinutes();
+    const lockoutMs = lockoutMinutes * 60 * 1000;
+
     // Verify the 2FA code
     const codeData = await verify2FACode(code);
 
@@ -62,9 +68,9 @@ export async function POST(request: NextRequest) {
       const currentAttempts = attemptStore.get(attemptKey) || { count: 0, firstAttempt: now };
       currentAttempts.count++;
 
-      // Lock account after 5 failed attempts for 30 minutes
-      if (currentAttempts.count >= 5) {
-        currentAttempts.lockedUntil = now + 1800000; // 30 minutes
+      // Lock account after max failed attempts
+      if (currentAttempts.count >= maxAttempts) {
+        currentAttempts.lockedUntil = now + lockoutMs;
         attemptStore.set(attemptKey, currentAttempts);
 
         // Log security event
@@ -83,7 +89,7 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json(
-          { error: 'Too many failed attempts. Account locked for 30 minutes.' },
+          { error: `Too many failed attempts. Account locked for ${lockoutMinutes} minutes.` },
           { status: 429 }
         );
       }
@@ -98,7 +104,7 @@ export async function POST(request: NextRequest) {
         action: 'failed_verification',
         field_name: '2fa_code',
         old_value: null,
-        new_value: `Failed attempt ${currentAttempts.count}/5`,
+        new_value: `Failed attempt ${currentAttempts.count}/${maxAttempts}`,
         description: 'Failed 2FA verification attempt',
         ip_address: ip,
         user_agent: userAgent,
@@ -108,7 +114,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: 'Invalid or expired code. Please try again.',
-          attemptsLeft: 5 - currentAttempts.count
+          attemptsLeft: maxAttempts - currentAttempts.count
         },
         { status: 400 }
       );

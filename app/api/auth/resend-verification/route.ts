@@ -9,6 +9,7 @@ import {
   createEmailVerificationToken
 } from '@/lib/mongodb/repositories/auth';
 import { sendVerificationEmail } from '@/lib/email/postmark';
+import { getEmailVerificationExpiryHours } from '@/lib/mongodb/repositories/global-settings';
 
 // Rate limiting for resend attempts
 const resendAttempts = new Map<string, { count: number; lastAttempt: number }>();
@@ -73,8 +74,9 @@ export async function POST(request: NextRequest) {
 
     // Generate new verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpiryHours = await getEmailVerificationExpiryHours();
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
+    expiresAt.setHours(expiresAt.getHours() + verificationExpiryHours);
 
     // Store new verification token (preserve signup_data from previous token)
     await createEmailVerificationToken({

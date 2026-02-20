@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { findUserByEmail } from '@/lib/mongodb/repositories/users';
 import { createTwoFACode, invalidateExisting2FACodes } from '@/lib/mongodb/repositories/auth';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
+import { getTwoFACodeExpiryMinutes } from '@/lib/mongodb/repositories/global-settings';
 
 // Rate limiting for resend requests
 const resendAttempts = new Map<string, { count: number; lastAttempt: number }>();
@@ -88,7 +89,7 @@ export async function POST(request: NextRequest) {
           TemplateModel: {
             first_name: user.first_name || 'User',
             verification_code: twoFACode.code,
-            code_expiry_minutes: '10',
+            code_expiry_minutes: String(await getTwoFACodeExpiryMinutes()),
           },
         }),
       });

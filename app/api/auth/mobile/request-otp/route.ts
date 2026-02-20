@@ -4,10 +4,10 @@ import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
+import { getTwoFACodeExpiryMinutes } from '@/lib/mongodb/repositories/global-settings';
 
 // Hardcoded OTP for testing - will implement SMS/Email later
 const HARDCODED_OTP = '998877';
-const OTP_EXPIRY_MINUTES = 10;
 
 // Input validation schema
 const requestOTPSchema = z.object({
@@ -15,22 +15,22 @@ const requestOTPSchema = z.object({
   device_id: z.string().optional(),
 });
 
-// Helper to normalize mobile number to +61 format
+// Helper to normalize mobile number to +91 (India) format
 function normalizeMobile(mobile: string): string {
   // Remove all non-digit characters except +
   let normalized = mobile.replace(/[^\d+]/g, '');
 
-  // Convert 04xx to +614xx
-  if (normalized.startsWith('04')) {
-    normalized = '+61' + normalized.slice(1);
+  // Convert 0XXXXXXXXXX to +91XXXXXXXXXX (remove leading 0)
+  if (normalized.startsWith('0') && normalized.length === 11) {
+    normalized = '+91' + normalized.slice(1);
   }
-  // Convert 4xx to +614xx
-  else if (normalized.startsWith('4') && normalized.length === 9) {
-    normalized = '+61' + normalized;
+  // Convert 10-digit Indian mobile (starts with 6-9) to +91XXXXXXXXXX
+  else if (/^[6-9]\d{9}$/.test(normalized)) {
+    normalized = '+91' + normalized;
   }
-  // Ensure +61 prefix
-  else if (!normalized.startsWith('+61')) {
-    if (normalized.startsWith('61')) {
+  // Ensure +91 prefix
+  else if (!normalized.startsWith('+91')) {
+    if (normalized.startsWith('91') && normalized.length === 12) {
       normalized = '+' + normalized;
     }
   }
@@ -123,7 +123,8 @@ export async function POST(request: NextRequest) {
 
     // Create OTP record
     const otpId = uuidv4();
-    const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
+    const otpExpiryMinutes = await getTwoFACodeExpiryMinutes();
+    const expiresAt = new Date(Date.now() + otpExpiryMinutes * 60 * 1000);
 
     await db.collection(COLLECTIONS.MOBILE_OTP_CODES).insertOne({
       _id: otpId as any,
@@ -165,7 +166,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'OTP sent to your mobile and email',
       otp_id: otpId,
-      expires_in: OTP_EXPIRY_MINUTES * 60, // seconds
+      expires_in: otpExpiryMinutes * 60, // seconds
       masked_email: maskEmail(user.email),
       masked_mobile: maskMobile(mobile),
     });

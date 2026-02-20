@@ -10,6 +10,7 @@ import { findOrganisationByABN, createOrganisation, createOrganisationDirector }
 import { createEmailVerificationToken } from '@/lib/mongodb/repositories/auth';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { sendVerificationEmail } from '@/lib/email/postmark';
+import { getMaxLoginAttempts, getLockoutDurationMinutes, getEmailVerificationExpiryHours, getBlockedEmailDomains } from '@/lib/mongodb/repositories/global-settings';
 
 // Rate limiting store for signup attempts
 const signupAttempts = new Map<string, { count: number; firstAttempt: number; blockedUntil?: number }>();
@@ -44,7 +45,7 @@ const signupSchema = z.object({
   })),
   entity: z.string().min(1, 'Entity type is required'),
   industryType: z.string().min(1, 'Industry type is required'),
-  password: z.string().min(8, 'Password must be at least 8 characters').max(100, 'Password is too long'),
+  password: z.string().min(10, 'Password must be at least 10 characters').max(100, 'Password is too long'),
   confirmPassword: z.string(),
   acceptTerms: z.boolean().refine(val => val === true, 'You must accept the Terms and Conditions')
 });
@@ -82,15 +83,18 @@ export async function POST(request: NextRequest) {
       // Reset attempts if window expired (15 minutes)
       if (now - attempts.firstAttempt > 900000) {
         signupAttempts.delete(attemptKey);
-      } else if (attempts.count >= 5) {
-        // Block for 30 minutes after 5 attempts
-        attempts.blockedUntil = now + 1800000;
-        signupAttempts.set(attemptKey, attempts);
+      } else {
+        const maxAttempts = await getMaxLoginAttempts();
+        const lockoutMinutes = await getLockoutDurationMinutes();
+        if (attempts.count >= maxAttempts) {
+          attempts.blockedUntil = now + lockoutMinutes * 60 * 1000;
+          signupAttempts.set(attemptKey, attempts);
 
-        return NextResponse.json(
-          { error: 'Too many signup attempts. Please try again in 30 minutes.' },
-          { status: 429 }
-        );
+          return NextResponse.json(
+            { error: `Too many signup attempts. Please try again in ${lockoutMinutes} minutes.` },
+            { status: 429 }
+          );
+        }
       }
     }
 
@@ -151,17 +155,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate email isn't disposable
-    const disposableDomains = [
-      'tempmail.com',
-      'throwaway.email',
-      '10minutemail.com',
-      'guerrillamail.com',
-      'mailinator.com',
-      'trashmail.com',
-      'yopmail.com'
-    ];
+    const blockedDomains = await getBlockedEmailDomains();
     const domain = sanitizedData.contactEmail.split('@')[1]?.toLowerCase();
-    if (disposableDomains.includes(domain)) {
+    if (blockedDomains.includes(domain)) {
       return NextResponse.json(
         { error: 'Disposable email addresses are not allowed' },
         { status: 400 }
@@ -308,8 +304,9 @@ export async function POST(request: NextRequest) {
 
     // Generate verification token
     const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpiryHours = await getEmailVerificationExpiryHours();
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
+    expiresAt.setHours(expiresAt.getHours() + verificationExpiryHours);
 
     // Store verification token with signup data for post-verification emails
     const signupData = {

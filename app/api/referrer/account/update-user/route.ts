@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@/lib/auth/password';
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -44,7 +44,7 @@ export async function PATCH(request: NextRequest) {
 
     // Update password if provided
     if (password) {
-      const hashedPassword = await bcrypt.hash(password, 12);
+      const hashedPassword = await hashPassword(password);
       await db.collection(COLLECTIONS.AUTH_USERS).updateOne(
         { _id: user.userId as any },
         { $set: { password_hash: hashedPassword } }

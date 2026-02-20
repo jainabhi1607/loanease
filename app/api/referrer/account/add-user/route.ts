@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { sendNewUserWelcomeEmail } from '@/lib/email/signup-emails';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@/lib/auth/password';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request: NextRequest) {
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     const newUserId = uuidv4();
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(tempPassword, 12);
+    const hashedPassword = await hashPassword(tempPassword);
 
     // Create user in auth_users collection
     await db.collection(COLLECTIONS.AUTH_USERS).insertOne({

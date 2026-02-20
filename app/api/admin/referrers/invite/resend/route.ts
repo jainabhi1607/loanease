@@ -4,6 +4,7 @@ import { getDatabase } from '@/lib/mongodb/client';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
+import { getInvitationExpiryDays, getMaxInvitationResends } from '@/lib/mongodb/repositories/global-settings';
 
 const resendSchema = z.object({
   inviteId: z.string().uuid('Invalid invitation ID'),
@@ -55,8 +56,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
     }
 
-    // Check resend limit (max 5 resends)
-    if (invitation.resent_count >= 5) {
+    // Check resend limit from settings
+    const maxResends = await getMaxInvitationResends();
+    if (invitation.resent_count >= maxResends) {
       return NextResponse.json({
         error: 'Maximum resend limit reached. Please create a new invitation.'
       }, { status: 400 });
@@ -75,10 +77,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate new token and expiry
+    // Generate new token and expiry from settings
+    const invitationExpiryDays = await getInvitationExpiryDays();
     const newToken = crypto.randomBytes(32).toString('hex');
     const newExpiresAt = new Date();
-    newExpiresAt.setDate(newExpiresAt.getDate() + 7);
+    newExpiresAt.setDate(newExpiresAt.getDate() + invitationExpiryDays);
 
     // Update invitation with new token and expiry
     const updateResult = await db.collection('user_invitations').updateOne(

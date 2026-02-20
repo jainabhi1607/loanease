@@ -13,8 +13,8 @@ export const formatCurrency = (amount?: number) => {
   }).format(amount);
 };
 
-// Australian timezone constant
-const AUSTRALIAN_TIMEZONE = 'Australia/Sydney';
+// Indian timezone constant
+const AUSTRALIAN_TIMEZONE = 'Asia/Kolkata';
 
 export const formatDate = (dateString?: string) => {
   if (!dateString) return '-';

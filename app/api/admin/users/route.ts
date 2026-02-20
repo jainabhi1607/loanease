@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase } from '@/lib/mongodb/client';
 import { z } from 'zod';
+import { getInvitationExpiryDays } from '@/lib/mongodb/repositories/global-settings';
 
 const createAdminSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -152,7 +153,7 @@ export async function POST(request: NextRequest) {
       organisation_id: null, // null for system admin invitations
       invited_by: user.userId,
       status: 'pending',
-      expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days
+      expires_at: new Date(Date.now() + (await getInvitationExpiryDays()) * 24 * 60 * 60 * 1000).toISOString(),
       metadata: {
         role: role,
         is_admin: true,

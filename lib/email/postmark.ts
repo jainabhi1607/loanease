@@ -1,4 +1,5 @@
 import { ServerClient } from 'postmark';
+import { getCompanyPhone, getCompanyAddress, getCompanyEmail } from '@/lib/mongodb/repositories/global-settings';
 
 // Lazy initialization of Postmark client to avoid build-time errors
 let _client: ServerClient | null = null;
@@ -14,28 +15,28 @@ function getPostmarkClient(): ServerClient {
   return _client;
 }
 
-// Australian timezone constant for consistent formatting
-const AUSTRALIAN_TIMEZONE = 'Australia/Sydney';
+// Indian timezone constant for consistent formatting
+const INDIAN_TIMEZONE = 'Asia/Kolkata';
 
-// Helper function to format date/time in Australian timezone
+// Helper function to format date/time in Indian timezone
 export const formatAustralianDateTime = (date: Date = new Date()) => {
-  return date.toLocaleString('en-AU', {
+  return date.toLocaleString('en-IN', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZone: AUSTRALIAN_TIMEZONE
+    timeZone: INDIAN_TIMEZONE
   });
 };
 
 export const formatAustralianDate = (date: Date = new Date()) => {
-  return date.toLocaleDateString('en-AU', {
+  return date.toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    timeZone: AUSTRALIAN_TIMEZONE
+    timeZone: INDIAN_TIMEZONE
   });
 };
 
@@ -95,9 +96,15 @@ const LOANCASE_GREEN = '#00D37F';
 const LOANCASE_DARK = '#02383B';
 
 // Standard branded email template wrapper
-export function wrapInBrandedTemplate(content: string, title?: string): string {
+export async function wrapInBrandedTemplate(content: string, title?: string): Promise<string> {
   // Note: Using JPG because most email clients don't support SVG
   const logoUrl = `${process.env.NEXT_PUBLIC_APP_URL}/logo.jpg`;
+  const [companyPhone, companyAddress, companyEmail] = await Promise.all([
+    getCompanyPhone(),
+    getCompanyAddress(),
+    getCompanyEmail(),
+  ]);
+  const phoneDigits = companyPhone.replace(/[^\d+]/g, '');
   return `
 <!DOCTYPE html>
 <html>
@@ -139,13 +146,13 @@ export function wrapInBrandedTemplate(content: string, title?: string): string {
                   <td style="color: #ffffff; font-size: 14px; line-height: 1.6;">
                     <p style="margin: 0 0 15px 0; font-weight: 600;">The Loanease Team</p>
                     <p style="margin: 0 0 5px 0;">
-                      <a href="tel:+611300007878" style="color: ${LOANCASE_GREEN}; text-decoration: none;">+61 1300 00 78 78</a>
+                      <a href="tel:${phoneDigits}" style="color: ${LOANCASE_GREEN}; text-decoration: none;">${companyPhone}</a>
                     </p>
                     <p style="margin: 0 0 5px 0;">
                       Applications: <a href="mailto:apps@loanease.com" style="color: ${LOANCASE_GREEN}; text-decoration: none;">apps@loanease.com</a>
                     </p>
                     <p style="margin: 0 0 20px 0;">
-                      Partners: <a href="mailto:partners@loanease.com" style="color: ${LOANCASE_GREEN}; text-decoration: none;">partners@loanease.com</a>
+                      Partners: <a href="mailto:${companyEmail}" style="color: ${LOANCASE_GREEN}; text-decoration: none;">${companyEmail}</a>
                     </p>
                   </td>
                 </tr>
@@ -153,7 +160,7 @@ export function wrapInBrandedTemplate(content: string, title?: string): string {
                   <td style="padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
                     <p style="margin: 0; color: rgba(255,255,255,0.6); font-size: 12px;">
                       &copy; ${new Date().getFullYear()} Loanease. All rights reserved.<br>
-                      Suite 3, 134 Cambridge Street, Collingwood VIC 3066
+                      ${companyAddress}
                     </p>
                   </td>
                 </tr>
@@ -281,7 +288,7 @@ export async function send2FACode(email: string, code: string, firstName?: strin
   return sendHtmlEmail({
     to: email,
     subject: 'Your Verification Code - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Verification Code'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Verification Code'),
   });
 }
 
@@ -307,7 +314,7 @@ export async function sendWelcomeEmail(email: string, firstName: string, organiz
   return sendHtmlEmail({
     to: email,
     subject: 'Welcome to Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Welcome'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Welcome'),
     from: 'partners@loanease.com',
   });
 }
@@ -332,7 +339,7 @@ export async function sendPasswordReset(email: string, resetToken: string, first
   return sendHtmlEmail({
     to: email,
     subject: 'Reset Your Password - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Password Reset'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Password Reset'),
   });
 }
 
@@ -356,7 +363,7 @@ export async function sendPasswordResetEmail(params: { to: string; userName: str
   return sendHtmlEmail({
     to: params.to,
     subject: 'Reset Your Password - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Password Reset'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Password Reset'),
   });
 }
 
@@ -382,7 +389,7 @@ export async function sendNewIPAlert(email: string, ipAddress: string, location?
   return sendHtmlEmail({
     to: email,
     subject: 'New Login Detected - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Security Alert'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Security Alert'),
   });
 }
 
@@ -444,7 +451,7 @@ export async function sendVerificationEmail(
   return sendHtmlEmail({
     to: email,
     subject: 'Verify Your Email - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'Email Verification'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Email Verification'),
     from: 'partners@loanease.com',
   });
 }
@@ -477,7 +484,7 @@ export async function sendUserInvitation(
   return sendHtmlEmail({
     to: email,
     subject: `You've been invited to join ${organisationName} - Loanease`,
-    htmlBody: wrapInBrandedTemplate(content, 'Invitation'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Invitation'),
     from: 'partners@loanease.com',
   });
 }
@@ -524,7 +531,7 @@ export async function sendNewReferrerAlert(
   return sendHtmlEmail({
     to: recipientEmail,
     subject: 'New Referrer Registration - Loanease',
-    htmlBody: wrapInBrandedTemplate(content, 'New Referrer'),
+    htmlBody: await wrapInBrandedTemplate(content, 'New Referrer'),
   });
 }
 
@@ -704,7 +711,7 @@ export async function sendStatusChangeEmails({
       results.clientResult = await sendHtmlEmail({
         to: clientEmail,
         subject,
-        htmlBody: wrapInBrandedTemplate(clientMessage, 'Application Update'),
+        htmlBody: await wrapInBrandedTemplate(clientMessage, 'Application Update'),
       });
       console.log(`Status change email sent to client: ${clientEmail}`);
     } catch (error) {
@@ -719,7 +726,7 @@ export async function sendStatusChangeEmails({
       results.referrerResult = await sendHtmlEmail({
         to: referrerEmail,
         subject,
-        htmlBody: wrapInBrandedTemplate(referrerMessage, 'Application Update'),
+        htmlBody: await wrapInBrandedTemplate(referrerMessage, 'Application Update'),
       });
       console.log(`Status change email sent to referrer: ${referrerEmail}`);
     } catch (error) {
@@ -758,7 +765,7 @@ export async function sendOpportunityConfirmationToReferrer({
   return sendHtmlEmail({
     to: referrerEmail,
     subject: 'Loanease - Referral Received',
-    htmlBody: wrapInBrandedTemplate(content, 'Referral Received'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Referral Received'),
     from: 'partners@loanease.com',
   });
 }
@@ -790,7 +797,7 @@ export async function sendOpportunityConfirmationToClient({
   return sendHtmlEmail({
     to: clientEmail,
     subject: 'Loanease - Application Received',
-    htmlBody: wrapInBrandedTemplate(content, 'Application Received'),
+    htmlBody: await wrapInBrandedTemplate(content, 'Application Received'),
     from: 'partners@loanease.com',
   });
 }
@@ -842,6 +849,6 @@ export async function sendNewOpportunityAlert(
   return sendHtmlEmail({
     to: recipientEmail,
     subject: `New Opportunity ${details.opportunityId} - Loanease`,
-    htmlBody: wrapInBrandedTemplate(content, 'New Opportunity'),
+    htmlBody: await wrapInBrandedTemplate(content, 'New Opportunity'),
   });
 }

@@ -1,5 +1,6 @@
 import { sendHtmlEmail, sendHtmlEmailWithAttachment, wrapInBrandedTemplate } from './postmark';
 import { getDatabase } from '@/lib/mongodb/client';
+import { getCompanyPhone, getCompanyAddress, getCompanyEmail } from '@/lib/mongodb/repositories/global-settings';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { drawLoaneaseLogo, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
@@ -69,7 +70,7 @@ function replaceVariables(template: string, variables: Record<string, string>): 
 }
 
 // Wrap content in HTML email template - uses branded template from postmark.ts
-function wrapInEmailTemplate(content: string): string {
+async function wrapInEmailTemplate(content: string): Promise<string> {
   return wrapInBrandedTemplate(content);
 }
 
@@ -98,6 +99,13 @@ async function generateReferrerAgreementPDF(params: {
 
   const termsAndConditions = settingsMap['terms_and_conditions'] || '';
   const referrerFees = settingsMap['referrer_fees'] || '';
+
+  // Get company details from settings
+  const [companyPhone, companyAddress, companyEmail] = await Promise.all([
+    getCompanyPhone(),
+    getCompanyAddress(),
+    getCompanyEmail(),
+  ]);
 
   // Create PDF
   const doc = new jsPDF();
@@ -153,11 +161,11 @@ async function generateReferrerAgreementPDF(params: {
 
   // Create schedule table
   const scheduleData = [
-    ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@loanease.com\nContact: +61 1300 00 78 78`],
+    ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: ${companyAddress}\nEmail: ${companyEmail}\nContact: ${companyPhone}`],
     ['2', 'Referrer', `Party: ${params.companyName}\nAddress: ${params.address}\nEmail: ${params.email}\nContact: ${params.phone}`],
     ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
     ['4', 'Referrer Services', formatIndustryType(params.industryType)],
-    ['5', 'Commencement Date', params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Australia/Sydney' })],
+    ['5', 'Commencement Date', params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
     ['6', 'Referrer Fees', referrerFees || '-'],
     ['7', 'Method of Payment', "Referral fees will be paid typically monthly in arrears as per aggregator / lender payment terms, directly to the Referrer's nominated bank account."],
   ];
@@ -193,9 +201,9 @@ async function generateReferrerAgreementPDF(params: {
   doc.setFont('helvetica', 'normal');
   doc.text(`IP Address: ${params.ipAddress}`, margin, yPos);
   yPos += 6;
-  doc.text(`Date of approval: ${params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Australia/Sydney' })}`, margin, yPos);
+  doc.text(`Date of approval: ${params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
   yPos += 6;
-  doc.text(`Time of approval: ${params.agreementDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Australia/Sydney' })}`, margin, yPos);
+  doc.text(`Time of approval: ${params.agreementDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })}`, margin, yPos);
 
   return Buffer.from(doc.output('arraybuffer'));
 }
@@ -238,7 +246,7 @@ export async function sendSignupWelcomeEmail(params: SignupEmailParams): Promise
 
     const subject = replaceVariables(subjectTemplate, variables);
     const content = replaceVariables(contentTemplate, variables);
-    const htmlBody = wrapInEmailTemplate(content);
+    const htmlBody = await wrapInEmailTemplate(content);
 
     return await sendHtmlEmail({
       to: params.email,
@@ -273,7 +281,7 @@ export async function sendReferrerAgreementEmail(params: SignupEmailParams): Pro
 
     const subject = replaceVariables(subjectTemplate, variables);
     const content = replaceVariables(contentTemplate, variables);
-    const htmlBody = wrapInEmailTemplate(content);
+    const htmlBody = await wrapInEmailTemplate(content);
 
     // Generate PDF
     const pdfBuffer = await generateReferrerAgreementPDF({
@@ -345,7 +353,7 @@ export async function sendNewBrokerAlertEmail(params: SignupEmailParams): Promis
 
     const subject = replaceVariables(subjectTemplate, variables);
     const content = replaceVariables(contentTemplate, variables);
-    const htmlBody = wrapInEmailTemplate(content);
+    const htmlBody = await wrapInEmailTemplate(content);
 
     // Parse email list (one per line)
     const emails = alertEmails
@@ -391,7 +399,7 @@ export async function sendNewUserWelcomeEmail(params: {
 
     const subject = replaceVariables(subjectTemplate, variables) || 'Welcome to Loanease';
     const content = replaceVariables(contentTemplate, variables);
-    const htmlBody = wrapInEmailTemplate(content);
+    const htmlBody = await wrapInEmailTemplate(content);
 
     console.log('Sending new user welcome email to:', params.email);
     console.log('Email subject:', subject);

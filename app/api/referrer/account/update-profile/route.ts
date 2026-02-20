@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
-import bcrypt from 'bcryptjs';
+import { hashPassword } from '@/lib/auth/password';
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -54,15 +54,15 @@ export async function PATCH(request: NextRequest) {
     // Handle password change
     if (new_password) {
       // Validate password length
-      if (new_password.length < 8) {
+      if (new_password.length < 10) {
         return NextResponse.json(
-          { error: 'Password must be at least 8 characters long' },
+          { error: 'Password must be at least 10 characters long' },
           { status: 400 }
         );
       }
 
       // Hash the new password
-      const hashedPassword = await bcrypt.hash(new_password, 12);
+      const hashedPassword = await hashPassword(new_password);
 
       // Update password in auth_users collection
       await db.collection(COLLECTIONS.AUTH_USERS).updateOne(

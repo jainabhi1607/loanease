@@ -5,6 +5,7 @@ import { findUserByEmail } from '@/lib/mongodb/repositories/users';
 import { createPasswordResetToken } from '@/lib/mongodb/repositories/auth';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { sendPasswordResetEmail } from '@/lib/email/postmark';
+import { getPasswordResetExpiryHours } from '@/lib/mongodb/repositories/global-settings';
 
 export async function POST(request: Request) {
   try {
@@ -23,8 +24,9 @@ export async function POST(request: Request) {
     if (user) {
       // Generate password reset token
       const resetToken = crypto.randomBytes(32).toString('hex');
+      const expiryHours = await getPasswordResetExpiryHours();
       const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + 1); // 1 hour expiry
+      expiresAt.setHours(expiresAt.getHours() + expiryHours);
 
       // Store token in database
       await createPasswordResetToken({

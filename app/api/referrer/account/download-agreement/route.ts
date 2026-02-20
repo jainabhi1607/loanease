@@ -4,6 +4,7 @@ import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { addLoaneaseLogoImage, LOANCASE_BRAND_COLOR } from '@/lib/pdf-logo';
+import { getCompanyPhone, getCompanyAddress, getCompanyEmail } from '@/lib/mongodb/repositories/global-settings';
 
 // Helper to strip HTML tags and decode entities
 function stripHtml(html: string): string {
@@ -162,12 +163,19 @@ export async function GET(request: NextRequest) {
     const commencementDateStr = organization.agreement_date || userData.created_at;
     const commencementDate = new Date(commencementDateStr);
 
+    // Get company details from settings
+    const [companyPhone, companyAddress, companyEmail] = await Promise.all([
+      getCompanyPhone(),
+      getCompanyAddress(),
+      getCompanyEmail(),
+    ]);
+
     const scheduleData = [
-      ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: Suite 3 134 Cambridge Street Collingwood VIC 3066\nEmail: partners@loanease.com\nContact: +61 1300 00 78 78`],
+      ['1', 'LOANEASE', `Party: LOANEASE PTY LTD\nAddress: ${companyAddress}\nEmail: ${companyEmail}\nContact: ${companyPhone}`],
       ['2', 'Referrer', `Party: ${organization.company_name || '-'}\nAddress: ${organization.address || '-'}\nEmail: ${userData.email || '-'}\nContact: ${organization.phone || userData.phone || '-'}`],
       ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
       ['4', 'Referrer Services', formatIndustryType(organization.industry_type)],
-      ['5', 'Commencement Date', commencementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Australia/Sydney' })],
+      ['5', 'Commencement Date', commencementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
       ['6', 'Referrer Fees', referrerFees || '-'],
       ['7', 'Method of Payment', "Referral fees will be paid typically monthly in arrears as per aggregator / lender payment terms, directly to the Referrer's nominated bank account."],
     ];
@@ -206,9 +214,9 @@ export async function GET(request: NextRequest) {
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Date of approval: ${approvalDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Australia/Sydney' })}`, margin, yPos);
+    doc.text(`Date of approval: ${approvalDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
     yPos += 6;
-    doc.text(`Time of approval: ${approvalDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Australia/Sydney' })} AEDT`, margin, yPos);
+    doc.text(`Time of approval: ${approvalDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })} IST`, margin, yPos);
     yPos += 6;
     doc.text(`IP Address: ${agreementIp}`, margin, yPos);
 

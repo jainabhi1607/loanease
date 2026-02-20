@@ -16,16 +16,21 @@ const verifyOTPSchema = z.object({
   device_id: z.string().optional(),
 });
 
-// Helper to normalize mobile number
+// Helper to normalize mobile number to +91 (India) format
 function normalizeMobile(mobile: string): string {
   let normalized = mobile.replace(/[^\d+]/g, '');
 
-  if (normalized.startsWith('04')) {
-    normalized = '+61' + normalized.slice(1);
-  } else if (normalized.startsWith('4') && normalized.length === 9) {
-    normalized = '+61' + normalized;
-  } else if (!normalized.startsWith('+61')) {
-    if (normalized.startsWith('61')) {
+  // Convert 0XXXXXXXXXX to +91XXXXXXXXXX (remove leading 0)
+  if (normalized.startsWith('0') && normalized.length === 11) {
+    normalized = '+91' + normalized.slice(1);
+  }
+  // Convert 10-digit Indian mobile (starts with 6-9) to +91XXXXXXXXXX
+  else if (/^[6-9]\d{9}$/.test(normalized)) {
+    normalized = '+91' + normalized;
+  }
+  // Ensure +91 prefix
+  else if (!normalized.startsWith('+91')) {
+    if (normalized.startsWith('91') && normalized.length === 12) {
       normalized = '+' + normalized;
     }
   }

@@ -9,6 +9,7 @@ import { logSuccessfulLogin, logFailedLogin, logBlockedLogin } from '@/lib/mongo
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { createTwoFACode } from '@/lib/mongodb/repositories/auth';
 import { send2FACode } from '@/lib/email/postmark';
+import { getMaxLoginAttempts, getLockoutDurationMinutes } from '@/lib/mongodb/repositories/global-settings';
 
 // Rate limiting store (consider Redis for production)
 const loginAttempts = new Map<string, { count: number; firstAttempt: number; lockedUntil?: number }>();
@@ -81,6 +82,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Fetch security settings from DB
+    const maxAttempts = await getMaxLoginAttempts();
+    const lockoutMinutes = await getLockoutDurationMinutes();
+    const lockoutMs = lockoutMinutes * 60 * 1000;
+
     // Find user by email
     const user = await findUserByEmail(email);
 
@@ -90,12 +96,12 @@ export async function POST(request: NextRequest) {
       currentAttempts.count++;
       loginAttempts.set(attemptKey, currentAttempts);
 
-      await logFailedLogin(email, ip, userAgent, `User not found. Attempt ${currentAttempts.count}/5`);
+      await logFailedLogin(email, ip, userAgent, `User not found. Attempt ${currentAttempts.count}/${maxAttempts}`);
 
       return NextResponse.json(
         {
           error: 'Invalid email or password',
-          attemptsLeft: 5 - currentAttempts.count
+          attemptsLeft: maxAttempts - currentAttempts.count
         },
         { status: 401 }
       );
@@ -122,9 +128,9 @@ export async function POST(request: NextRequest) {
       const currentAttempts = loginAttempts.get(attemptKey) || { count: 0, firstAttempt: now };
       currentAttempts.count++;
 
-      // Lock after 5 failed attempts for 30 minutes
-      if (currentAttempts.count >= 5) {
-        currentAttempts.lockedUntil = now + 1800000; // 30 minutes
+      // Lock after max failed attempts
+      if (currentAttempts.count >= maxAttempts) {
+        currentAttempts.lockedUntil = now + lockoutMs;
         loginAttempts.set(attemptKey, currentAttempts);
 
         await createAuditLog({
@@ -142,18 +148,18 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json(
-          { error: 'Too many failed attempts. Account locked for 30 minutes.' },
+          { error: `Too many failed attempts. Account locked for ${lockoutMinutes} minutes.` },
           { status: 429 }
         );
       }
 
       loginAttempts.set(attemptKey, currentAttempts);
-      await logFailedLogin(email, ip, userAgent, `Invalid credentials. Attempt ${currentAttempts.count}/5`);
+      await logFailedLogin(email, ip, userAgent, `Invalid credentials. Attempt ${currentAttempts.count}/${maxAttempts}`);
 
       return NextResponse.json(
         {
           error: 'Invalid email or password',
-          attemptsLeft: 5 - currentAttempts.count
+          attemptsLeft: maxAttempts - currentAttempts.count
         },
         { status: 401 }
       );
