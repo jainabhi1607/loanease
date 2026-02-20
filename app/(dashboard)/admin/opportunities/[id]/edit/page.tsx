@@ -95,7 +95,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     abn: '',
     entityName: '',
     timeInBusiness: '',
@@ -117,7 +117,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     assetSuburb: '',
     assetState: '',
     assetPostcode: '',
-    assetCountry: 'AU',
+    assetCountry: 'IN',
   });
 
   // Financial Details
@@ -144,8 +144,8 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   const [lvr, setLvr] = useState<number>(0);
   const [outcomeLevel, setOutcomeLevel] = useState<number>(0);
 
-  // Interest rate
-  const INTEREST_RATE = 12.5;
+  // Interest rate (fetched from settings)
+  const [INTEREST_RATE, setInterestRate] = useState(8.5);
 
   // Terms & Conditions
   const [termsAccepted, setTermsAccepted] = useState({
@@ -157,6 +157,14 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
 
   // Loading state
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch interest rate from settings
+  useEffect(() => {
+    fetch('/api/settings/interest-rate')
+      .then(res => res.json())
+      .then(data => { if (data.interestRate) setInterestRate(data.interestRate); })
+      .catch(() => {});
+  }, []);
 
   // Fetch opportunity data
   useEffect(() => {
@@ -205,7 +213,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             companySuburb: opp.client_suburb || '',
             companyState: opp.client_state || '',
             companyPostcode: opp.client_postcode || '',
-            companyCountry: opp.client_country || 'AU',
+            companyCountry: opp.client_country || 'IN',
             abn: opp.client_abn || '',
             entityName: opp.client_entity_name || '',
             timeInBusiness: opp.client_time_in_business || '',
@@ -228,7 +236,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             assetSuburb: opp.asset_suburb || '',
             assetState: opp.asset_state || '',
             assetPostcode: opp.asset_postcode || '',
-            assetCountry: opp.asset_country || 'AU',
+            assetCountry: opp.asset_country || 'IN',
           });
 
           // Set financial details
@@ -386,7 +394,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   useEffect(() => {
     const parseNumber = (value: string): number => {
       if (!value) return 0;
-      const cleaned = value.replace(/[$,]/g, '');
+      const cleaned = value.replace(/[₹$,]/g, '');
       return parseFloat(cleaned) || 0;
     };
 
@@ -545,8 +553,8 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
         time_in_business: newClientData.timeInBusiness || null,
         abn: newClientData.abn || null,
         // Loan details
-        loan_amount: opportunityData.loanAmount ? parseFloat(opportunityData.loanAmount.replace(/[$,]/g, '')) : null,
-        property_value: opportunityData.estimatedPropertyValue ? parseFloat(opportunityData.estimatedPropertyValue.replace(/[$,]/g, '')) : null,
+        loan_amount: opportunityData.loanAmount ? parseFloat(opportunityData.loanAmount.replace(/[₹$,]/g, '')) : null,
+        property_value: opportunityData.estimatedPropertyValue ? parseFloat(opportunityData.estimatedPropertyValue.replace(/[₹$,]/g, '')) : null,
         loan_type: opportunityData.loanType || null,
         loan_purpose: opportunityData.loanPurpose || null,
         asset_type: opportunityData.assetType || null,
@@ -559,12 +567,12 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
         additional_notes: additionalNotes || null,
         outcome_level: outcomeLevel,
         // Financial details
-        net_profit: financialDetails.netProfitBeforeTax ? parseFloat(financialDetails.netProfitBeforeTax.replace(/[$,]/g, '')) : null,
-        ammortisation: financialDetails.amortisation ? parseFloat(financialDetails.amortisation.replace(/[$,]/g, '')) : null,
-        deprecition: financialDetails.depreciation ? parseFloat(financialDetails.depreciation.replace(/[$,]/g, '')) : null,
-        existing_interest_costs: financialDetails.existingInterestCosts ? parseFloat(financialDetails.existingInterestCosts.replace(/[$,]/g, '')) : null,
-        rental_expense: financialDetails.rentalExpense ? parseFloat(financialDetails.rentalExpense.replace(/[$,]/g, '')) : null,
-        proposed_rental_income: financialDetails.proposedRentalIncome ? parseFloat(financialDetails.proposedRentalIncome.replace(/[$,]/g, '')) : null,
+        net_profit: financialDetails.netProfitBeforeTax ? parseFloat(financialDetails.netProfitBeforeTax.replace(/[₹$,]/g, '')) : null,
+        ammortisation: financialDetails.amortisation ? parseFloat(financialDetails.amortisation.replace(/[₹$,]/g, '')) : null,
+        deprecition: financialDetails.depreciation ? parseFloat(financialDetails.depreciation.replace(/[₹$,]/g, '')) : null,
+        existing_interest_costs: financialDetails.existingInterestCosts ? parseFloat(financialDetails.existingInterestCosts.replace(/[₹$,]/g, '')) : null,
+        rental_expense: financialDetails.rentalExpense ? parseFloat(financialDetails.rentalExpense.replace(/[₹$,]/g, '')) : null,
+        proposed_rental_income: financialDetails.proposedRentalIncome ? parseFloat(financialDetails.proposedRentalIncome.replace(/[₹$,]/g, '')) : null,
         existing_liabilities: financialDetails.existingLiabilities || null,
         additional_property: financialDetails.additionalSecurity || null,
         smsf_structure: financialDetails.smsf || null,
@@ -773,7 +781,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       companySuburb: addressData.suburb,
                       companyState: addressData.state,
                       companyPostcode: addressData.postcode,
-                      companyCountry: addressData.country || 'AU'
+                      companyCountry: addressData.country || 'IN'
                     }));
                   }
                 }}
@@ -909,7 +917,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                           assetSuburb: addressData.suburb,
                           assetState: addressData.state,
                           assetPostcode: addressData.postcode,
-                          assetCountry: addressData.country || 'AU'
+                          assetCountry: addressData.country || 'IN'
                         }));
                       }
                     }}
@@ -1013,7 +1021,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label htmlFor="proposedRentalIncome">Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="proposedRentalIncome"
                           type="text"
@@ -1032,7 +1040,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label htmlFor="netProfitBeforeTax">Net Profit Before Tax</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="netProfitBeforeTax"
                           type="text"
@@ -1052,7 +1060,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label htmlFor="amortisation">Amortisation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="amortisation"
                             type="text"
@@ -1066,7 +1074,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label htmlFor="depreciation">Depreciation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="depreciation"
                             type="text"
@@ -1083,7 +1091,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label htmlFor="existingInterestCosts">Existing Interest Costs</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="existingInterestCosts"
                             type="text"
@@ -1097,7 +1105,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label htmlFor="rentalExpense">Rental Expense</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="rentalExpense"
                             type="text"
@@ -1113,7 +1121,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label htmlFor="proposedRentalIncomeNo">Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="proposedRentalIncomeNo"
                           type="text"
@@ -1320,7 +1328,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                 onCheckedChange={(checked) => setTermsAccepted(prev => ({ ...prev, term2: checked as boolean }))}
               />
               <Label htmlFor="term2" className="cursor-pointer font-normal leading-normal">
-                I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Clue, and that I have advised the client that Clue will be making contact with them via email, text and/or call.
+                I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Loanease, and that I have advised the client that Loanease will be making contact with them via email, text and/or call.
               </Label>
             </div>
             <div className="flex items-start space-x-3">
@@ -1330,7 +1338,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                 onCheckedChange={(checked) => setTermsAccepted(prev => ({ ...prev, term3: checked as boolean }))}
               />
               <Label htmlFor="term3" className="cursor-pointer font-normal leading-normal">
-                I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Clue, for the loan I am submitting on their behalf, once the loan is settled.
+                I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Loanease, for the loan I am submitting on their behalf, once the loan is settled.
               </Label>
             </div>
             <div className="flex items-start space-x-3">

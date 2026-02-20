@@ -256,6 +256,11 @@ export async function PATCH(
     const body = await request.json();
     const db = await getDatabase();
 
+    // Only super_admin can update date_settled and target_settlement_date
+    if ((body.date_settled !== undefined || body.target_settlement_date !== undefined) && user.role !== 'super_admin') {
+      return NextResponse.json({ error: 'Only super admins can modify settlement dates' }, { status: 403 });
+    }
+
     // Get current opportunity data before update (for status change detection and email)
     let oldStatus = null;
     let opportunityDetails: any = null;
@@ -381,8 +386,30 @@ export async function PATCH(
       }
     }
 
+    // Update client record if client-specific fields are provided
+    const clientFields: any = {};
+    if (body.entity_name !== undefined) clientFields.entity_name = body.entity_name || null;
+    if (body.contact_name !== undefined) {
+      const nameParts = (body.contact_name || '').trim().split(' ');
+      clientFields.contact_first_name = nameParts[0] || '';
+      clientFields.contact_last_name = nameParts.slice(1).join(' ') || '';
+    }
+    if (body.contact_mobile !== undefined) clientFields.contact_phone = body.contact_mobile || null;
+    if (body.contact_email !== undefined) clientFields.contact_email = body.contact_email || null;
+
+    if (Object.keys(clientFields).length > 0) {
+      // Get client_id from opportunity
+      const opp = opportunity || await db.collection(COLLECTIONS.OPPORTUNITIES).findOne({ _id: id as any });
+      if (opp && opp.client_id) {
+        await db.collection(COLLECTIONS.CLIENTS).updateOne(
+          { _id: opp.client_id as any },
+          { $set: clientFields }
+        );
+      }
+    }
+
     // If no valid fields to update in either table, return success
-    if (Object.keys(opportunitiesUpdateData).length === 0 && Object.keys(detailsUpdateData).length === 0) {
+    if (Object.keys(opportunitiesUpdateData).length === 0 && Object.keys(detailsUpdateData).length === 0 && Object.keys(clientFields).length === 0) {
       console.log('No valid fields to update');
       return NextResponse.json({
         success: true,
@@ -449,7 +476,7 @@ export async function PATCH(
             if (!reasonDeclined) {
               const details = await db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({ opportunity_id: id });
               if (details) {
-                reasonDeclined = (details as any).reason_declined || '';
+                reasonDeclined = (details as any).reason_declined || (details as any).withdrawn_reason || '';
               }
             }
           }

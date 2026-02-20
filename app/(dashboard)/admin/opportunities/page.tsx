@@ -120,7 +120,7 @@ function OpportunitiesContent() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', {
+    return date.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
@@ -129,9 +129,9 @@ function OpportunitiesContent() {
 
   const formatCurrency = (amount: number) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
@@ -263,7 +263,7 @@ function OpportunitiesContent() {
         opp.borrowing_entity || '',
         formatLoanType(opp.loan_type),
         opp.referrer_name || '',
-        opp.loan_amount ? `$${opp.loan_amount.toLocaleString()}` : '',
+        opp.loan_amount ? formatCurrency(opp.loan_amount) : '',
         formatStatus(opp.status)
       ]);
 
@@ -322,7 +322,7 @@ function OpportunitiesContent() {
 
       doc.setFontSize(10);
       doc.setTextColor(120, 114, 116);
-      doc.text(`Generated: ${new Date().toLocaleDateString('en-AU')}`, 14, 30);
+      doc.text(`Generated: ${new Date().toLocaleDateString('en-IN')}`, 14, 30);
 
       if (hasActiveFilters) {
         let filterText = 'Filters: ';
@@ -340,7 +340,7 @@ function OpportunitiesContent() {
           formatDate(opp.date_created),
           opp.borrowing_entity || '',
           formatLoanType(opp.loan_type),
-          opp.loan_amount ? `$${opp.loan_amount.toLocaleString()}` : '-',
+          opp.loan_amount ? formatCurrency(opp.loan_amount) : '-',
           formatStatus(opp.status)
         ]),
         headStyles: {
@@ -411,10 +411,10 @@ function OpportunitiesContent() {
     currentPage * itemsPerPage
   );
 
-  // Reset to page 1 when search changes
+  // Reset to page 1 when search or filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm]);
+  }, [searchTerm, selectedEntity, fromDate, toDate]);
 
   if (loading) {
     return (
@@ -758,9 +758,9 @@ function OpportunitiesContent() {
                   <TableRow key={opp.id} className="border-b border-gray-100 hover:bg-gray-50">
                     <TableCell className="font-medium">{opp.deal_id}</TableCell>
                     <TableCell>{formatDate(opp.date_created)}</TableCell>
-                    <TableCell className="font-semibold">{opp.borrowing_entity}</TableCell>
+                    <TableCell className="font-semibold">{opp.borrowing_entity || '-'}</TableCell>
                     <TableCell>{formatLoanType(opp.loan_type)}</TableCell>
-                    <TableCell>{opp.referrer_name}</TableCell>
+                    <TableCell>{opp.referrer_name || '-'}</TableCell>
                     <TableCell>{formatCurrency(opp.loan_amount)}</TableCell>
                     <TableCell className="min-w-[180px]">
                       <span

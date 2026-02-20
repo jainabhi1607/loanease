@@ -192,8 +192,8 @@ function PotentialReferrersContent() {
     }
 
     if (typeof aValue === 'string') {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
+      aValue = (aValue || '').toLowerCase();
+      bValue = (bValue || '').toLowerCase();
     }
 
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;

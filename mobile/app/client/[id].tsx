@@ -113,7 +113,7 @@ export default function ClientDetailScreen() {
 
   // Format currency
   const formatCurrency = (amount: number) => {
-    return `$${amount.toLocaleString('en-AU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `₹${amount.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   // Detail row component
@@ -186,7 +186,7 @@ export default function ClientDetailScreen() {
             <ListCard
               key={opp._id}
               title={opp.opportunity_id}
-              subtitle={`$${opp.loan_amount?.toLocaleString() || 0}`}
+              subtitle={`₹${opp.loan_amount?.toLocaleString('en-IN') || 0}`}
               rightContent={<StatusBadge status={opp.status} size="sm" />}
               onPress={() => router.push(`/opportunity/${opp._id}`)}
             />

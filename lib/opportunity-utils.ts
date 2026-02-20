@@ -5,47 +5,47 @@
 
 export const formatCurrency = (amount?: number) => {
   if (!amount) return '-';
-  return new Intl.NumberFormat('en-AU', {
+  return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'AUD',
+    currency: 'INR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(amount);
 };
 
 // Indian timezone constant
-const AUSTRALIAN_TIMEZONE = 'Asia/Kolkata';
+const INDIAN_TIMEZONE = 'Asia/Kolkata';
 
 export const formatDate = (dateString?: string) => {
   if (!dateString) return '-';
-  return new Date(dateString).toLocaleDateString('en-AU', {
+  return new Date(dateString).toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
-    timeZone: AUSTRALIAN_TIMEZONE
+    timeZone: INDIAN_TIMEZONE
   });
 };
 
 export const formatDateTime = (dateString?: string) => {
   if (!dateString) return '-';
-  return new Date(dateString).toLocaleString('en-AU', {
+  return new Date(dateString).toLocaleString('en-IN', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZone: AUSTRALIAN_TIMEZONE
+    timeZone: INDIAN_TIMEZONE
   });
 };
 
 export const formatTime = (dateString?: string) => {
   if (!dateString) return '-';
-  return new Date(dateString).toLocaleTimeString('en-AU', {
+  return new Date(dateString).toLocaleTimeString('en-IN', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-    timeZone: AUSTRALIAN_TIMEZONE
+    timeZone: INDIAN_TIMEZONE
   });
 };
 

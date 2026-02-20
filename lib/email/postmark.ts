@@ -19,7 +19,7 @@ function getPostmarkClient(): ServerClient {
 const INDIAN_TIMEZONE = 'Asia/Kolkata';
 
 // Helper function to format date/time in Indian timezone
-export const formatAustralianDateTime = (date: Date = new Date()) => {
+export const formatIndianDateTime = (date: Date = new Date()) => {
   return date.toLocaleString('en-IN', {
     day: 'numeric',
     month: 'short',
@@ -31,7 +31,7 @@ export const formatAustralianDateTime = (date: Date = new Date()) => {
   });
 };
 
-export const formatAustralianDate = (date: Date = new Date()) => {
+export const formatIndianDate = (date: Date = new Date()) => {
   return date.toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -48,11 +48,6 @@ export interface EmailTemplate {
 }
 
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
-  // TEMPORARY: Email sending disabled for development - will be re-enabled later
-  console.log('[EMAIL DISABLED] Would send template email to:', to, 'template:', templateAlias);
-  return { success: true, messageId: 'disabled-' + Date.now() };
-
-  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const result = await getPostmarkClient().sendEmailWithTemplate({
       From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
@@ -66,7 +61,6 @@ export async function sendEmail({ to, templateAlias, templateModel, from }: Emai
     console.error('Error sending email:', error);
     return { success: false, error };
   }
-  */
 }
 
 // Helper to convert HTML to plain text for email
@@ -198,11 +192,6 @@ export function emailInfoTable(rows: Array<{ label: string; value: string }>): s
 }
 
 export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: string; subject: string; htmlBody: string; from?: string }) {
-  // TEMPORARY: Email sending disabled for development - will be re-enabled later
-  console.log('[EMAIL DISABLED] Would send HTML email to:', to, 'subject:', subject);
-  return { success: true, messageId: 'disabled-' + Date.now() };
-
-  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const textBody = htmlToPlainText(htmlBody);
 
@@ -220,7 +209,6 @@ export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: strin
     console.error('Error sending HTML email:', error);
     return { success: false, error };
   }
-  */
 }
 
 export async function sendHtmlEmailWithAttachment({
@@ -238,11 +226,6 @@ export async function sendHtmlEmailWithAttachment({
     ContentType: string;
   };
 }) {
-  // TEMPORARY: Email sending disabled for development - will be re-enabled later
-  console.log('[EMAIL DISABLED] Would send HTML email with attachment to:', to, 'subject:', subject);
-  return { success: true, messageId: 'disabled-' + Date.now() };
-
-  /* ORIGINAL CODE - COMMENTED OUT
   try {
     const textBody = htmlToPlainText(htmlBody);
 
@@ -266,7 +249,6 @@ export async function sendHtmlEmailWithAttachment({
     console.error('Error sending HTML email with attachment:', error);
     return { success: false, error };
   }
-  */
 }
 
 // Specific email functions
@@ -377,7 +359,7 @@ export async function sendNewIPAlert(email: string, ipAddress: string, location?
       <div style="display: inline-block; background-color: #f3f4f6; padding: 20px 30px; border-radius: 8px; text-align: left;">
         <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">IP Address: <strong style="color: ${LOANCASE_DARK};">${ipAddress}</strong></p>
         <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">Location: <strong style="color: ${LOANCASE_DARK};">${location || 'Unknown'}</strong></p>
-        <p style="margin: 0; font-size: 14px; color: #6b7280;">Time: <strong style="color: ${LOANCASE_DARK};">${formatAustralianDateTime()}</strong></p>
+        <p style="margin: 0; font-size: 14px; color: #6b7280;">Time: <strong style="color: ${LOANCASE_DARK};">${formatIndianDateTime()}</strong></p>
       </div>
     </div>
 
@@ -478,7 +460,7 @@ export async function sendUserInvitation(
       ${emailButton('Accept Invitation', inviteUrl)}
     </div>
 
-    <p style="font-size: 15px; color: #374151; margin: 0;">This invitation expires on <strong>${formatAustralianDate(expiresAt)}</strong>.</p>
+    <p style="font-size: 15px; color: #374151; margin: 0;">This invitation expires on <strong>${formatIndianDate(expiresAt)}</strong>.</p>
   `;
 
   return sendHtmlEmail({
@@ -512,7 +494,7 @@ export async function sendNewReferrerAlert(
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
     ${emailInfoTable([
-      { label: 'Registration Date', value: formatAustralianDateTime() },
+      { label: 'Registration Date', value: formatIndianDateTime() },
       { label: 'Company Name', value: details.companyName },
       { label: 'Director Name', value: details.directorName },
       { label: 'Contact Phone', value: details.contactPhone },
@@ -555,7 +537,7 @@ export async function sendStatusChangeEmails({
   newStatus: string;
   reasonDeclined?: string;
 }) {
-  const today = formatAustralianDate();
+  const today = formatIndianDate();
   const refDetails = `${applicationId} - ${entityName}`;
 
   // Status badge colors
@@ -828,7 +810,7 @@ export async function sendNewOpportunityAlert(
     <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
 
     ${emailInfoTable([
-      { label: 'Submitted', value: formatAustralianDateTime() },
+      { label: 'Submitted', value: formatIndianDateTime() },
       { label: 'Borrower Entity', value: details.borrowerEntityName || '-' },
       { label: 'Borrower Email', value: details.borrowerEmail || '-' },
       { label: 'Referrer', value: details.referrerEntity || '-' },

@@ -42,8 +42,8 @@ function ResetPasswordConfirmContent() {
       return;
     }
 
-    if (password.length < 8) {
-      setError('Password must be at least 8 characters');
+    if (password.length < 10) {
+      setError('Password must be at least 10 characters');
       setIsLoading(false);
       return;
     }
@@ -213,7 +213,7 @@ function ResetPasswordConfirmContent() {
                 autoComplete="new-password"
               />
               <p className="text-xs text-muted-foreground">
-                Must be at least 8 characters
+                Must be at least 10 characters
               </p>
             </div>
 

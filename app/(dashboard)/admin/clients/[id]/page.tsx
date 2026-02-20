@@ -98,10 +98,10 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   };
 
   const formatCurrency = (amount: number) => {
-    if (!amount) return '$0';
-    return new Intl.NumberFormat('en-AU', {
+    if (!amount) return '₹0';
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
@@ -109,7 +109,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -303,7 +303,7 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
 
             {/* Upcoming Settlements */}
             <div className="bg-white rounded-lg p-10 border border-[#E7EBEF]">
-              <h4 className="text-base font-semibold text-[#02383B] mb-2">Upcoming Settlements</h4>
+              <h4 className="text-base font-semibold text-[#02383B] mb-2">Settlements</h4>
               <p className="text-[#787274] text-sm">
                 {upcomingSettlements > 0
                   ? `There are ${upcomingSettlements} upcoming settlement${upcomingSettlements !== 1 ? 's' : ''}.`

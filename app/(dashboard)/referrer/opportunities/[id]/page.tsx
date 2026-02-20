@@ -471,7 +471,7 @@ export default function ReferrerOpportunityDetailPage() {
                     >
                       <div className="w-32 shrink-0">
                         <p className="font-semibold text-[#02383B]">
-                          {new Date(entry.date).toLocaleDateString('en-AU', {
+                          {new Date(entry.date).toLocaleDateString('en-IN', {
                             day: '2-digit',
                             month: 'long',
                             year: 'numeric',

@@ -97,7 +97,7 @@ export async function GET(
 
 function formatTime(dateInput: Date | string): string {
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
-  return date.toLocaleTimeString('en-AU', {
+  return date.toLocaleTimeString('en-IN', {
     hour: '2-digit',
     minute: '2-digit',
     hour12: true,
@@ -362,7 +362,7 @@ function formatStatusChange(status: string, data: any): string {
 function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', {
+    return date.toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'

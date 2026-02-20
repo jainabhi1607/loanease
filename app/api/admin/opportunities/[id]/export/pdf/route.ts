@@ -265,28 +265,28 @@ export async function GET(
             View,
             { style: styles.row },
             React.createElement(Text, { style: styles.label }, 'Loan Amount:'),
-            React.createElement(Text, { style: styles.value }, opp.loan_amount ? `$${parseFloat(opp.loan_amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
+            React.createElement(Text, { style: styles.value }, opp.loan_amount ? `₹${parseFloat(opp.loan_amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
           ),
           // Estimated property value
           React.createElement(
             View,
             { style: styles.row },
             React.createElement(Text, { style: styles.label }, 'Estimated property value:'),
-            React.createElement(Text, { style: styles.value }, opp.property_value ? `$${parseFloat(opp.property_value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
+            React.createElement(Text, { style: styles.value }, opp.property_value ? `₹${parseFloat(opp.property_value).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
           ),
           // Depreciation (note: DB field has typo 'deprecition')
           React.createElement(
             View,
             { style: styles.row },
             React.createElement(Text, { style: styles.label }, 'Depreciation:'),
-            React.createElement(Text, { style: styles.value }, details.deprecition ? `$${parseFloat(details.deprecition).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
+            React.createElement(Text, { style: styles.value }, details.deprecition ? `₹${parseFloat(details.deprecition).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
           ),
           // Interest (existing interest costs)
           React.createElement(
             View,
             { style: styles.row },
             React.createElement(Text, { style: styles.label }, 'Interest:'),
-            React.createElement(Text, { style: styles.value }, details.existing_interest_costs ? `$${parseFloat(details.existing_interest_costs).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
+            React.createElement(Text, { style: styles.value }, details.existing_interest_costs ? `₹${parseFloat(details.existing_interest_costs).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '')
           ),
           // Loan Purpose
           React.createElement(

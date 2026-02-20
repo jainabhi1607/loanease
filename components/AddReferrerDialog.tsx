@@ -35,7 +35,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     numberOfAdditionalDirectors: 'None',
     additionalDirectors: [] as { firstName: string; surname: string }[],
     entity: '',
@@ -55,7 +55,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
 
   const validatePassword = (password: string) => {
     setPasswordStrength({
-      minLength: password.length >= 8,
+      minLength: password.length >= 10,
       hasUpperCase: /[A-Z]/.test(password),
       hasLowerCase: /[a-z]/.test(password),
       hasNumber: /\d/.test(password),
@@ -137,8 +137,8 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
       }
     }
 
-    if (!formData.password || formData.password.length < 8) {
-      setError('Password must be at least 8 characters');
+    if (!formData.password || formData.password.length < 10) {
+      setError('Password must be at least 10 characters');
       return;
     }
 
@@ -198,7 +198,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
         companySuburb: '',
         companyState: '',
         companyPostcode: '',
-        companyCountry: 'AU',
+        companyCountry: 'IN',
         numberOfAdditionalDirectors: 'None',
         additionalDirectors: [],
         entity: '',
@@ -348,7 +348,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
                         companySuburb: addressData.suburb,
                         companyState: addressData.state,
                         companyPostcode: addressData.postcode,
-                        companyCountry: addressData.country || 'AU'
+                        companyCountry: addressData.country || 'IN'
                       }));
                     }
                   }}
@@ -473,7 +473,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Min 8 characters"
+                    placeholder="Min 10 characters"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     required
@@ -483,7 +483,7 @@ export function AddReferrerDialog({ open, onOpenChange, onReferrerAdded }: AddRe
                     <div className="space-y-1 text-xs">
                       <div className={`flex items-center gap-1 ${passwordStrength.minLength ? 'text-green-600' : 'text-gray-400'}`}>
                         {passwordStrength.minLength ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
-                        <span>At least 8 characters</span>
+                        <span>At least 10 characters</span>
                       </div>
                       <div className={`flex items-center gap-1 ${passwordStrength.hasUpperCase ? 'text-green-600' : 'text-gray-400'}`}>
                         {passwordStrength.hasUpperCase ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}

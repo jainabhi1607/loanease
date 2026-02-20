@@ -13,7 +13,7 @@ const mobileSignupSchema = z.object({
   surname: z.string().min(1, 'Surname is required'),
   phone: z.string().min(8, 'Phone is required'),
   email: z.string().email('Please enter a valid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(10, 'Password must be at least 10 characters'),
   abn: z.string().min(11, 'ABN is required'),
   entity_name: z.string().min(1, 'Company name is required'),
   trading_name: z.string().optional(),

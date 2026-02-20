@@ -78,8 +78,8 @@ export function EditUserDialog({
       return;
     }
 
-    if (password && password.length < 8) {
-      setError('Password must be at least 8 characters');
+    if (password && password.length < 10) {
+      setError('Password must be at least 10 characters');
       return;
     }
 

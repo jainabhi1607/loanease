@@ -64,16 +64,41 @@ export async function GET(request: NextRequest) {
     const formatState = (state: string | null) => {
       if (!state) return '';
       const stateMap: { [key: string]: string } = {
-        'nsw': 'New South Wales',
-        'vic': 'Victoria',
-        'qld': 'Queensland',
-        'sa': 'South Australia',
-        'wa': 'Western Australia',
-        'tas': 'Tasmania',
-        'nt': 'Northern Territory',
-        'act': 'Australian Capital Territory',
+        'AN': 'Andaman and Nicobar Islands',
+        'AP': 'Andhra Pradesh',
+        'AR': 'Arunachal Pradesh',
+        'AS': 'Assam',
+        'BR': 'Bihar',
+        'CH': 'Chandigarh',
+        'CT': 'Chhattisgarh',
+        'DL': 'Delhi',
+        'GA': 'Goa',
+        'GJ': 'Gujarat',
+        'HR': 'Haryana',
+        'HP': 'Himachal Pradesh',
+        'JK': 'Jammu and Kashmir',
+        'JH': 'Jharkhand',
+        'KA': 'Karnataka',
+        'KL': 'Kerala',
+        'LA': 'Ladakh',
+        'MP': 'Madhya Pradesh',
+        'MH': 'Maharashtra',
+        'MN': 'Manipur',
+        'ML': 'Meghalaya',
+        'MZ': 'Mizoram',
+        'NL': 'Nagaland',
+        'OR': 'Odisha',
+        'PB': 'Punjab',
+        'RJ': 'Rajasthan',
+        'SK': 'Sikkim',
+        'TN': 'Tamil Nadu',
+        'TG': 'Telangana',
+        'TR': 'Tripura',
+        'UP': 'Uttar Pradesh',
+        'UT': 'Uttarakhand',
+        'WB': 'West Bengal',
       };
-      return stateMap[state.toLowerCase()] || state;
+      return stateMap[state.toUpperCase()] || stateMap[state] || state;
     };
 
     // Format industry type helper

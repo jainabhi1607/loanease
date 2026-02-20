@@ -170,8 +170,7 @@ function Verify2FAContent() {
         return;
       }
 
-      // Set 2FA verified cookie
-      document.cookie = `cf_2fa_verified=${result.userId}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
+      // 2FA cookie is set server-side by the verify-2fa API (httpOnly)
 
       toast({
         title: 'Success',
@@ -182,8 +181,7 @@ function Verify2FAContent() {
       if (result.role === 'super_admin' || result.role === 'admin_team') {
         window.location.href = '/admin/dashboard';
       } else {
-        // All other users (referrers, clients) go to /dashboard
-        window.location.href = '/dashboard';
+        window.location.href = '/referrer/dashboard';
       }
     } catch (err) {
       console.error('2FA verification error:', err);

@@ -59,7 +59,7 @@ function UnqualifiedOpportunitiesContent() {
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', {
+    return date.toLocaleDateString('en-IN', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -68,10 +68,12 @@ function UnqualifiedOpportunitiesContent() {
 
   const formatCurrency = (amount: number) => {
     if (!amount) return '-';
-    return `$${parseFloat(amount.toString()).toLocaleString('en-US', {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
-    })}`;
+    }).format(parseFloat(amount.toString()));
   };
 
   const handleSort = (key: string) => {

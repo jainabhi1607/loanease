@@ -129,7 +129,7 @@ function SettlementsContent() {
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -138,9 +138,9 @@ function SettlementsContent() {
 
   const formatCurrency = (amount: number) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -325,7 +325,7 @@ function SettlementsContent() {
             <TableBody>
               {paginatedSettlements.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
+                  <TableCell colSpan={7} className="text-center py-8">
                     {searchTerm ? 'No settlements found matching your search' : 'No settlements found'}
                   </TableCell>
                 </TableRow>

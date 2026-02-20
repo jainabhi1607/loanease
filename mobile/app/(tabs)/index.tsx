@@ -150,18 +150,21 @@ export default function DashboardScreen() {
 
   // Format currency
   const formatCurrency = (value: number) => {
-    if (value >= 1000000) {
-      return `$${(value / 1000000).toFixed(2)}M`;
+    if (value >= 10000000) {
+      return `₹${(value / 10000000).toFixed(2)}Cr`;
+    }
+    if (value >= 100000) {
+      return `₹${(value / 100000).toFixed(2)}L`;
     }
     if (value >= 1000) {
-      return `$${(value / 1000).toFixed(0)}K`;
+      return `₹${(value / 1000).toFixed(0)}K`;
     }
-    return `$${value.toLocaleString()}`;
+    return `₹${value.toLocaleString('en-IN')}`;
   };
 
   // Format full currency
   const formatFullCurrency = (value: number) => {
-    return `$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `₹${value.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   };
 
   // Get user name
@@ -357,7 +360,7 @@ export default function DashboardScreen() {
                 style={styles.emptyButton}
                 onPress={() => router.push('/opportunity/add')}
               >
-                <Text style={styles.emptyButtonText}>+ New Referral</Text>
+                <Text style={styles.emptyButtonText}>+ New Lead</Text>
               </TouchableOpacity>
             </View>
           )}
@@ -412,10 +415,10 @@ export default function DashboardScreen() {
             <Text style={styles.modalText}>Call our team Monday to Friday 9.00am to 5.30pm</Text>
             <TouchableOpacity
               style={styles.modalEmailRow}
-              onPress={() => Linking.openURL('tel:1300007878')}
+              onPress={() => Linking.openURL('tel:+912262000000')}
             >
               <Ionicons name="call-outline" size={16} color="#334155" />
-              <Text style={styles.modalEmailText}>1300 00 78 78</Text>
+              <Text style={styles.modalEmailText}>+91 22 6200 0000</Text>
             </TouchableOpacity>
           </TouchableOpacity>
         </TouchableOpacity>

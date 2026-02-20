@@ -205,8 +205,8 @@ export default function ReferrerLayout({
                       <p className="text-sm">Call our team Monday to Friday 9.00am to 5.30pm</p>
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4" />
-                        <a href="tel:1300007878" className="hover:underline">
-                          1300 00 78 78
+                        <a href="tel:+912262000000" className="hover:underline">
+                          +91 22 6200 0000
                         </a>
                       </div>
                     </div>
@@ -309,8 +309,8 @@ export default function ReferrerLayout({
                       <p className="text-sm">Call our team Monday to Friday 9.00am to 5.30pm</p>
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4" />
-                        <a href="tel:1300007878" className="hover:underline">
-                          1300 00 78 78
+                        <a href="tel:+912262000000" className="hover:underline">
+                          +91 22 6200 0000
                         </a>
                       </div>
                     </div>

@@ -61,11 +61,12 @@ function ReferrersContent() {
 
   useEffect(() => {
     // Filter referrers based on search term
-    const filtered = referrers.filter(referrer => 
-      referrer.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      referrer.contact_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      referrer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      referrer.state.toLowerCase().includes(searchTerm.toLowerCase())
+    const term = searchTerm.toLowerCase();
+    const filtered = referrers.filter(referrer =>
+      (referrer.company_name || '').toLowerCase().includes(term) ||
+      (referrer.contact_name || '').toLowerCase().includes(term) ||
+      (referrer.email || '').toLowerCase().includes(term) ||
+      (referrer.state || '').toLowerCase().includes(term)
     );
     setFilteredReferrers(filtered);
   }, [searchTerm, referrers]);
@@ -105,7 +106,7 @@ function ReferrersContent() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -133,8 +134,8 @@ function ReferrersContent() {
     }
 
     if (typeof aValue === 'string') {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
+      aValue = (aValue || '').toLowerCase();
+      bValue = (bValue || '').toLowerCase();
     }
 
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;

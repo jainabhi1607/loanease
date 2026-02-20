@@ -96,7 +96,7 @@ export default function SignupPage() {
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     
     // Additional Directors
     numberOfAdditionalDirectors: 'None',
@@ -134,7 +134,7 @@ export default function SignupPage() {
 
   const validatePassword = (password: string) => {
     setPasswordStrength({
-      minLength: password.length >= 8,
+      minLength: password.length >= 10,
       hasUpperCase: /[A-Z]/.test(password),
       hasLowerCase: /[a-z]/.test(password),
       hasNumber: /\d/.test(password),
@@ -359,8 +359,8 @@ export default function SignupPage() {
       return;
     }
 
-    if (!formData.password || formData.password.length < 8) {
-      setErrorAndScroll('Password must be at least 8 characters');
+    if (!formData.password || formData.password.length < 10) {
+      setErrorAndScroll('Password must be at least 10 characters');
       return;
     }
 
@@ -639,7 +639,7 @@ export default function SignupPage() {
                         companySuburb: addressData.suburb,
                         companyState: addressData.state,
                         companyPostcode: addressData.postcode,
-                        companyCountry: addressData.country || 'AU'
+                        companyCountry: addressData.country || 'IN'
                       }));
                     }
                   }}
@@ -772,7 +772,7 @@ export default function SignupPage() {
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Min 8 characters"
+                    placeholder="Min 10 characters"
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     required
@@ -782,7 +782,7 @@ export default function SignupPage() {
                     <div className="space-y-1 text-xs">
                       <div className={`flex items-center gap-1 ${passwordStrength.minLength ? 'text-green-600' : 'text-gray-400'}`}>
                         {passwordStrength.minLength ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}
-                        <span>At least 8 characters</span>
+                        <span>At least 10 characters</span>
                       </div>
                       <div className={`flex items-center gap-1 ${passwordStrength.hasUpperCase ? 'text-green-600' : 'text-gray-400'}`}>
                         {passwordStrength.hasUpperCase ? <Check className="h-3 w-3" /> : <X className="h-3 w-3" />}

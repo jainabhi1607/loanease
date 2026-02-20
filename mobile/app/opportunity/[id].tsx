@@ -280,9 +280,9 @@ export default function OpportunityDetailScreen() {
   // Format currency
   const formatCurrency = (value?: number) => {
     if (!value && value !== 0) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       maximumFractionDigits: 0,
     }).format(value);
   };
@@ -296,7 +296,7 @@ export default function OpportunityDetailScreen() {
   // Format date
   const formatDate = (dateString?: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -306,7 +306,7 @@ export default function OpportunityDetailScreen() {
   // Format datetime
   const formatDateTime = (dateString?: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleString('en-AU', {
+    return new Date(dateString).toLocaleString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',

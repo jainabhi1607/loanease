@@ -514,7 +514,7 @@ export default function ViewReferrerPage() {
             <div className="border rounded-lg p-4">
               <p className="text-sm text-gray-500 mb-1">Opportunities Value</p>
               <p className="text-2xl font-bold text-[#02383B]">
-                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.opportunities_value.toLocaleString()}`}
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(stats.opportunities_value)}
               </p>
             </div>
             <div className="border rounded-lg p-4">
@@ -532,7 +532,7 @@ export default function ViewReferrerPage() {
             <div className="border rounded-lg p-4">
               <p className="text-sm text-gray-500 mb-1">Total Settled Value</p>
               <p className="text-2xl font-bold text-[#02383B]">
-                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : `$${stats.total_settled_value.toLocaleString()}`}
+                {loadingStats ? <Loader2 className="h-6 w-6 animate-spin text-gray-400" /> : new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(stats.total_settled_value)}
               </p>
             </div>
             <div className="border rounded-lg p-4">
@@ -556,7 +556,7 @@ export default function ViewReferrerPage() {
                     <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.company_name || '-'}</span>
                   </div>
                   <div className="flex py-3">
-                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Referrer Group</span>
+                    <span className="w-40 text-sm text-gray-500 flex-shrink-0">Entity Type</span>
                     <span className="text-sm font-medium text-[#02383B]">{referrer.organisation?.entity_type || '-'}</span>
                   </div>
                   <div className="flex py-3">
@@ -696,12 +696,12 @@ export default function ViewReferrerPage() {
                     <TableRow key={opportunity.id}>
                       <TableCell className="font-medium">{opportunity.deal_id}</TableCell>
                       <TableCell className="whitespace-nowrap">
-                        {new Date(opportunity.date_created).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {new Date(opportunity.date_created).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </TableCell>
                       <TableCell>{opportunity.borrowing_entity || '-'}</TableCell>
                       <TableCell>{formatLoanType(opportunity.loan_type)}</TableCell>
                       <TableCell>{opportunity.referrer_name || '-'}</TableCell>
-                      <TableCell>{opportunity.loan_amount ? `$${opportunity.loan_amount.toLocaleString()}` : '-'}</TableCell>
+                      <TableCell>{opportunity.loan_amount ? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(opportunity.loan_amount) : '-'}</TableCell>
                       <TableCell>
                         <Badge className={getStatusColor(opportunity.status)}>{formatStatus(opportunity.status)}</Badge>
                       </TableCell>

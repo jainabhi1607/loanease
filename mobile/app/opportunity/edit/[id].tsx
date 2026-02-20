@@ -261,7 +261,7 @@ export default function EditOpportunityScreen() {
   const fmtCurrency = (val: string) => {
     if (!val) return '-';
     const num = parseFloat(val);
-    return isNaN(num) ? '-' : `$${num.toLocaleString()}`;
+    return isNaN(num) ? '-' : `₹${num.toLocaleString('en-IN')}`;
   };
 
   // Render progress indicator

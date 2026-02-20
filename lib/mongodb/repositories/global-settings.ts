@@ -100,7 +100,7 @@ export async function getEmailTemplate(templateKey: string): Promise<{ subject: 
 }
 
 export async function getNewBrokerAlertRecipients(): Promise<string[]> {
-  const value = await getSettingValue('new_broker_alert');
+  const value = await getSettingValue('new_referrer_alert_emails');
   if (!value) return [];
   return value.split('\n').map(email => email.trim()).filter(Boolean);
 }
@@ -181,12 +181,12 @@ export async function getBlockedEmailDomains(): Promise<string[]> {
 // Company details settings
 export async function getCompanyPhone(): Promise<string> {
   const value = await getSettingValue('company_phone');
-  return value || '+91 1300 00 78 78';
+  return value || '+91 22 6200 0000';
 }
 
 export async function getCompanyAddress(): Promise<string> {
   const value = await getSettingValue('company_address');
-  return value || 'Suite 3, 134 Cambridge Street, Collingwood VIC 3066';
+  return value || 'Mumbai, Maharashtra, India';
 }
 
 export async function getCompanyEmail(): Promise<string> {

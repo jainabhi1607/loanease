@@ -188,6 +188,7 @@ export async function GET(request: NextRequest) {
         created_at: opp.created_at,
         loan_amount: opp.loan_amount || 0,
         loan_type: opp.loan_type || '',
+        asset_type: opp.asset_type || '',
         borrowing_entity: client?.entity_name || '',
         contact_name: client
           ? `${client.contact_first_name || ''} ${client.contact_last_name || ''}`.trim()

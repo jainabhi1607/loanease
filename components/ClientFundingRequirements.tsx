@@ -255,7 +255,7 @@ export function ClientFundingRequirements({
                       </Label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          $
+                          ₹
                         </span>
                         <Input
                           id="proposedRentalIncome"
@@ -276,7 +276,7 @@ export function ClientFundingRequirements({
                       <Label htmlFor="netProfitBeforeTax">Net Profit Before Tax</Label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          $
+                          ₹
                         </span>
                         <Input
                           id="netProfitBeforeTax"
@@ -298,7 +298,7 @@ export function ClientFundingRequirements({
                         <Label htmlFor="amortisation">Amortisation</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                            $
+                            ₹
                           </span>
                           <Input
                             id="amortisation"
@@ -314,7 +314,7 @@ export function ClientFundingRequirements({
                         <Label htmlFor="depreciation">Depreciation</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                            $
+                            ₹
                           </span>
                           <Input
                             id="depreciation"
@@ -333,7 +333,7 @@ export function ClientFundingRequirements({
                         <Label htmlFor="existingInterestCosts">Existing Interest Costs</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                            $
+                            ₹
                           </span>
                           <Input
                             id="existingInterestCosts"
@@ -349,7 +349,7 @@ export function ClientFundingRequirements({
                         <Label htmlFor="rentalExpense">Rental Expense</Label>
                         <div className="relative">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                            $
+                            ₹
                           </span>
                           <Input
                             id="rentalExpense"
@@ -369,7 +369,7 @@ export function ClientFundingRequirements({
                       </Label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                          $
+                          ₹
                         </span>
                         <Input
                           id="proposedRentalIncomeNo"

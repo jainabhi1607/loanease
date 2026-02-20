@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
     const lockoutMinutes = await getLockoutDurationMinutes();
     const lockoutMs = lockoutMinutes * 60 * 1000;
 
-    // Verify the 2FA code
-    const codeData = await verify2FACode(code);
+    // Verify the 2FA code (pass userId to validate ownership if available)
+    const codeData = await verify2FACode(code, userId || undefined);
 
     if (!codeData) {
       // Log failed attempt

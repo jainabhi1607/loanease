@@ -83,8 +83,8 @@ function PreAssessmentContent() {
   }, [fundingData, otherQuestionsData, interestRate]);
 
   const calculateOutcome = () => {
-    const loanAmount = parseFloat(fundingData.loanAmount.replace(/[$,]/g, '')) || 0;
-    const propertyValue = parseFloat(fundingData.estimatedPropertyValue.replace(/[$,]/g, '')) || 0;
+    const loanAmount = parseFloat(fundingData.loanAmount.replace(/[₹$,]/g, '')) || 0;
+    const propertyValue = parseFloat(fundingData.estimatedPropertyValue.replace(/[₹$,]/g, '')) || 0;
 
     if (loanAmount === 0 || propertyValue === 0) {
       setOutcome({
@@ -97,12 +97,12 @@ function PreAssessmentContent() {
     }
 
     // Parse financial fields
-    const netProfit = parseFloat(fundingData.netProfitBeforeTax.replace(/[$,]/g, '')) || 0;
-    const amortisation = parseFloat(fundingData.amortisation.replace(/[$,]/g, '')) || 0;
-    const depreciation = parseFloat(fundingData.depreciation.replace(/[$,]/g, '')) || 0;
-    const existingInterestCosts = parseFloat(fundingData.existingInterestCosts.replace(/[$,]/g, '')) || 0;
-    const rentalExpense = parseFloat(fundingData.rentalExpense.replace(/[$,]/g, '')) || 0;
-    const proposedRentalIncome = parseFloat(fundingData.proposedRentalIncome.replace(/[$,]/g, '')) || 0;
+    const netProfit = parseFloat(fundingData.netProfitBeforeTax.replace(/[₹$,]/g, '')) || 0;
+    const amortisation = parseFloat(fundingData.amortisation.replace(/[₹$,]/g, '')) || 0;
+    const depreciation = parseFloat(fundingData.depreciation.replace(/[₹$,]/g, '')) || 0;
+    const existingInterestCosts = parseFloat(fundingData.existingInterestCosts.replace(/[₹$,]/g, '')) || 0;
+    const rentalExpense = parseFloat(fundingData.rentalExpense.replace(/[₹$,]/g, '')) || 0;
+    const proposedRentalIncome = parseFloat(fundingData.proposedRentalIncome.replace(/[₹$,]/g, '')) || 0;
 
     // Calculate LVR
     const lvr = (loanAmount / propertyValue) * 100;
@@ -203,12 +203,12 @@ function PreAssessmentContent() {
     router.push('/referrer/opportunities/add');
   };
 
-  // Format number as currency with $ and commas
+  // Format number as currency with ₹ and commas
   const formatCurrency = (value: string): string => {
-    const num = value.replace(/[$,]/g, '');
+    const num = value.replace(/[₹$,]/g, '');
     if (!num || isNaN(Number(num))) return value;
     const number = parseFloat(num);
-    return '$' + number.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return '₹' + number.toLocaleString('en-IN', { maximumFractionDigits: 0 });
   };
 
   // Handle input change - only allow numbers

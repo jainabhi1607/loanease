@@ -125,7 +125,7 @@ export default function DashboardPage() {
             
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="font-semibold text-lg mb-2">Commission</h3>
-              <p className="text-3xl font-bold">$0</p>
+              <p className="text-3xl font-bold">₹0</p>
               <p className="text-sm text-muted-foreground">YTD earnings</p>
             </div>
           </div>

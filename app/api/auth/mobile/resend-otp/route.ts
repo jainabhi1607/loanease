@@ -6,8 +6,10 @@ import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { getTwoFACodeExpiryMinutes } from '@/lib/mongodb/repositories/global-settings';
 
-// Hardcoded OTP for testing - will implement SMS/Email later
-const HARDCODED_OTP = '998877';
+// Generate a random 6-digit OTP
+function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
 const RESEND_COOLDOWN_SECONDS = 60;
 
 // Input validation schema
@@ -123,6 +125,7 @@ export async function POST(request: NextRequest) {
 
     // Create new OTP record
     const newOtpId = uuidv4();
+    const generatedOtp = generateOTP();
     const otpExpiryMinutes = await getTwoFACodeExpiryMinutes();
     const expiresAt = new Date(Date.now() + otpExpiryMinutes * 60 * 1000);
 
@@ -131,7 +134,7 @@ export async function POST(request: NextRequest) {
       user_id: originalOTP.user_id,
       mobile: mobile,
       email: originalOTP.email,
-      otp: HARDCODED_OTP, // Hardcoded OTP for testing
+      otp: generatedOtp,
       otp_id: newOtpId,
       attempts: 0,
       max_attempts: 3,
@@ -159,8 +162,8 @@ export async function POST(request: NextRequest) {
     });
 
     // TODO: Send OTP via SMS and Email
-    // For now, OTP is hardcoded as 998877
-    console.log(`[DEV] Resent OTP for ${maskMobile(mobile)}: ${HARDCODED_OTP}`);
+    // TODO: Send OTP via SMS - for now log it
+    console.log(`[DEV] Resent OTP for ${maskMobile(mobile)}: ${generatedOtp}`);
 
     return NextResponse.json({
       success: true,

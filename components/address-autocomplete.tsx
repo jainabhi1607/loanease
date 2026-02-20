@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 
 // Common countries list
 const COUNTRIES = [
+  { value: 'IN', label: 'India' },
   { value: 'AU', label: 'Australia' },
   { value: 'NZ', label: 'New Zealand' },
   { value: 'US', label: 'United States' },
@@ -15,7 +16,6 @@ const COUNTRIES = [
   { value: 'HK', label: 'Hong Kong' },
   { value: 'JP', label: 'Japan' },
   { value: 'CN', label: 'China' },
-  { value: 'IN', label: 'India' },
   { value: 'DE', label: 'Germany' },
   { value: 'FR', label: 'France' },
   { value: 'IT', label: 'Italy' },
@@ -71,7 +71,7 @@ export function AddressAutocomplete({
   suburb = '',
   state = '',
   postcode = '',
-  country = 'AU',
+  country = 'IN',
   onFieldChange
 }: AddressFieldsProps) {
 

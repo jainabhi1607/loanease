@@ -66,9 +66,9 @@ export default function ApplicationsScreen() {
 
   // Format currency
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       maximumFractionDigits: 0,
     }).format(value);
   };

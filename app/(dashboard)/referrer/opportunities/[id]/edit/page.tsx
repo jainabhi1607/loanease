@@ -53,7 +53,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     abn: '',
     timeInBusiness: '',
     industry: '',
@@ -73,7 +73,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     assetSuburb: '',
     assetState: '',
     assetPostcode: '',
-    assetCountry: 'AU',
+    assetCountry: 'IN',
   });
 
   const [financialDetails, setFinancialDetails] = useState({
@@ -95,7 +95,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   const [icr, setIcr] = useState<number>(0);
   const [lvr, setLvr] = useState<number>(0);
   const [outcomeLevel, setOutcomeLevel] = useState<number>(0);
-  const INTEREST_RATE = 12.5;
+  const [INTEREST_RATE, setInterestRate] = useState(8.5);
 
   const [termsAccepted, setTermsAccepted] = useState({
     term1: false,
@@ -105,6 +105,14 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch interest rate from settings
+  useEffect(() => {
+    fetch('/api/settings/interest-rate')
+      .then(res => res.json())
+      .then(data => { if (data.interestRate) setInterestRate(data.interestRate); })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const fetchOpportunity = async () => {
@@ -125,7 +133,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             companySuburb: data.client_suburb || '',
             companyState: data.client_state || '',
             companyPostcode: data.client_postcode || '',
-            companyCountry: data.client_country || 'AU',
+            companyCountry: data.client_country || 'IN',
             abn: data.client_abn || '',
             timeInBusiness: data.client_time_in_business || '',
             industry: data.client_industry || data.industry || '',
@@ -146,7 +154,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
             assetSuburb: data.asset_suburb || '',
             assetState: data.asset_state || '',
             assetPostcode: data.asset_postcode || '',
-            assetCountry: data.asset_country || 'AU',
+            assetCountry: data.asset_country || 'IN',
           });
 
           setFinancialDetails({
@@ -224,7 +232,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
   useEffect(() => {
     const parseNumber = (value: string): number => {
       if (!value) return 0;
-      return parseFloat(value.replace(/[$,]/g, '')) || 0;
+      return parseFloat(value.replace(/[₹$,]/g, '')) || 0;
     };
 
     const netProfit = parseNumber(financialDetails.netProfitBeforeTax);
@@ -260,7 +268,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     else if (calculatedIcr < 1.5 && calculatedIcr > 0) level = 3;
 
     setOutcomeLevel(level);
-  }, [financialDetails, opportunityData]);
+  }, [financialDetails, opportunityData, INTEREST_RATE]);
 
   const handleBack = () => router.push('/referrer/opportunities');
 
@@ -300,8 +308,8 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
         industry: clientData.industry || null,
         time_in_business: clientData.timeInBusiness || null,
         abn: clientData.abn || null,
-        loan_amount: opportunityData.loanAmount ? parseFloat(opportunityData.loanAmount.replace(/[$,]/g, '')) : null,
-        property_value: opportunityData.estimatedPropertyValue ? parseFloat(opportunityData.estimatedPropertyValue.replace(/[$,]/g, '')) : null,
+        loan_amount: opportunityData.loanAmount ? parseFloat(opportunityData.loanAmount.replace(/[₹$,]/g, '')) : null,
+        property_value: opportunityData.estimatedPropertyValue ? parseFloat(opportunityData.estimatedPropertyValue.replace(/[₹$,]/g, '')) : null,
         loan_type: opportunityData.loanType || null,
         loan_purpose: opportunityData.loanPurpose || null,
         asset_type: opportunityData.assetType || null,
@@ -312,12 +320,12 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
         brief_overview: clientData.briefOverview || null,
         additional_notes: additionalNotes || null,
         outcome_level: outcomeLevel,
-        net_profit: financialDetails.netProfitBeforeTax ? parseFloat(financialDetails.netProfitBeforeTax.replace(/[$,]/g, '')) : null,
-        ammortisation: financialDetails.amortisation ? parseFloat(financialDetails.amortisation.replace(/[$,]/g, '')) : null,
-        deprecition: financialDetails.depreciation ? parseFloat(financialDetails.depreciation.replace(/[$,]/g, '')) : null,
-        existing_interest_costs: financialDetails.existingInterestCosts ? parseFloat(financialDetails.existingInterestCosts.replace(/[$,]/g, '')) : null,
-        rental_expense: financialDetails.rentalExpense ? parseFloat(financialDetails.rentalExpense.replace(/[$,]/g, '')) : null,
-        proposed_rental_income: financialDetails.proposedRentalIncome ? parseFloat(financialDetails.proposedRentalIncome.replace(/[$,]/g, '')) : null,
+        net_profit: financialDetails.netProfitBeforeTax ? parseFloat(financialDetails.netProfitBeforeTax.replace(/[₹$,]/g, '')) : null,
+        ammortisation: financialDetails.amortisation ? parseFloat(financialDetails.amortisation.replace(/[₹$,]/g, '')) : null,
+        deprecition: financialDetails.depreciation ? parseFloat(financialDetails.depreciation.replace(/[₹$,]/g, '')) : null,
+        existing_interest_costs: financialDetails.existingInterestCosts ? parseFloat(financialDetails.existingInterestCosts.replace(/[₹$,]/g, '')) : null,
+        rental_expense: financialDetails.rentalExpense ? parseFloat(financialDetails.rentalExpense.replace(/[₹$,]/g, '')) : null,
+        proposed_rental_income: financialDetails.proposedRentalIncome ? parseFloat(financialDetails.proposedRentalIncome.replace(/[₹$,]/g, '')) : null,
         existing_liabilities: financialDetails.existingLiabilities || null,
         additional_property: financialDetails.additionalSecurity || null,
         smsf_structure: financialDetails.smsf || null,
@@ -448,7 +456,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       companySuburb: addressData.suburb,
                       companyState: addressData.state,
                       companyPostcode: addressData.postcode,
-                      companyCountry: addressData.country || 'AU'
+                      companyCountry: addressData.country || 'IN'
                     }));
                   }
                 }}
@@ -542,7 +550,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                           assetSuburb: addressData.suburb,
                           assetState: addressData.state,
                           assetPostcode: addressData.postcode,
-                          assetCountry: addressData.country || 'AU'
+                          assetCountry: addressData.country || 'IN'
                         }));
                       }
                     }}
@@ -607,7 +615,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label>Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input className="pl-7" value={financialDetails.proposedRentalIncome} onChange={(e) => setFinancialDetails(prev => ({ ...prev, proposedRentalIncome: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                       </div>
                     </div>
@@ -619,7 +627,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label>Net Profit Before Tax</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input className="pl-7" value={financialDetails.netProfitBeforeTax} onChange={(e) => setFinancialDetails(prev => ({ ...prev, netProfitBeforeTax: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                       </div>
                     </div>
@@ -628,14 +636,14 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label>Amortisation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input className="pl-7" value={financialDetails.amortisation} onChange={(e) => setFinancialDetails(prev => ({ ...prev, amortisation: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label>Depreciation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input className="pl-7" value={financialDetails.depreciation} onChange={(e) => setFinancialDetails(prev => ({ ...prev, depreciation: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                         </div>
                       </div>
@@ -644,14 +652,14 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="space-y-2">
                         <Label>Existing Interest Costs</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input className="pl-7" value={financialDetails.existingInterestCosts} onChange={(e) => setFinancialDetails(prev => ({ ...prev, existingInterestCosts: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                         </div>
                       </div>
                       <div className="space-y-2">
                         <Label>Rental Expense</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input className="pl-7" value={financialDetails.rentalExpense} onChange={(e) => setFinancialDetails(prev => ({ ...prev, rentalExpense: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                         </div>
                       </div>
@@ -659,7 +667,7 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                     <div className="space-y-2">
                       <Label>Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input className="pl-7" value={financialDetails.proposedRentalIncome} onChange={(e) => setFinancialDetails(prev => ({ ...prev, proposedRentalIncome: handleNumericInput(e.target.value) }))} inputMode="numeric" />
                       </div>
                     </div>

@@ -89,7 +89,7 @@ export default function AddOpportunityPage() {
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     abn: '',
     entityName: '',
     timeInBusiness: '',
@@ -111,7 +111,7 @@ export default function AddOpportunityPage() {
     assetSuburb: '',
     assetState: '',
     assetPostcode: '',
-    assetCountry: 'AU',
+    assetCountry: 'IN',
   });
 
   // Financial Details
@@ -139,8 +139,8 @@ export default function AddOpportunityPage() {
   const [lvr, setLvr] = useState<number>(0);
   const [outcomeLevel, setOutcomeLevel] = useState<number>(0); // 0=default, 1=green, 2=yellow, 3=red
 
-  // Interest rate (should come from settings, hardcoded for now)
-  const INTEREST_RATE = 12.5; // percentage
+  // Interest rate (fetched from settings)
+  const [INTEREST_RATE, setInterestRate] = useState(8.5);
 
   // Terms & Conditions
   const [termsAccepted, setTermsAccepted] = useState({
@@ -174,6 +174,14 @@ export default function AddOpportunityPage() {
     };
 
     fetchReferrers();
+  }, []);
+
+  // Fetch interest rate from settings
+  useEffect(() => {
+    fetch('/api/settings/interest-rate')
+      .then(res => res.json())
+      .then(data => { if (data.interestRate) setInterestRate(data.interestRate); })
+      .catch(() => {});
   }, []);
 
   // Fetch users when referrer is selected
@@ -254,7 +262,7 @@ export default function AddOpportunityPage() {
   useEffect(() => {
     const parseNumber = (value: string): number => {
       if (!value) return 0;
-      const cleaned = value.replace(/[$,]/g, '');
+      const cleaned = value.replace(/[₹$,]/g, '');
       return parseFloat(cleaned) || 0;
     };
 
@@ -752,7 +760,7 @@ export default function AddOpportunityPage() {
                           companySuburb: addressData.suburb,
                           companyState: addressData.state,
                           companyPostcode: addressData.postcode,
-                          companyCountry: addressData.country || 'AU'
+                          companyCountry: addressData.country || 'IN'
                         }));
                       }
                     }}
@@ -942,7 +950,7 @@ export default function AddOpportunityPage() {
                           assetSuburb: addressData.suburb,
                           assetState: addressData.state,
                           assetPostcode: addressData.postcode,
-                          assetCountry: addressData.country || 'AU'
+                          assetCountry: addressData.country || 'IN'
                         }));
                       }
                     }}
@@ -1063,7 +1071,7 @@ export default function AddOpportunityPage() {
                     <div className="space-y-2">
                       <Label htmlFor="proposedRentalIncome">Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="proposedRentalIncome"
                           type="text"
@@ -1082,7 +1090,7 @@ export default function AddOpportunityPage() {
                     <div className="space-y-2">
                       <Label htmlFor="netProfitBeforeTax">Net Profit Before Tax</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="netProfitBeforeTax"
                           type="text"
@@ -1102,7 +1110,7 @@ export default function AddOpportunityPage() {
                       <div className="space-y-2">
                         <Label htmlFor="amortisation">Amortisation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="amortisation"
                             type="text"
@@ -1116,7 +1124,7 @@ export default function AddOpportunityPage() {
                       <div className="space-y-2">
                         <Label htmlFor="depreciation">Depreciation</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="depreciation"
                             type="text"
@@ -1133,7 +1141,7 @@ export default function AddOpportunityPage() {
                       <div className="space-y-2">
                         <Label htmlFor="existingInterestCosts">Existing Interest Costs</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="existingInterestCosts"
                             type="text"
@@ -1147,7 +1155,7 @@ export default function AddOpportunityPage() {
                       <div className="space-y-2">
                         <Label htmlFor="rentalExpense">Rental Expense</Label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                           <Input
                             id="rentalExpense"
                             type="text"
@@ -1163,7 +1171,7 @@ export default function AddOpportunityPage() {
                     <div className="space-y-2">
                       <Label htmlFor="proposedRentalIncomeNo">Proposed Rental Income (Annual)</Label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
                         <Input
                           id="proposedRentalIncomeNo"
                           type="text"
@@ -1378,7 +1386,7 @@ export default function AddOpportunityPage() {
                 onCheckedChange={(checked) => setTermsAccepted(prev => ({ ...prev, term2: checked as boolean }))}
               />
               <Label htmlFor="term2" className="cursor-pointer font-normal leading-normal">
-                I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Clue, and that I have advised the client that Clue will be making contact with them via email, text and/or call.
+                I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Loanease, and that I have advised the client that Loanease will be making contact with them via email, text and/or call.
               </Label>
             </div>
             <div className="flex items-start space-x-3">
@@ -1388,7 +1396,7 @@ export default function AddOpportunityPage() {
                 onCheckedChange={(checked) => setTermsAccepted(prev => ({ ...prev, term3: checked as boolean }))}
               />
               <Label htmlFor="term3" className="cursor-pointer font-normal leading-normal">
-                I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Clue, for the loan I am submitting on their behalf, once the loan is settled.
+                I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Loanease, for the loan I am submitting on their behalf, once the loan is settled.
               </Label>
             </div>
             <div className="flex items-start space-x-3">

@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 // Helper function to safely parse currency strings to numbers
 function parseCurrency(value: string | null | undefined): number | null {
   if (!value || value === '' || value.trim() === '') return null;
-  const cleaned = value.replace(/[$,]/g, '').trim();
+  const cleaned = value.replace(/[₹$,]/g, '').trim();
   if (cleaned === '') return null;
   const num = parseFloat(cleaned);
   return isNaN(num) ? null : num;
@@ -164,7 +164,10 @@ export async function POST(request: NextRequest) {
         timeInBusiness: new_client_data.timeInBusiness,
         abn: new_client_data.abn
       });
-      opportunityData.entity_type = new_client_data.entityType || null;
+      const entityMap: Record<string, number> = {
+        'private_company': 1, 'sole_trader': 2, 'smsf_trust': 3, 'trust': 4, 'partnership': 5, 'individual': 6
+      };
+      opportunityData.entity_type = new_client_data.entityType ? entityMap[new_client_data.entityType] || null : null;
       opportunityData.industry = new_client_data.industry || null;
       opportunityData.time_in_business = new_client_data.timeInBusiness || null;
       opportunityData.abn = new_client_data.abn || null;

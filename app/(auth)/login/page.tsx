@@ -53,10 +53,6 @@ export default function LoginPage() {
       }
 
       if (data.success && data.user) {
-        // Debug logging
-        console.log('Login response:', data);
-        console.log('User role:', data.user.role);
-        
         // Store remember me preference if checked
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true');
@@ -70,13 +66,10 @@ export default function LoginPage() {
           router.push(`/login/verify-2fa?email=${encodeURIComponent(email)}`);
         } else {
           // Redirect based on user role
-          // Admins go to /admin/dashboard, everyone else goes to /dashboard
           if (data.user.role === 'super_admin' || data.user.role === 'admin_team') {
-            console.log('Redirecting to admin dashboard');
             router.push('/admin/dashboard');
           } else {
-            console.log('Redirecting to dashboard');
-            router.push('/dashboard');
+            router.push('/referrer/dashboard');
           }
         }
       }

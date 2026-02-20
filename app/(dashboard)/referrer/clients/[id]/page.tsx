@@ -83,10 +83,10 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
   };
 
   const formatCurrency = (amount: number) => {
-    if (!amount) return '$0';
-    return new Intl.NumberFormat('en-AU', {
+    if (!amount) return '₹0';
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
@@ -94,7 +94,7 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'

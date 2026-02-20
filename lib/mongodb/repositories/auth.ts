@@ -23,8 +23,7 @@ export async function createTwoFACode(userId: string): Promise<TwoFACode> {
   });
 
   // Generate a 6-digit code
-  // TEMPORARY: Fixed OTP code for development - will be reverted later
-  const code = '998877'; // Math.floor(100000 + Math.random() * 900000).toString();
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
 
   // Expires based on DB setting (default 10 minutes)
   const expiryMinutes = await getTwoFACodeExpiryMinutes();
@@ -64,15 +63,20 @@ export async function verifyTwoFACode(userId: string, code: string): Promise<boo
   return true;
 }
 
-// Verify 2FA code by code only (returns the code data)
-export async function verify2FACode(code: string): Promise<TwoFACode | null> {
+// Verify 2FA code (returns the code data). If userId is provided, validates ownership.
+export async function verify2FACode(code: string, userId?: string): Promise<TwoFACode | null> {
   const db = await getDatabase();
 
-  const twoFACode = await db.collection<TwoFACode>('two_fa_codes').findOne({
+  const query: any = {
     code,
     used: false,
     expires_at: { $gt: new Date().toISOString() }
-  });
+  };
+  if (userId) {
+    query.user_id = userId;
+  }
+
+  const twoFACode = await db.collection<TwoFACode>('two_fa_codes').findOne(query);
 
   return twoFACode;
 }

@@ -164,7 +164,7 @@ export async function GET(
     const formatCurrency = (value: any) => {
       if (!value) return '';
       const num = parseFloat(value);
-      return isNaN(num) ? '' : `$${num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      return isNaN(num) ? '' : `₹${num.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
 
     // Helper to format yes/no boolean fields

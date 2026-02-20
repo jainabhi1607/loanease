@@ -40,11 +40,10 @@ export async function GET(
       console.error('Error fetching organisation: organisation not found');
     }
 
-    // Fetch additional directors
+    // Fetch all directors (including primary)
     const directors = await db.collection('organisation_directors')
       .find({
         organisation_id: referrerUser.organisation_id,
-        is_primary: false
       })
       .sort({ created_at: 1 })
       .toArray();
@@ -58,14 +57,22 @@ export async function GET(
     let state = '';
     if (organisation?.address) {
       const statePatterns = [
-        { pattern: /\b(NSW|New South Wales)\b/i, abbr: 'NSW' },
-        { pattern: /\b(VIC|Victoria)\b/i, abbr: 'VIC' },
-        { pattern: /\b(QLD|Queensland)\b/i, abbr: 'QLD' },
-        { pattern: /\b(WA|Western Australia)\b/i, abbr: 'WA' },
-        { pattern: /\b(SA|South Australia)\b/i, abbr: 'SA' },
-        { pattern: /\b(TAS|Tasmania)\b/i, abbr: 'TAS' },
-        { pattern: /\b(ACT|Australian Capital Territory)\b/i, abbr: 'ACT' },
-        { pattern: /\b(NT|Northern Territory)\b/i, abbr: 'NT' }
+        { pattern: /\b(MH|Maharashtra)\b/i, abbr: 'MH' },
+        { pattern: /\b(DL|Delhi)\b/i, abbr: 'DL' },
+        { pattern: /\b(KA|Karnataka)\b/i, abbr: 'KA' },
+        { pattern: /\b(TN|Tamil Nadu)\b/i, abbr: 'TN' },
+        { pattern: /\b(UP|Uttar Pradesh)\b/i, abbr: 'UP' },
+        { pattern: /\b(GJ|Gujarat)\b/i, abbr: 'GJ' },
+        { pattern: /\b(RJ|Rajasthan)\b/i, abbr: 'RJ' },
+        { pattern: /\b(WB|West Bengal)\b/i, abbr: 'WB' },
+        { pattern: /\b(KL|Kerala)\b/i, abbr: 'KL' },
+        { pattern: /\b(TS|Telangana)\b/i, abbr: 'TS' },
+        { pattern: /\b(AP|Andhra Pradesh)\b/i, abbr: 'AP' },
+        { pattern: /\b(MP|Madhya Pradesh)\b/i, abbr: 'MP' },
+        { pattern: /\b(PB|Punjab)\b/i, abbr: 'PB' },
+        { pattern: /\b(HR|Haryana)\b/i, abbr: 'HR' },
+        { pattern: /\b(BR|Bihar)\b/i, abbr: 'BR' },
+        { pattern: /\b(GA|Goa)\b/i, abbr: 'GA' },
       ];
 
       for (const { pattern, abbr } of statePatterns) {
@@ -84,7 +91,7 @@ export async function GET(
       email: referrerUser.email,
       phone: referrerUser.phone || referrerUser.mobile || '',
       state: state,
-      status: 'active',
+      status: organisation?.is_active === false ? 'inactive' : 'active',
       created_at: referrerUser.created_at,
       // Include full user details
       user: {

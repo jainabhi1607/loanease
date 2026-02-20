@@ -47,7 +47,7 @@ export const PAGINATION = {
 // Validation
 export const VALIDATION = {
   PASSWORD_MIN_LENGTH: 10,
-  MOBILE_REGEX: /^(\+?61|0)4\d{8}$/,
+  MOBILE_REGEX: /^(\+?91|0)?[6-9]\d{9}$/,
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   ABN_LENGTH: 11,
 };
@@ -57,5 +57,5 @@ export const APP_INFO = {
   NAME: 'Loanease',
   VERSION: '1.0.0',
   SUPPORT_EMAIL: 'support@loanease.com',
-  SUPPORT_PHONE: '1300 XXX XXX',
+  SUPPORT_PHONE: '+91 22 6200 0000',
 };

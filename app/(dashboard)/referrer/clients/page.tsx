@@ -51,7 +51,7 @@ function ClientsContent() {
   const fetchClients = async () => {
     try {
       // Use the same API endpoint - it already filters by organization for referrers
-      const response = await fetch('/api/admin/clients/all');
+      const response = await fetch('/api/referrer/clients');
 
       if (!response.ok) {
         const error = await response.json();
@@ -83,7 +83,7 @@ function ClientsContent() {
   const handleDownloadCSV = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch('/api/admin/clients/export/csv');
+      const response = await fetch('/api/referrer/clients/export/csv');
 
       if (!response.ok) {
         throw new Error('Failed to download CSV');
@@ -122,7 +122,7 @@ function ClientsContent() {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'

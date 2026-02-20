@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Download, Edit, Pencil, CheckCircle2, Circle, X } from 'lucide-react';
@@ -107,7 +107,15 @@ interface HistoryEntry {
   ip_address: string;
 }
 
-export default function OpportunityDetailPage() {
+export default function OpportunityDetailPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-gray-500">Loading...</p></div>}>
+      <OpportunityDetailPage />
+    </Suspense>
+  );
+}
+
+function OpportunityDetailPage() {
   const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
@@ -207,7 +215,7 @@ export default function OpportunityDetailPage() {
   const [lvr, setLvr] = useState<number>(0);
   const [additionalNotes, setAdditionalNotes] = useState('');
 
-  const INTEREST_RATE = 12.5;
+  const [INTEREST_RATE, setInterestRate] = useState(8.5);
 
   useEffect(() => {
     if (params.id) {
@@ -223,6 +231,11 @@ export default function OpportunityDetailPage() {
     fetch('/api/settings/loan-declined-reasons').then(res => res.ok ? res.json() : null).then(data => {
       if (data?.reasons) setLoanDeclinedReasons(data.reasons);
     }).catch(() => {});
+    // Fetch interest rate from settings
+    fetch('/api/settings/interest-rate')
+      .then(res => res.json())
+      .then(data => { if (data.interestRate) setInterestRate(data.interestRate); })
+      .catch(() => {});
   }, [params.id]);
 
   useEffect(() => {
@@ -680,6 +693,10 @@ export default function OpportunityDetailPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           entity_type: clientEntityType,
+          entity_name: clientEntityName,
+          contact_name: clientContactName,
+          contact_mobile: clientMobile,
+          contact_email: clientEmail,
           abn: clientAbn,
           time_in_business: clientTimeInBusiness,
           industry: clientIndustry,
@@ -778,9 +795,9 @@ export default function OpportunityDetailPage() {
 
   const formatCurrency = (amount: number | undefined) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -821,12 +838,12 @@ export default function OpportunityDetailPage() {
 
   const formatLoanPurpose = (purpose: string) => {
     const purposes: { [key: string]: string } = {
-      'purchase': 'Purchase',
+      'purchase_owner_occupier': 'Purchase - Owner Occupier',
+      'purchase_investment': 'Purchase - Investment',
       'refinance': 'Refinance',
       'equity_release': 'Equity Release',
-      'construction': 'Construction',
-      'renovation': 'Renovation',
-      'commercial_equipment': 'Commercial Equipment',
+      'land_bank': 'Land Bank',
+      'business_use': 'Business Use',
     };
     return purposes[purpose] || purpose || '-';
   };

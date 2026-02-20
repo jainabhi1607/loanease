@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     // Call MapBox API from server side (no CORS issues)
     const mapboxUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?` +
       `access_token=${mapboxToken}&` +
-      `country=AU&` + // Restrict to Australia
+      `country=IN&` + // Restrict to India
       `types=address&` + // Only get addresses
       `limit=5`;
     

@@ -210,8 +210,9 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // Send 2FA if enabled
-    if (user.two_fa_enabled) {
+    // Send 2FA if enabled or if user is admin (mandatory for admins)
+    const isAdmin = user.role === 'super_admin' || user.role === 'admin_team';
+    if (user.two_fa_enabled || isAdmin) {
       try {
         const twoFACode = await createTwoFACode(user._id);
         await send2FACode(user.email, twoFACode.code, user.first_name);
@@ -226,7 +227,7 @@ export async function POST(request: NextRequest) {
       email: user.email,
       role: user.role,
       organisationId: user.organisation_id,
-      twoFaEnabled: user.two_fa_enabled
+      twoFaEnabled: user.two_fa_enabled || isAdmin
     };
 
     // Set auth cookies (for web)
@@ -245,7 +246,7 @@ export async function POST(request: NextRequest) {
         id: user._id,
         email: user.email,
         role: user.role,
-        twoFAEnabled: user.two_fa_enabled,
+        twoFAEnabled: user.two_fa_enabled || isAdmin,
         first_name: user.first_name,
         surname: user.surname,
         organisation_id: user.organisation_id,

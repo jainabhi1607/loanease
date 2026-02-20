@@ -144,9 +144,7 @@ export default function PreAssessmentPage() {
       let determinedOutcome: 'good' | 'caution' | 'risk' = 'risk';
       if (calculatedIcr >= 2 && calculatedLvr <= 65) {
         determinedOutcome = 'good';
-      } else if (calculatedIcr >= 2 && calculatedLvr <= 80) {
-        determinedOutcome = 'caution';
-      } else if (calculatedIcr < 1.5) {
+      } else if (calculatedIcr < 1.5 || calculatedLvr > 80) {
         determinedOutcome = 'risk';
       } else {
         determinedOutcome = 'caution';
@@ -257,7 +255,7 @@ export default function PreAssessmentPage() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="0400 000 000"
+                      placeholder="98765 43210"
                     />
                   </div>
                 </div>

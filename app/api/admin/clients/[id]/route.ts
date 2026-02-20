@@ -100,6 +100,8 @@ export async function GET(
         email: client.contact_email || '-',
         industry: client.industry || '-',
         company_address: client.address || '-',
+        abn: client.abn || '-',
+        time_in_business: client.time_in_business || '-',
         referrer_group: referrerGroup,
       },
       total_finance_amount: totalFinanceAmount,

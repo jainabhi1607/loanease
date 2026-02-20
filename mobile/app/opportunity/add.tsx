@@ -40,8 +40,6 @@ const STEPS = [
 
 type Step = 0 | 1 | 2 | 3;
 
-const INTEREST_RATE = 12.5;
-
 const LOAN_PURPOSE_OPTIONS = [
   { value: 'purchase_owner_occupier', label: 'Purchase - Owner Occupier' },
   { value: 'purchase_investment', label: 'Purchase - Investment' },
@@ -52,19 +50,19 @@ const LOAN_PURPOSE_OPTIONS = [
   { value: 'commercial_equipment', label: 'Commercial Equipment' },
 ];
 
-const ENTITY_TYPE_OPTIONS_WEB = [
-  { value: 'private_company', label: 'Private Company' },
-  { value: 'sole_trader', label: 'Sole Trader' },
-  { value: 'smsf_trust', label: 'SMSF Trust' },
-  { value: 'trust', label: 'Trust' },
-  { value: 'partnership', label: 'Partnership' },
-  { value: 'individual', label: 'Individual' },
+const ENTITY_TYPE_OPTIONS = [
+  { value: '1', label: 'Private Company' },
+  { value: '2', label: 'Sole Trader' },
+  { value: '3', label: 'SMSF Trust' },
+  { value: '4', label: 'Trust' },
+  { value: '5', label: 'Partnership' },
+  { value: '6', label: 'Individual' },
 ];
 
 const TERMS = [
   'I confirm that all the information being submitted is true and correct to my knowledge at the time of submission.',
-  'I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Clue, and that I have advised the client that Clue will be making contact with them via email, text and/or call.',
-  'I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Clue, for the loan I am submitting on their behalf, once the loan is settled.',
+  'I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Loanease, and that I have advised the client that Loanease will be making contact with them via email, text and/or call.',
+  'I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Loanease, for the loan I am submitting on their behalf, once the loan is settled.',
   'I confirm that I have advised the client that Loanease will charge a Service Fee in relation to their application and that this will be communicated directly to the client upon application.',
 ];
 
@@ -109,6 +107,7 @@ export default function AddOpportunityScreen() {
 
   const [step, setStep] = useState<Step>(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [interestRate, setInterestRate] = useState(8.5);
 
   // ── Data loading state ──
   const [orgName, setOrgName] = useState('');
@@ -216,6 +215,13 @@ export default function AddOpportunityScreen() {
     load();
   }, []);
 
+  // Fetch interest rate from settings
+  useEffect(() => {
+    get<{ interestRate: number }>('/settings/interest-rate')
+      .then(data => { if (data.interestRate) setInterestRate(data.interestRate); })
+      .catch(() => {});
+  }, []);
+
   // Pre-fill from pre-assessment data
   useEffect(() => {
     if (params.fromPreAssessment === 'true') {
@@ -267,7 +273,7 @@ export default function AddOpportunityScreen() {
   // ─── ICR / LVR Calculation ────────────────────────────────────
   const parseNum = (v: string) => {
     if (!v) return 0;
-    return parseFloat(v.replace(/[$,]/g, '')) || 0;
+    return parseFloat(v.replace(/[₹$,]/g, '')) || 0;
   };
 
   const { icr, lvr, outcomeLevel } = useMemo(() => {
@@ -286,7 +292,7 @@ export default function AddOpportunityScreen() {
     let calcIcr = 0;
     if (np > 0 || am > 0 || dep > 0 || eic > 0 || re > 0 || pri > 0) {
       const totalIncome = np + am + dep + eic + re + pri;
-      const proposedInterest = la * (INTEREST_RATE / 100);
+      const proposedInterest = la * (interestRate / 100);
       const totalInterest = eic + proposedInterest;
       if (totalInterest > 0) calcIcr = totalIncome / totalInterest;
     }
@@ -325,6 +331,7 @@ export default function AddOpportunityScreen() {
     loanAmount, propertyValue, netProfit, ammortisation, deprecition,
     existingInterestCosts, rentalExpense, proposedRentalIncome,
     existingLiabilities, additionalSecurity, smsfStructure, atoLiabilities, creditIssues,
+    interestRate,
   ]);
 
   // ─── Validation ───────────────────────────────────────────────
@@ -679,7 +686,7 @@ export default function AddOpportunityScreen() {
             label="Entity Type"
             value={entityType}
             onSelect={setEntityType}
-            options={ENTITY_TYPE_OPTIONS_WEB}
+            options={ENTITY_TYPE_OPTIONS}
           />
 
           <Input

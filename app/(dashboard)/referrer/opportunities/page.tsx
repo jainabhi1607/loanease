@@ -77,7 +77,7 @@ export default function ReferrerOpportunitiesPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', {
+    return date.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
@@ -86,12 +86,34 @@ export default function ReferrerOpportunitiesPage() {
 
   const formatCurrency = (amount: number) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
+  };
+
+  const formatStatus = (status: string) => {
+    return status
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'draft': return 'bg-gray-100 text-gray-800';
+      case 'opportunity': return 'bg-[#00D37F] text-white';
+      case 'application_created':
+      case 'application_submitted': return 'bg-blue-100 text-blue-800';
+      case 'conditionally_approved': return 'bg-yellow-100 text-yellow-800';
+      case 'approved': return 'bg-emerald-100 text-emerald-800';
+      case 'settled': return 'bg-purple-100 text-purple-800';
+      case 'declined': return 'bg-red-100 text-red-800';
+      case 'withdrawn': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const formatLoanType = (loanType: string) => {
@@ -317,8 +339,8 @@ export default function ReferrerOpportunitiesPage() {
                       <TableCell className="py-4 text-[#787274]">{opp.referrer_type || 'Mortgage Broker'}</TableCell>
                       <TableCell className="py-4 font-bold text-[#787274]">{formatCurrency(opp.loan_amount)}</TableCell>
                       <TableCell className="py-4">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#00D37F] text-white">
-                          Opportunity
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(opp.status)}`}>
+                          {formatStatus(opp.status)}
                         </span>
                       </TableCell>
                       <TableCell className="py-4 text-right">

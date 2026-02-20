@@ -33,7 +33,7 @@ export default function EditReferrerPage() {
     companySuburb: '',
     companyState: '',
     companyPostcode: '',
-    companyCountry: 'AU',
+    companyCountry: 'IN',
     numberOfAdditionalDirectors: 'None',
     additionalDirectors: [] as { id?: string; firstName: string; surname: string; email?: string; phone?: string }[],
     entity: '',
@@ -69,7 +69,7 @@ export default function EditReferrerPage() {
         companySuburb: referrer.organisation?.suburb || '',
         companyState: referrer.organisation?.state || '',
         companyPostcode: referrer.organisation?.postcode || '',
-        companyCountry: referrer.organisation?.country || 'AU',
+        companyCountry: referrer.organisation?.country || 'IN',
         numberOfAdditionalDirectors: String(referrer.directors?.filter((d: any) => !d.is_primary).length || 0),
         additionalDirectors: referrer.directors?.filter((d: any) => !d.is_primary).map((d: any) => ({
           id: d.id,
@@ -338,7 +338,7 @@ export default function EditReferrerPage() {
                           companySuburb: addressData.suburb,
                           companyState: addressData.state,
                           companyPostcode: addressData.postcode,
-                          companyCountry: addressData.country || 'AU'
+                          companyCountry: addressData.country || 'IN'
                         }));
                       }
                     }}

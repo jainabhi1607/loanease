@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     let usersMap = new Map();
     if (userIds.length > 0) {
       const users = await db.collection(COLLECTIONS.USERS)
-        .find({ _id: { $in: userIds } })
+        .find({ _id: { $in: userIds as any } })
         .project({ _id: 1, first_name: 1, surname: 1 })
         .toArray();
       usersMap = new Map(users.map((u: any) => [u._id, u]));

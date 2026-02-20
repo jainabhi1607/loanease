@@ -96,13 +96,13 @@ export function Input({
 
 /**
  * Phone Input Component
- * Input with country code prefix for Australian mobile numbers
+ * Input with country code prefix for Indian mobile numbers
  */
 interface PhoneInputProps extends Omit<InputProps, 'keyboardType' | 'leftIcon'> {
   countryCode?: string;
 }
 
-export function PhoneInput({ countryCode = '+61', ...props }: PhoneInputProps) {
+export function PhoneInput({ countryCode = '+91', ...props }: PhoneInputProps) {
   return (
     <Input
       keyboardType="phone-pad"
@@ -124,7 +124,7 @@ interface CurrencyInputProps extends Omit<InputProps, 'keyboardType' | 'leftIcon
   currency?: string;
 }
 
-export function CurrencyInput({ currency = '$', ...props }: CurrencyInputProps) {
+export function CurrencyInput({ currency = '₹', ...props }: CurrencyInputProps) {
   return (
     <Input
       keyboardType="numeric"

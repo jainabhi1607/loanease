@@ -56,7 +56,7 @@ export function EditClientDialog({
   const [suburb, setSuburb] = useState('');
   const [addressState, setAddressState] = useState('');
   const [postcode, setPostcode] = useState('');
-  const [country, setCountry] = useState('AU');
+  const [country, setCountry] = useState('IN');
 
   useEffect(() => {
     if (client) {
@@ -197,7 +197,7 @@ export function EditClientDialog({
                     setSuburb(addressData.suburb);
                     setAddressState(addressData.state);
                     setPostcode(addressData.postcode);
-                    setCountry(addressData.country || 'AU');
+                    setCountry(addressData.country || 'IN');
                   }
                 }}
                 streetAddress={streetAddress}

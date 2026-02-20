@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -70,7 +70,15 @@ interface LoginHistoryEntry {
   user_role?: string;
 }
 
-export default function ReferrerAccountPage() {
+export default function ReferrerAccountPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><p className="text-gray-500">Loading...</p></div>}>
+      <ReferrerAccountPage />
+    </Suspense>
+  );
+}
+
+function ReferrerAccountPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
@@ -284,10 +292,10 @@ export default function ReferrerAccountPage() {
       // Validate password fields if showing and entered
       const hasPasswordInput = showPasswordFields && (passwordForm.new_password || passwordForm.confirm_password);
       if (hasPasswordInput) {
-        if (passwordForm.new_password.length < 8) {
+        if (passwordForm.new_password.length < 10) {
           toast({
             title: 'Error',
-            description: 'New password must be at least 8 characters',
+            description: 'New password must be at least 10 characters',
             variant: 'destructive',
           });
           setProfileSaving(false);
@@ -384,7 +392,7 @@ export default function ReferrerAccountPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-AU', {
+    return date.toLocaleString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
@@ -748,14 +756,39 @@ export default function ReferrerAccountPage() {
                     <SelectValue placeholder="Select state" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="ACT">ACT</SelectItem>
-                    <SelectItem value="NSW">NSW</SelectItem>
-                    <SelectItem value="NT">NT</SelectItem>
-                    <SelectItem value="QLD">QLD</SelectItem>
-                    <SelectItem value="SA">SA</SelectItem>
-                    <SelectItem value="TAS">TAS</SelectItem>
-                    <SelectItem value="VIC">VIC</SelectItem>
-                    <SelectItem value="WA">WA</SelectItem>
+                    <SelectItem value="AN">Andaman and Nicobar Islands</SelectItem>
+                    <SelectItem value="AP">Andhra Pradesh</SelectItem>
+                    <SelectItem value="AR">Arunachal Pradesh</SelectItem>
+                    <SelectItem value="AS">Assam</SelectItem>
+                    <SelectItem value="BR">Bihar</SelectItem>
+                    <SelectItem value="CH">Chandigarh</SelectItem>
+                    <SelectItem value="CT">Chhattisgarh</SelectItem>
+                    <SelectItem value="DL">Delhi</SelectItem>
+                    <SelectItem value="GA">Goa</SelectItem>
+                    <SelectItem value="GJ">Gujarat</SelectItem>
+                    <SelectItem value="HR">Haryana</SelectItem>
+                    <SelectItem value="HP">Himachal Pradesh</SelectItem>
+                    <SelectItem value="JK">Jammu and Kashmir</SelectItem>
+                    <SelectItem value="JH">Jharkhand</SelectItem>
+                    <SelectItem value="KA">Karnataka</SelectItem>
+                    <SelectItem value="KL">Kerala</SelectItem>
+                    <SelectItem value="LA">Ladakh</SelectItem>
+                    <SelectItem value="MP">Madhya Pradesh</SelectItem>
+                    <SelectItem value="MH">Maharashtra</SelectItem>
+                    <SelectItem value="MN">Manipur</SelectItem>
+                    <SelectItem value="ML">Meghalaya</SelectItem>
+                    <SelectItem value="MZ">Mizoram</SelectItem>
+                    <SelectItem value="NL">Nagaland</SelectItem>
+                    <SelectItem value="OR">Odisha</SelectItem>
+                    <SelectItem value="PB">Punjab</SelectItem>
+                    <SelectItem value="RJ">Rajasthan</SelectItem>
+                    <SelectItem value="SK">Sikkim</SelectItem>
+                    <SelectItem value="TN">Tamil Nadu</SelectItem>
+                    <SelectItem value="TG">Telangana</SelectItem>
+                    <SelectItem value="TR">Tripura</SelectItem>
+                    <SelectItem value="UP">Uttar Pradesh</SelectItem>
+                    <SelectItem value="UT">Uttarakhand</SelectItem>
+                    <SelectItem value="WB">West Bengal</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

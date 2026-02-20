@@ -175,7 +175,7 @@ export async function GET(request: NextRequest) {
       ['2', 'Referrer', `Party: ${organization.company_name || '-'}\nAddress: ${organization.address || '-'}\nEmail: ${userData.email || '-'}\nContact: ${organization.phone || userData.phone || '-'}`],
       ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
       ['4', 'Referrer Services', formatIndustryType(organization.industry_type)],
-      ['5', 'Commencement Date', commencementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
+      ['5', 'Commencement Date', commencementDate.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
       ['6', 'Referrer Fees', referrerFees || '-'],
       ['7', 'Method of Payment', "Referral fees will be paid typically monthly in arrears as per aggregator / lender payment terms, directly to the Referrer's nominated bank account."],
     ];
@@ -214,9 +214,9 @@ export async function GET(request: NextRequest) {
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Date of approval: ${approvalDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
+    doc.text(`Date of approval: ${approvalDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
     yPos += 6;
-    doc.text(`Time of approval: ${approvalDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })} IST`, margin, yPos);
+    doc.text(`Time of approval: ${approvalDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })} IST`, margin, yPos);
     yPos += 6;
     doc.text(`IP Address: ${agreementIp}`, margin, yPos);
 

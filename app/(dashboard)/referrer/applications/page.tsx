@@ -78,7 +78,7 @@ export default function ReferrerApplicationsPage() {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU', {
+    return date.toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
@@ -87,9 +87,9 @@ export default function ReferrerApplicationsPage() {
 
   const formatCurrency = (amount: number) => {
     if (!amount) return '-';
-    return new Intl.NumberFormat('en-AU', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'AUD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(amount);
@@ -193,7 +193,7 @@ export default function ReferrerApplicationsPage() {
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-[#02383B]">Applications</h1>
-          <p className="text-[#787274] mt-1">Track and manage potential referral opportunities</p>
+          <p className="text-[#787274] mt-1">Track and manage your loan applications</p>
         </div>
 
         {/* Stats Cards */}

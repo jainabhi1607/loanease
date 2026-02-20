@@ -66,7 +66,7 @@ export default function ClientsScreen() {
 
       if (Platform.OS === 'web') {
         // Web: use fetch + blob download
-        const response = await fetch(`${API_CONFIG.BASE_URL}/admin/clients/export/csv`, {
+        const response = await fetch(`${API_CONFIG.BASE_URL}/referrer/clients/export/csv`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Failed to download CSV');
@@ -83,7 +83,7 @@ export default function ClientsScreen() {
         // Native: download to file system then share
         const fileUri = FileSystem.documentDirectory + fileName;
         const result = await FileSystem.downloadAsync(
-          `${API_CONFIG.BASE_URL}/admin/clients/export/csv`,
+          `${API_CONFIG.BASE_URL}/referrer/clients/export/csv`,
           fileUri,
           { headers: { Authorization: `Bearer ${token}` } }
         );

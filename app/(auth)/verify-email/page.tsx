@@ -49,7 +49,7 @@ function VerifyEmailContent() {
           setHasSession(true);
           // Redirect to dashboard after 3 seconds
           setTimeout(() => {
-            router.push('/referrer');
+            router.push('/referrer/dashboard');
           }, 3000);
         }
       } else {

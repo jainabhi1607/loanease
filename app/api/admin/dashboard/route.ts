@@ -201,7 +201,7 @@ export async function GET(request: NextRequest) {
       },
       newOpportunities: formattedNewOpportunities,
       newReferrers: formattedReferrers,
-      currentMonth: now.toLocaleString('en-AU', { month: 'long' }),
+      currentMonth: now.toLocaleString('en-IN', { month: 'long' }),
       userName,
     });
 

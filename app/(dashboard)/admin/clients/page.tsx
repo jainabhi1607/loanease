@@ -135,7 +135,7 @@ function ClientsContent() {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-AU', {
+    return new Date(dateString).toLocaleDateString('en-IN', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
@@ -168,8 +168,8 @@ function ClientsContent() {
     }
 
     if (typeof aValue === 'string') {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
+      aValue = (aValue || '').toLowerCase();
+      bValue = (bValue || '').toLowerCase();
     }
 
     if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;

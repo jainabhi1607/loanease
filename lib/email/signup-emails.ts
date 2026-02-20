@@ -165,7 +165,7 @@ async function generateReferrerAgreementPDF(params: {
     ['2', 'Referrer', `Party: ${params.companyName}\nAddress: ${params.address}\nEmail: ${params.email}\nContact: ${params.phone}`],
     ['3', 'Services', 'Financial brokerage services for business and commercial loans'],
     ['4', 'Referrer Services', formatIndustryType(params.industryType)],
-    ['5', 'Commencement Date', params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
+    ['5', 'Commencement Date', params.agreementDate.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Asia/Kolkata' })],
     ['6', 'Referrer Fees', referrerFees || '-'],
     ['7', 'Method of Payment', "Referral fees will be paid typically monthly in arrears as per aggregator / lender payment terms, directly to the Referrer's nominated bank account."],
   ];
@@ -201,9 +201,9 @@ async function generateReferrerAgreementPDF(params: {
   doc.setFont('helvetica', 'normal');
   doc.text(`IP Address: ${params.ipAddress}`, margin, yPos);
   yPos += 6;
-  doc.text(`Date of approval: ${params.agreementDate.toLocaleDateString('en-AU', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
+  doc.text(`Date of approval: ${params.agreementDate.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' })}`, margin, yPos);
   yPos += 6;
-  doc.text(`Time of approval: ${params.agreementDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })}`, margin, yPos);
+  doc.text(`Time of approval: ${params.agreementDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Asia/Kolkata' })}`, margin, yPos);
 
   return Buffer.from(doc.output('arraybuffer'));
 }
@@ -244,8 +244,14 @@ export async function sendSignupWelcomeEmail(params: SignupEmailParams): Promise
       'Entity Name': entityName,
     };
 
-    const subject = replaceVariables(subjectTemplate, variables);
+    const subject = replaceVariables(subjectTemplate, variables) || 'Welcome to Loanease';
     const content = replaceVariables(contentTemplate, variables);
+
+    if (!content) {
+      console.warn('Signup welcome email content template is empty, skipping send');
+      return { success: false, error: 'Email content template is empty' };
+    }
+
     const htmlBody = await wrapInEmailTemplate(content);
 
     return await sendHtmlEmail({
@@ -279,8 +285,14 @@ export async function sendReferrerAgreementEmail(params: SignupEmailParams): Pro
       'Entity Name': entityName,
     };
 
-    const subject = replaceVariables(subjectTemplate, variables);
+    const subject = replaceVariables(subjectTemplate, variables) || 'Loanease Referrer Agreement';
     const content = replaceVariables(contentTemplate, variables);
+
+    if (!content) {
+      console.warn('Referrer agreement email content template is empty, skipping send');
+      return { success: false, error: 'Email content template is empty' };
+    }
+
     const htmlBody = await wrapInEmailTemplate(content);
 
     // Generate PDF
@@ -323,10 +335,10 @@ export async function sendNewBrokerAlertEmail(params: SignupEmailParams): Promis
   try {
     const subjectTemplate = await getEmailTemplate('new_broker_email_subject');
     const contentTemplate = await getEmailTemplate('new_broker_email_content');
-    const alertEmails = await getEmailTemplate('new_broker_alert');
+    const alertEmails = await getEmailTemplate('new_referrer_alert_emails');
 
     if (!alertEmails) {
-      console.log('No new_broker_alert emails configured');
+      console.log('No new_referrer_alert_emails configured');
       return { success: true };
     }
 
@@ -351,8 +363,14 @@ export async function sendNewBrokerAlertEmail(params: SignupEmailParams): Promis
       'Industry-Type': formatIndustryType(params.industryType),
     };
 
-    const subject = replaceVariables(subjectTemplate, variables);
+    const subject = replaceVariables(subjectTemplate, variables) || 'New Referrer Registration';
     const content = replaceVariables(contentTemplate, variables);
+
+    if (!content) {
+      console.warn('New broker alert email content template is empty, skipping send');
+      return { success: false, error: 'Email content template is empty' };
+    }
+
     const htmlBody = await wrapInEmailTemplate(content);
 
     // Parse email list (one per line)
@@ -399,6 +417,12 @@ export async function sendNewUserWelcomeEmail(params: {
 
     const subject = replaceVariables(subjectTemplate, variables) || 'Welcome to Loanease';
     const content = replaceVariables(contentTemplate, variables);
+
+    if (!content) {
+      console.warn('New user welcome email content template is empty, skipping send');
+      return { success: false, error: 'Email content template is empty' };
+    }
+
     const htmlBody = await wrapInEmailTemplate(content);
 
     console.log('Sending new user welcome email to:', params.email);

@@ -140,7 +140,7 @@ export default function TermsAndConditionsPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Referrer Fees</h3>
             <p className="text-sm text-gray-500 mb-4">
-              Add the referrer fees you wish to display in the referrer aggrement.
+              Add the referrer fees you wish to display in the referrer agreement.
             </p>
             <p className="text-sm text-gray-500 mb-4">This will apply to all referrers.</p>
             <Textarea
