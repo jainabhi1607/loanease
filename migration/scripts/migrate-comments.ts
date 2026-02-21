@@ -122,7 +122,7 @@ async function migrateComments() {
   console.log('Starting comments migration...\n');
 
   // Read SQL file
-  const commentsPath = path.join(__dirname, '..', 'clue_staging_db_table_application_comments.sql');
+  const commentsPath = path.join(__dirname, '..', 'loanease_staging_db_table_application_comments.sql');
   const commentsSql = fs.readFileSync(commentsPath, 'utf-8');
   const comments = parseInsertStatements(commentsSql) as OldComment[];
 

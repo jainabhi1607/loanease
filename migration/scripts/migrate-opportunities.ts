@@ -203,8 +203,8 @@ async function migrateOpportunities() {
   console.log('Starting opportunities migration...\n');
 
   // Read SQL files
-  const appsPath = path.join(__dirname, '..', 'clue_staging_db_table_applications.sql');
-  const usersPath = path.join(__dirname, '..', 'clue_staging_db_table_users.sql');
+  const appsPath = path.join(__dirname, '..', 'loanease_staging_db_table_applications.sql');
+  const usersPath = path.join(__dirname, '..', 'loanease_staging_db_table_users.sql');
 
   const appsSql = fs.readFileSync(appsPath, 'utf-8');
   const usersSql = fs.readFileSync(usersPath, 'utf-8');

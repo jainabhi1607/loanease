@@ -163,7 +163,7 @@ function parseRowValues(row: string): any[] {
 // Map old role to new role
 function mapRole(oldRole: number | null, email: string | null): string {
   // Special case for main admin
-  if (email === 'admin@cluefinance.com.au' || email === 'luay@duofinance.com.au') {
+  if (email === 'admin@loanease.com' || email === 'luay@duofinance.com.au') {
     return 'super_admin';
   }
 
@@ -223,7 +223,7 @@ async function migrateUsers() {
   console.log('Starting user migration...\n');
 
   // Read SQL files
-  const usersPath = path.join(__dirname, '..', 'clue_staging_db_table_users.sql');
+  const usersPath = path.join(__dirname, '..', 'loanease_staging_db_table_users.sql');
   const usersSql = fs.readFileSync(usersPath, 'utf-8');
   const users = parseInsertStatements(usersSql) as OldUser[];
 

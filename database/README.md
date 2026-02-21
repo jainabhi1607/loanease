@@ -1,6 +1,6 @@
-# ClueFinance Database
+# Loanease Database
 
-This directory contains the optimized database schema, migration scripts, and maintenance tools for ClueFinance.
+This directory contains the optimized database schema, migration scripts, and maintenance tools for Loanease.
 
 ## Directory Structure
 

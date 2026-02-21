@@ -26,7 +26,7 @@ BEGIN
       is_active
     ) VALUES (
       admin_user_id,
-      'Clue Finance',
+      'Loanease',
       'Admin',
       'super_admin',
       true,  -- 2FA is mandatory for super admins

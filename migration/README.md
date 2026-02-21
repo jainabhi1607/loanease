@@ -21,7 +21,7 @@ This folder contains scripts and data for migrating from the old CakePHP MySQL d
 migration/
 ├── README.md                    # This file
 ├── SCHEMA_MAPPING.md           # Detailed schema mapping documentation
-├── clue_staging_db_table_*.sql # SQL export files from CakePHP MySQL
+├── loanease_staging_db_table_*.sql # SQL export files from legacy MySQL
 ├── scripts/                     # Migration scripts
 │   ├── migrate-organisations.ts
 │   ├── migrate-users.ts

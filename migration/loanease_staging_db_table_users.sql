@@ -32,7 +32,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `admin_id`, `username`, `password`, `company_name`, `name`, `last_name`, `email`, `phone`, `abn`, `acn`, `number_of_directors`, `entity`, `retainer_type`, `industry_type`, `trading_name`, `state`, `role`, `status`) VALUES
-(5, 1, 'luay@duofinance.com.au', '$2y$10$nqk2UZsLSLw/V1WVI7ArAO5ZZdMJ4xvppDACqEgFVYuO0GN6WmvrO', NULL, 'Clue', 'Finance', 'luay@duofinance.com.au', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(5, 1, 'luay@duofinance.com.au', '$2y$10$nqk2UZsLSLw/V1WVI7ArAO5ZZdMJ4xvppDACqEgFVYuO0GN6WmvrO', NULL, 'Loanease', 'Admin', 'luay@duofinance.com.au', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
 (8, NULL, 'jnshankey@gmail.com', '$2y$10$XE04ACWKSvfFk/XbaRLjGOclisK255r/FyYxn7FEJoE0BsD.EHRhi', 'Sterling Infotech', 'Shankey', 'Jain', 'jnshankey@gmail.com', '8788767', '67676', '675675', 3, NULL, NULL, NULL, NULL, NULL, 3, 1),
 (9, 5, 'admin1', '$2y$10$8c6BlzqmmzSlP9BQ6lRaTu4N0GKtqi34BKeN3DNQcgw9JA7Wfez3W', NULL, 'First', 'Admin', 'admin1@test.com', '767765', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
 (13, NULL, 'pw@test.com', '$2y$10$Lcve79LG5YTY0yq.1rzEfuyMvSgbZzBDGKn.Cz0q0EfMZQQ80e5Dm', NULL, 'Paul', 'Williams', 'pw@test.com', '04830 7658', 'ABN-865546', 'ACN-23423', 2, NULL, NULL, NULL, NULL, NULL, 3, 3),
@@ -51,7 +51,7 @@ INSERT INTO `users` (`id`, `admin_id`, `username`, `password`, `company_name`, `
 (33, 30, 'subbroker1@northbase.io', '$2y$10$7lXv8WFzCE02wUwkhfsGxe/2hsRD2cEgcbdV4bh9twmbLcjQYBiEy', NULL, 'Sub', 'Broker', 'subbroker1@northbase.io', '', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 7, 3),
 (38, 5, 's11hankey@sxda.com.au', '$2y$10$lwPtMuvtUqZl0uuwq.nO2eAeFa66uC4rjE5fcLjPy4klFWy/7Jz7.', NULL, 'Anshu', 'Jain', 's11hankey@sxda.com.au', '9119188885', '', '', NULL, NULL, NULL, NULL, NULL, NULL, 3, 3),
 (39, 5, 's111hankey@sxda.com.au', '$2y$10$QrQlyd85eMaPuJilYK4Eb.lFv2q7mJTlsjdXIgKfVYPF1Guc8il7u', 'DUO FINANCE PTY LTD', 'User 10', 'Shankey', 's111hankey@sxda.com.au', '9468590655', '79640471101', NULL, NULL, NULL, NULL, NULL, NULL, '', 3, NULL),
-(40, 21, 'admin@cluefinance.com.au', '$2y$10$HkrOYDH7kDS0vVL700tQte4Tebkjy72NWjs1VN.Z8/XnHe/79PwX2', NULL, 'Clue', 'Finance', 'admin@cluefinance.com.au', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
+(40, 21, 'admin@loanease.com', '$2y$10$HkrOYDH7kDS0vVL700tQte4Tebkjy72NWjs1VN.Z8/XnHe/79PwX2', NULL, 'Loanease', 'Admin', 'admin@loanease.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
 (41, NULL, 'eamonn.j.keogh@gmail.com', '$2y$10$UK684nJkVMhZiLk4DHRUn.LY.S9p7/EygwP8QJ.zFqLqpvFsEHhLq', 'Duo Finance 1', 'Eamonn', 'Keogh', 'eamonn.j.keogh@gmail.com', '0409409310', '79640471101', '', NULL, NULL, NULL, 8, NULL, NULL, 3, 1),
 (42, 16, 'gunjit@northbase.au', '$2y$10$3tCBXNKWBZh4zju.3SU5X.FtmO58gKU9RQfqCdaom6aOWKitAExjW', NULL, 'Gunjit', 'Singh', 'gunjit@northbase.au', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1),
 (50, 5, 'test99@northbase.dev', '$2y$10$6O3Pp8tI6StV4OoLCl0HfeKZNFFMfzmHNtY1S/gVnLSPz1F4SWjse', 'Abhi', 'Abhishek333', 'Jn', 'test99@northbase.dev', '444444', '', '', NULL, 3, NULL, 3, NULL, '', 3, NULL),

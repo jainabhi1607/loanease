@@ -33,8 +33,8 @@ CREATE TRIGGER update_users_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies for users
--- Clue Finance can view all users
-CREATE POLICY "Clue Finance can view all users" ON public.users
+-- Loanease can view all users
+CREATE POLICY "Loanease can view all users" ON public.users
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -55,8 +55,8 @@ CREATE POLICY "Users can view own profile" ON public.users
     auth.uid() = id
   );
 
--- Only Clue Finance can insert users (signup uses service role)
-CREATE POLICY "Clue Finance can insert users" ON public.users
+-- Only Loanease can insert users (signup uses service role)
+CREATE POLICY "Loanease can insert users" ON public.users
   FOR INSERT
   WITH CHECK (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -77,8 +77,8 @@ CREATE POLICY "Users can update own profile" ON public.users
     auth.uid() = id
   );
 
--- Clue Finance can update any user
-CREATE POLICY "Clue Finance can update users" ON public.users
+-- Loanease can update any user
+CREATE POLICY "Loanease can update users" ON public.users
   FOR UPDATE
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')

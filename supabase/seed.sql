@@ -5,7 +5,7 @@
 INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
 VALUES (
   'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-  'admin@cluefinance.com.au',
+  'admin@loanease.com',
   crypt('Admin123!', gen_salt('bf')),
   NOW(),
   '{"provider": "email", "providers": ["email"]}',

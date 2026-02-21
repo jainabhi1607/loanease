@@ -314,8 +314,8 @@ export async function POST(request: NextRequest) {
 
       case 'organisations': {
         log('Starting organisations migration...');
-        const usersSql = readSqlFile('clue_staging_db_table_users.sql');
-        const userDetailsSql = readSqlFile('clue_staging_db_table_user_details.sql');
+        const usersSql = readSqlFile('loanease_staging_db_table_users.sql');
+        const userDetailsSql = readSqlFile('loanease_staging_db_table_user_details.sql');
         const users = parseInsertStatements(usersSql);
         const userDetails = parseInsertStatements(userDetailsSql);
 
@@ -384,7 +384,7 @@ export async function POST(request: NextRequest) {
 
       case 'users': {
         log('Starting users migration...');
-        const usersSql = readSqlFile('clue_staging_db_table_users.sql');
+        const usersSql = readSqlFile('loanease_staging_db_table_users.sql');
         const users = parseInsertStatements(usersSql);
         const orgMappings = loadMappings('organisations');
 
@@ -470,8 +470,8 @@ export async function POST(request: NextRequest) {
 
       case 'directors': {
         log('Starting directors migration...');
-        const directorsSql = readSqlFile('clue_staging_db_table_directors.sql');
-        const usersSql = readSqlFile('clue_staging_db_table_users.sql');
+        const directorsSql = readSqlFile('loanease_staging_db_table_directors.sql');
+        const usersSql = readSqlFile('loanease_staging_db_table_users.sql');
         const directors = parseInsertStatements(directorsSql);
         const users = parseInsertStatements(usersSql);
         const orgMappings = loadMappings('organisations');
@@ -529,9 +529,9 @@ export async function POST(request: NextRequest) {
 
       case 'clients': {
         log('Starting clients migration...');
-        const clientsSql = readSqlFile('clue_staging_db_table_clients.sql');
-        const clientDetailsSql = readSqlFile('clue_staging_db_table_client_details.sql');
-        const usersSql = readSqlFile('clue_staging_db_table_users.sql');
+        const clientsSql = readSqlFile('loanease_staging_db_table_clients.sql');
+        const clientDetailsSql = readSqlFile('loanease_staging_db_table_client_details.sql');
+        const usersSql = readSqlFile('loanease_staging_db_table_users.sql');
 
         const clients = parseInsertStatements(clientsSql);
         const clientDetails = parseInsertStatements(clientDetailsSql);
@@ -673,8 +673,8 @@ export async function POST(request: NextRequest) {
 
       case 'opportunities': {
         log('Starting opportunities migration...');
-        const appsSql = readSqlFile('clue_staging_db_table_applications.sql');
-        const usersSql = readSqlFile('clue_staging_db_table_users.sql');
+        const appsSql = readSqlFile('loanease_staging_db_table_applications.sql');
+        const usersSql = readSqlFile('loanease_staging_db_table_users.sql');
 
         const applications = parseInsertStatements(appsSql);
         const users = parseInsertStatements(usersSql);
@@ -793,7 +793,7 @@ export async function POST(request: NextRequest) {
 
       case 'opportunity_details': {
         log('Starting opportunity details migration...');
-        const detailsSql = readSqlFile('clue_staging_db_table_application_details.sql');
+        const detailsSql = readSqlFile('loanease_staging_db_table_application_details.sql');
         const appDetails = parseInsertStatements(detailsSql);
         const oppMappings = loadMappings('opportunities');
 
@@ -850,7 +850,7 @@ export async function POST(request: NextRequest) {
 
       case 'comments': {
         log('Starting comments migration...');
-        const commentsSql = readSqlFile('clue_staging_db_table_application_comments.sql');
+        const commentsSql = readSqlFile('loanease_staging_db_table_application_comments.sql');
         const comments = parseInsertStatements(commentsSql);
         const oppMappings = loadMappings('opportunities');
         const userMappings = loadMappings('users');
@@ -881,7 +881,7 @@ export async function POST(request: NextRequest) {
 
       case 'pre_assessment': {
         log('Starting pre-assessment contacts migration...');
-        const contactsSql = readSqlFile('clue_staging_db_table_contact_details.sql');
+        const contactsSql = readSqlFile('loanease_staging_db_table_contact_details.sql');
         const contacts = parseInsertStatements(contactsSql);
 
         let count = 0;
@@ -911,7 +911,7 @@ export async function POST(request: NextRequest) {
 
       case 'global_settings': {
         log('Starting global settings migration...');
-        const settingsSql = readSqlFile('clue_staging_db_table_global_settings.sql');
+        const settingsSql = readSqlFile('loanease_staging_db_table_global_settings.sql');
         const settings = parseInsertStatements(settingsSql);
 
         if (settings.length === 0) {

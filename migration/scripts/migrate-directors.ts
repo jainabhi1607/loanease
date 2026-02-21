@@ -130,7 +130,7 @@ async function migrateDirectors() {
   console.log('Starting directors migration...\n');
 
   // Read SQL file
-  const directorsPath = path.join(__dirname, '..', 'clue_staging_db_table_directors.sql');
+  const directorsPath = path.join(__dirname, '..', 'loanease_staging_db_table_directors.sql');
   const directorsSql = fs.readFileSync(directorsPath, 'utf-8');
   const directors = parseInsertStatements(directorsSql) as OldDirector[];
 

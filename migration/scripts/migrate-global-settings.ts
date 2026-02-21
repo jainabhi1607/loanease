@@ -139,7 +139,7 @@ async function migrateGlobalSettings() {
   console.log('Starting global settings migration...\n');
 
   // Read SQL file
-  const settingsPath = path.join(__dirname, '..', 'clue_staging_db_table_global_settings.sql');
+  const settingsPath = path.join(__dirname, '..', 'loanease_staging_db_table_global_settings.sql');
   const settingsSql = fs.readFileSync(settingsPath, 'utf-8');
   const settings = parseInsertStatements(settingsSql) as OldGlobalSettings[];
 

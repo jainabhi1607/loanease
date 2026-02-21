@@ -1,6 +1,6 @@
-# ClueFinance Database Optimization Guide
+# Loanease Database Optimization Guide
 
-This document outlines the database optimization strategy for ClueFinance to ensure fast access with large datasets.
+This document outlines the database optimization strategy for Loanease to ensure fast access with large datasets.
 
 ## Table of Contents
 1. [Indexing Strategy](#indexing-strategy)

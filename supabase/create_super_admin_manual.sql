@@ -35,7 +35,7 @@ BEGIN
       updated_at
     ) VALUES (
       admin_user_id,
-      'Clue Finance',
+      'Loanease',
       'Admin',
       'super_admin'::user_role,
       true,

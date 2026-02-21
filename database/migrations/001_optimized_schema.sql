@@ -1,4 +1,4 @@
--- ClueFinance Optimized Database Schema
+-- Loanease Optimized Database Schema
 -- This schema is optimized for performance with large datasets
 -- Includes proper indexes, constraints, and partitioning strategies
 

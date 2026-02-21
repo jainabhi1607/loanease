@@ -196,9 +196,9 @@ async function migrateClients() {
   console.log('Starting clients migration...\n');
 
   // Read SQL files
-  const clientsPath = path.join(__dirname, '..', 'clue_staging_db_table_clients.sql');
-  const clientDetailsPath = path.join(__dirname, '..', 'clue_staging_db_table_client_details.sql');
-  const usersPath = path.join(__dirname, '..', 'clue_staging_db_table_users.sql');
+  const clientsPath = path.join(__dirname, '..', 'loanease_staging_db_table_clients.sql');
+  const clientDetailsPath = path.join(__dirname, '..', 'loanease_staging_db_table_client_details.sql');
+  const usersPath = path.join(__dirname, '..', 'loanease_staging_db_table_users.sql');
 
   const clientsSql = fs.readFileSync(clientsPath, 'utf-8');
   const clientDetailsSql = fs.readFileSync(clientDetailsPath, 'utf-8');

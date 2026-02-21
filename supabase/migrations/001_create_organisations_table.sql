@@ -40,8 +40,8 @@ CREATE TRIGGER update_organisations_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies for organisations
--- Clue Finance (super_admin and admin_team) can see all organisations
-CREATE POLICY "Clue Finance can view all organisations" ON public.organisations
+-- Loanease (super_admin and admin_team) can see all organisations
+CREATE POLICY "Loanease can view all organisations" ON public.organisations
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -54,15 +54,15 @@ CREATE POLICY "Referrers can view own organisation" ON public.organisations
     auth.jwt() ->> 'organisation_id' = id::text
   );
 
--- Only Clue Finance can insert organisations (for now - signup will use service role)
-CREATE POLICY "Clue Finance can insert organisations" ON public.organisations
+-- Only Loanease can insert organisations (for now - signup will use service role)
+CREATE POLICY "Loanease can insert organisations" ON public.organisations
   FOR INSERT
   WITH CHECK (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
   );
 
--- Only Clue Finance can update organisations
-CREATE POLICY "Clue Finance can update organisations" ON public.organisations
+-- Only Loanease can update organisations
+CREATE POLICY "Loanease can update organisations" ON public.organisations
   FOR UPDATE
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')

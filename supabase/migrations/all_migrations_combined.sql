@@ -42,8 +42,8 @@ CREATE TRIGGER update_organisations_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies for organisations
--- Clue Finance (super_admin and admin_team) can see all organisations
-CREATE POLICY "Clue Finance can view all organisations" ON public.organisations
+-- Loanease (super_admin and admin_team) can see all organisations
+CREATE POLICY "Loanease can view all organisations" ON public.organisations
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -56,15 +56,15 @@ CREATE POLICY "Referrers can view own organisation" ON public.organisations
     auth.jwt() ->> 'organisation_id' = id::text
   );
 
--- Only Clue Finance can insert organisations (for now - signup will use service role)
-CREATE POLICY "Clue Finance can insert organisations" ON public.organisations
+-- Only Loanease can insert organisations (for now - signup will use service role)
+CREATE POLICY "Loanease can insert organisations" ON public.organisations
   FOR INSERT
   WITH CHECK (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
   );
 
--- Only Clue Finance can update organisations
-CREATE POLICY "Clue Finance can update organisations" ON public.organisations
+-- Only Loanease can update organisations
+CREATE POLICY "Loanease can update organisations" ON public.organisations
   FOR UPDATE
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -113,8 +113,8 @@ CREATE TRIGGER update_users_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies for users
--- Clue Finance can view all users
-CREATE POLICY "Clue Finance can view all users" ON public.users
+-- Loanease can view all users
+CREATE POLICY "Loanease can view all users" ON public.users
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -135,8 +135,8 @@ CREATE POLICY "Users can view own profile" ON public.users
     auth.uid() = id
   );
 
--- Only Clue Finance can insert users (signup uses service role)
-CREATE POLICY "Clue Finance can insert users" ON public.users
+-- Only Loanease can insert users (signup uses service role)
+CREATE POLICY "Loanease can insert users" ON public.users
   FOR INSERT
   WITH CHECK (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -157,8 +157,8 @@ CREATE POLICY "Users can update own profile" ON public.users
     auth.uid() = id
   );
 
--- Clue Finance can update any user
-CREATE POLICY "Clue Finance can update users" ON public.users
+-- Loanease can update any user
+CREATE POLICY "Loanease can update users" ON public.users
   FOR UPDATE
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -198,8 +198,8 @@ CREATE TRIGGER update_organisation_directors_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies
--- Clue Finance can view all directors
-CREATE POLICY "Clue Finance can view all directors" ON public.organisation_directors
+-- Loanease can view all directors
+CREATE POLICY "Loanease can view all directors" ON public.organisation_directors
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -216,8 +216,8 @@ CREATE POLICY "Organisation members can view own directors" ON public.organisati
     )
   );
 
--- Clue Finance can manage directors
-CREATE POLICY "Clue Finance can manage directors" ON public.organisation_directors
+-- Loanease can manage directors
+CREATE POLICY "Loanease can manage directors" ON public.organisation_directors
   FOR ALL
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')

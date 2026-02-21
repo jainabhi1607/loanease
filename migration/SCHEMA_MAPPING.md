@@ -56,7 +56,7 @@ In the old system, the `users` table contains both user and organisation data co
 **Role Mapping:**
 | Old Role | New Role |
 |----------|----------|
-| 1 (with admin@cluefinance.com.au) | super_admin |
+| 1 (with admin@loanease.com) | super_admin |
 | 1, 2 | admin_team |
 | 3 | referrer_admin |
 | 4, 7 | referrer_team |

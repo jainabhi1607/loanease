@@ -4,8 +4,8 @@
       "email": "luay@duofinance.com.au",
       "organisation_id": null,
       "role": "super_admin",
-      "first_name": "Clue",
-      "surname": "Finance",
+      "first_name": "Loanease",
+      "surname": "Admin",
       "phone": "3",
       "position": null,
       "two_fa_enabled": false,
@@ -481,10 +481,10 @@
       "_id": "ba54f05f-0a0f-4f72-8775-da9d551b173b"
     },
     {
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "organisation_id": null,
       "role": "super_admin",
-      "first_name": "Clue Finance",
+      "first_name": "Loanease",
       "surname": "Admin",
       "phone": "9468590655",
       "position": null,
@@ -1085,7 +1085,7 @@
       "organisation_id": "a5248efe-7c66-4209-84b5-a1820d951f1e",
       "role": "referrer_team",
       "first_name": "User",
-      "surname": "Clue",
+      "surname": "Loanease",
       "phone": "546545",
       "position": null,
       "two_fa_enabled": false,
@@ -10260,7 +10260,7 @@
       "created_at": "2025-11-21T03:44:03.791031+00:00",
       "updated_at": "2025-11-21T03:44:03.196+00:00",
       "key": "commission_split",
-      "value": "Clue Commercial will pay 30% (inclusive of GST) of the net upfront commission received by Clue Commercial from the lender (via the aggregator).\n\nThis will be paid typically monthly in arrears as per aggregator / lender payment terms and you will receive your own copy of the commission statement for your records, directly from the aggregator.",
+      "value": "Loanease will pay 30% (inclusive of GST) of the net upfront commission received by Loanease from the lender (via the aggregator).\n\nThis will be paid typically monthly in arrears as per aggregator / lender payment terms and you will receive your own copy of the commission statement for your records, directly from the aggregator.",
       "description": null,
       "_id": "ae81cb1f-39c1-4ad9-be80-9db0e85ecf9a"
     },
@@ -10268,7 +10268,7 @@
       "created_at": "2025-11-21T03:44:45.041712+00:00",
       "updated_at": "2025-11-21T03:44:44.417+00:00",
       "key": "referrer_fees",
-      "value": "30% (inclusive of GST) of the net upfront commission and 20% (inclusive of GST) of the net trail commission received by ClueCommercial from the Lender (as defined in the definition of Referral Fees in Schedule 1).",
+      "value": "30% (inclusive of GST) of the net upfront commission and 20% (inclusive of GST) of the net trail commission received by Loanease from the Lender (as defined in the definition of Referral Fees in Schedule 1).",
       "description": null,
       "_id": "8fb78cfa-ff9b-4ff6-b4a9-4cc10eb6b483"
     },
@@ -10276,7 +10276,7 @@
       "created_at": "2025-11-21T03:54:07.857254+00:00",
       "updated_at": "2025-11-21T03:54:07.184+00:00",
       "key": "terms_and_conditions",
-      "value": "<p><strong>BACKGROUND</strong><br>A. Clue Commercial is a provider of the Services.<br>B. The Referrer is a provider of the Referrer Services.<br>C. Subject to the terms of this Agreement:<br>a. Clue Commercial shall offer the Services to Referred Clients who are Introduced by the Referrer; and<br>b. where the Referrer provides Clue Commercial with a Referral, Clue Commercial will pay the Referrer the Referral Fees.<br><br><strong>OPERATIVE PART</strong><br><strong>1.</strong> <strong>TERM</strong><br>1.1 Term<br>This Agreement commences on the Commencement Date and continues unless terminated in accordance with this clause 1.2.<br>1.2 Termination<br>(a) Clue Commercial may terminate this Agreement without cause upon 30 days written notice to the other.<br>(b) Clue Commercial may terminate this Agreement immediately on written notice to the Referrer if the Referrer is, or is in Clue Commercial's reasonable opinion, likely to be;<br>(i) prohibited, restricted or adversely impacted by any applicable laws;<br>(ii) prohibited, restricted or suspended from holding any licences, registrations or accreditation that is required to provide the Referrer Services; or<br>(iii) in serious or persistent breach of Professional Business Standards.<br>(c) If either party (<strong>Defaulting Party</strong>):<br>(i) commits a breach of this Agreement and fails to remedy such breach within 14 days of receipt of a notice in writing setting out the breach and requiring such breach to be remedied; or<br>(ii) becomes subject to an Insolvency Event,<br>the other party may terminate this Agreement immediately by giving written notice of termination to the Defaulting Party.<br>(d) Upon termination or expiry of this Agreement:<br>(i) The Referrer's right to make Introductions shall cease;<br>(ii) any rights or obligations of one party to the other party which have accrued before the date of termination shall continue; and<br>(e) The Referrer acknowledges that in the event of any breach of the terms of the Agreement, any Referral Fees which have accrued or were to accrue or which are due and unpaid after any breach or Termination will no longer be payable by Clue Commercial to the Referrer, including in connection with all Introductions which have already occurred.<br>(f) All covenants, indemnities, warranties and agreements in this Agreement which by their terms or by reasonable implication are to be performed in whole or in part after termination of this Agreement shall survive termination.<br><br><strong>2.</strong> <strong>CONDITION PRECEDENT</strong><br>The mutual obligations of Clue Commercial and the Referrer pursuant to this Agreement, are subject to Clue Commercial and the Referred Client entering into a Client Services Agreement, unless waived by Clue Commercial in writing.<br><br><strong>3.</strong> <strong>REFERRALS AND FEES</strong><br><strong>3.1</strong> <strong>Authorisation and Referral</strong><br>The parties agree that:<br>(a) the Referrer may, at its discretion, Introduce Referred Clients to Clue Commercial for Clue Commercial to provide the Services to those Referred Clients;<br>(b) the Referrer must provide a Referred Client's Contact Details to Clue Commercial;<br>(c) the Referrer has the written consent of the Referred Client to make an Introduction to Clue Commercial;<br>(d) Clue Commercial agrees to provide the Services to Referred Clients Introduced by the Referrer to the extent that it is reasonably able to do so;<br>(e) Clue Commercial may, prior to and during the Term or otherwise from time to time, request any information it reasonably requires in respect of the Referrer and the business operated by the Referrer, including but not limited to copies of any licences all and any current licenses, certifications and accreditations of the Referrer as are required by law to undertake and offer any of the Referrer Services (collectively)<strong>Referrer Information'</strong>);<br>(f) the Referrer must provide any Referrer Information to Clue Commercial within five (5) Business Days of written request from Clue Commercial. Should any Referrer Information given to Clue Commercial change, the Referrer agrees to update Clue Commercial within five (5) Business Days of becoming aware of this change;<br>(g) in addition to the Referrer Information, the Referrer must advise and disclose to Clue Commercial any specific Professional Business Standards relating to its industry and that upon such disclosure, Clue Commercial reserves the right to make appropriate amendments to the Agreement;<br>(h) the Referrer must and covenants that it will, at minimum in relation to any Client Introduced during the Term;<br>(i) comply with all applicable laws;<br>(ii) devote sufficient time, staff and resources to Introduce any Referred Clients to Clue Commercial and take any other steps reasonably necessary to enable Clue Commercial to offer the Services to the Referred Client;<br>(iii) maintain Professional Business Standards;<br>(iv) verify any information which it obtains in respect of the Referred Client and must provide such information to Clue Commercial;<br>(v) promptly notify Clue Commercial in writing if it becomes aware or has reason to believe that the Referred Client has provided misleading and deceptive or false information to either the Referrer or to Clue Commercial; and<br>(vi) promptly notify Clue Commercial in writing of and use reasonable endeavours to resolve any Claims in relation to the Referrer Services or Referred Clients.<br><strong>3.2</strong> <strong>Referral Fee</strong><br>(a) The Referrer acknowledges and agrees that the payment of the Referral Fees by Clue Commercial is conditional upon;<br>(i) the Referred Client entering into and executing a Client Services Agreement with Clue Commercial;<br>(ii) the Referred Client's Loan Application being successful;<br>(iii) the Referred Client's ability to satisfy all or any of the conditions stipulated by the Lender whether in the Loan Offer or subsequent to its issue;<br>(iv) Settlement of the Loan;<br>(v) receipt by Clue Commercial of any Third Party Rebates, which the Referrer acknowledges may only be received by Clue Commercial approximately thirty (30) to sixty (60) days after Settlement of the Loan; and<br>(vi) the Referrer providing a tax invoice for the Referral Fees to Clue Commercial.<br>(b) The Referrer acknowledges and agrees that the Referral Fees will not be due and payable if;<br>(i) any Loan Offer from the Lender is cancelled;<br>(ii) the Referred Client fails or declines to sign a Loan Offer from the Lender; and<br>(iii) Clue Commercial does not for any reason receive any Third Party Rebates.<br>(c) The Referrer acknowledges and agrees that in circumstances where the Referred Client refinances or pays out any finance from a Lender procured by Clue Commercial as part of the Services within two (2) years from the execution of the Loan or facility, or undertakes any other action which would give rise to a clawback of any Third Party Rebates paid to Clue Commercial, Clue Commercial may seek to recover from the Referrer and/or the Client, at its discretion, the whole or part of any rebates so clawed back.<br><strong>3.3</strong> <strong>Nature of Relationship</strong><br>Each Party acknowledges and agrees that nothing in this Agreement will or is capable of creating a relationship of employee/employer, partnership, joint venture or otherwise.<br><br><strong>4.</strong> <strong>ACKNOWLEDGEMENTS</strong><br>4.1 For the avoidance of doubt, the Referrer acknowledges and agrees that in providing the Services, Clue Commercial;<br>(a) will only be acting as the Referred Client's finance broker and the Services do not include nor does this Agreement constitute the provision of finance or any financial accommodation;<br>(b) will not provide or offer financial, investment or taxation advice as part of the Services;<br>(c) does not guarantee that any Loan Application of the Referred Client will be approved;<br>(d) does not have any control over the Lender who may vary or withdraw the Loan Offer at any time prior to Settlement; and<br>(e) will not be liable for any loss incurred by either the Referrer and/or Referred Client in the event any Loan Application is not approved, varied or withdrawn in accordance with sub-clauses (c) and (d).<br><br><strong>5.</strong> <strong>DIRECTOR'S GUARANTEE</strong><br>5.1 The director(s) of the Referrer irrevocably and unconditionally guarantee to Clue Commercial the;<br>(a) performance by the Referrer of its obligations under this Agreement; and<br>(b) continual compliance with and satisfaction of Professional Business Standards.<br>5.2 The director(s) of the Referrer agree that by signing this Agreement they are jointly and severally liable for all obligations of the Referrer under this Agreement.<br><br><strong>6.</strong> <strong>WARRANTIES</strong><br>6.1 The Referrer warrants to Clue Commercial that:<br>(a) it will keep accurate records of all Referrer Services, Introductions and Referred Clients;<br>(b) it will keep accurate records of any and all Claims or complaints made in connection with the Referrer Services;<br>(c) all provision of the Referrer Services to Referred Clients will comply with all applicable laws;<br>(d) it holds any and all current required licenses, certifications and accreditations as may be required by law to undertake and offer any of the Referrer Services;<br>(e) all information, including Referrer Information and documentation which it has provided to Clue Commercial is accurate, complete and correct; and<br>(f) it is not subject to an Insolvency Event at the time of entering into this Agreement.<br>6.2 Clue Commercial gives no warranties about or in relation to the Referred Clients or any Services, Contract with or payment to the Referrer by the Referred Clients.<br><br><strong>7.</strong> <strong>LIABILITY AND INDEMNITY</strong><br>7.1 The Referrer acknowledges, and agrees that:<br>(a) it is solely responsible for the provision of the Referrer Services and Clue Commercial shall have no liability whatsoever for any Referrer Services provided by the Referrer and indemnifies and releases Clue Commercial from all Claims arising in relation to the provision of the Referrer Services and any related services;<br>(b) it indemnifies Clue Commercial in respect of any Claims suffered or incurred by Clue Commercial in connection with:<br>(i) any breach the Referrer's obligations and warranties under this Agreement by its or its directors, officer, employees, agents or persons under its control; or<br>(ii) any wilful or negligent actions or omissions by the Referrer's directors, officer, employees, agents or persons under its control in connection with this Agreement;<br>(c) it enters into any agreements or arrangements with any third parties at its own risk and after making its own enquiries and Clue Commercial shall not be liable for any Claims suffered or incurred by the Referrer arising under or in relation to any such agreements or arrangements for any reason;<br>(d) it will ensure that it has any and all required liability and other insurance and will provide Clue Commercial with copies of such, on request;<br>(e) Clue Commercial shall not be responsible or liable for any inaccuracy in any Contact Details given by the Referrer and the Referrer shall be responsible for confirming and validating any Contact Details prior to providing them to Clue Commercial; and<br>(f) Clue Commercial shall have no liability whatsoever in connection with;<br>(i) Payment and reporting of any Income Tax;<br>(ii) Payment and reporting of any Goods and Services Tax (or other value added tax) imposed or to be imposed by any relevant Commonwealth, State or Territory law in effect from time to time;<br>(iii) Obtaining and maintaining an Australian Business Number (ABN);<br>(iv) Any other costs incidental to the performance of this Agreement that are not specified herein; and<br>(v) obtaining and maintaining WorkCover insurance and the insurances in clause 7.1(c).<br>7.2 The indemnities in this Agreement are continuing and do not merge on termination and expiry.<br>7.3 This clause shall operate as an agreement in favour of each member of Clue Commercial.</p><p><strong>8.</strong> <strong>ACCESS TO INFORMATION</strong><br>8.1 The Referrer shall provide Clue Commercial upon reasonable request with access to any of the following information on written request by Clue Commercial for the purposes of confirming or verifying the same:<br>(a) whether any Introduced party has entered into a Contract;<br>(b) all payments notified or received from Referred Clients in respect of any Contract; and<br>(c) any other information reasonably requested to verify the identity of the Referred Client and the Referred Services.<br>8.2 Clause 8.1 shall survive termination.<br><br><strong>9.</strong> <strong>PRIVACY</strong><br>Clue Commercial and the Referrer each:<br>(a) acknowledge and agree that information provided in respect of the Referred Clients (including any Contact Details provided), may be personal information as defined in the Privacy Laws (Personal Information);<br>(b) must deal with any Personal Information it receives from the other Party under this Agreement in accordance with the Privacy Laws;<br>(c) must only use Personal Information held by it as permitted by the Privacy Laws;<br>(d) must take all reasonable steps to ensure that Personal Information held by it is protected from misuse, loss, unauthorised access, modification or disclosure; and<br>(e) to the extent that the Personal Information concerns the Contact Details of any Referred Client that does not ultimately engage Clue Commercial, Clue Commercial must not use those Contact Details for any other purpose than making the complimentary Initial Contact with the Referred Client, share those Contact Details with any third party or otherwise cause do or omit to do anything with may place the Referrer in breach of its obligations under any Privacy Laws.</p><p><strong>10.</strong> <strong>CONFIDENTIAL INFORMATION AND INTELLECTUAL PROPERTY</strong><br>10.1 The parties will maintain as confidential at all times any information about the terms and conditions set out in this Agreement and any Confidential Information of the other party and will not at any time disclose or permit such information to be disclosed except:<br>(a) as required by law;<br>(b) to its advisers;<br>(c) to comply with its obligations under this Agreement or to enforce its rights under this Agreement; or<br>(d) if at the time of first disclosure between the parties, the information is already in the public domain.<br>10.2 Subject to clause 10.3, if this Agreement is terminated in accordance with its terms, any party may require the other party to return or destroy any of its Confidential Information. That party must attend to such return or destruction within 2 Business Days of the termination or expiry, unless and to the extent a copy is required to be kept for the purposes of legal compliance or in order to enforce its rights under this Agreement.<br>10.3 If this Agreement is terminated in accordance with its terms, the Referrer acknowledges and agrees that Clue Commercial may continue to hold Confidential Information relating to the Referrer and any Referred Clients for a duration of up to seven (7) years or for any period longer in circumstances where Settlement of a Loan has occurred, and the advance is to be repaid to the Lender beyond seven (7) years.<br>10.4 All Intellectual Property of Clue Commercial, of any nature, obtained by or used by the Referrer in the course of providing the Services will be the property of Clue Commercial at all times, and the Referrer will have no claim to or interest of any nature in such Intellectual Property and further, will be the property of Clue Commercial at all times, and the Referrer will have no claim to or interest of any nature in such Intellectual Property.<br>10.5 Unless otherwise provided for under this Agreement, or agreed to in writing by Clue Commercial, the Referrer may not make use of or reproduce any of the Intellectual Property (which includes any and all Confidential Information) which is the property of Clue Commercial.<br>10.6 Notwithstanding anything contained in this Agreement, upon termination of this Agreement, this obligation of confidentiality and restraint on the use of Clue Commercial's Intellectual Property will remain in full force and effect and survive termination of this Agreement. For the avoidance of doubt, the Referrer will be liable for all Claims in respect of a breach of Clue Commercial's Confidential Information and Intellectual Property Rights notwithstanding that such breach may have occurred by an associate, agent, representative, director, shareholder or adviser of the Referrer.<br><br><strong>11.</strong> <strong>DISPUTE RESOLUTION</strong><br>11.1 Best Endeavours to Resolve<br>If there is a reasonable dispute in relation to the interpretation of this Agreement or about the performance of any party of its obligations under this Agreement (<strong>Dispute</strong>), the parties must use their best endeavours to resolve the Dispute between themselves without delay.<br>11.2 Referral to Mediation<br>If the parties cannot resolve the Dispute within 14 days of the dispute arising, either party may require, by written notice, the Dispute to be referred to mediation and conducted in accordance with any legislation or codes of conduct applicable in the relevant jurisdiction (<strong>Mediation</strong>).<br>11.3 Appointment of Mediator<br>The Mediator to be appointed must be agreed by the parties involved in the Dispute within 14 days of the written notice, but failing agreement, appointed by the then President of the Law Institute of Victoria.<br>11.4 Timeframe for Mediation<br>Mediation must occur within 14 days of selection or nomination of a Mediator.<br>11.5 Costs of Mediation<br>Other than the costs of them and their advisers considering, preparing for and attending a Mediation, the costs of any Mediation must be shared equally by the parties involved in the Dispute, unless otherwise agreed.<br>11.6 Bar to Proceedings<br>Unless a party has complied with clauses 11.1 to 11.5, that party may not commence court proceedings or arbitration relating to a Dispute except where that party seeks urgent interlocutory relief in which case that party need not comply with this clause before seeking relief.<br><br><strong>12.</strong> <strong>MISCELLANEOUS</strong><br>12.1 Victorian Law and Jurisdiction<br>The law of Victoria from time to time governs this Agreement. The parties agree to the exclusive jurisdiction of the courts of Victoria, the Federal Court of Australia, and of courts entitled to hear appeals from those courts.<br>12.2 Agreement<br>The parties agree that the Schedules form part of this Agreement. Furthermore, an amendment to this Agreement is only effective once it is executed by all parties.<br>12.3 Counterparts<br>This document may be executed in any number of counterparts all of which taken together constitute one instrument.<br>12.4 Notices<br>(a) A notice by a party must be in writing and must be given to each other party. A notice may be given to a party in any of these ways:<br>(i) delivered by hand to the party and is deemed delivered when handed over;<br>(ii) sent by prepaid mail or document exchange to the address of the party and is deemed delivered 5 Business Days after posting;<br>(iii) sent by email or other electronic means to the parties nominated e-mail address and is deemed delivered immediately after sending unless a delivery failure notification is given concerning the email.<br>(b) A notice given on a day which is not a Business Day is treated as given on the next Business Day.</p><p>12.5 Severability<br>If all or any part of a provision of this Agreement is held to be unenforceable or invalid, then that provision (or part of it) must:<br>(a) where possible, be interpreted as narrowly as necessary to allow it to be enforceable and valid; or<br>(b) be severed from this Agreement,<br>and in either case the validity and enforceability of the remaining provisions is not affected.<br>12.6 No Waiver<br>A party may exercise its rights at any time and does not waive those rights even if that party previously waived a breach or default of all or part of the same or other provision or delayed or omitted to exercise its rights.<br>12.7 Electronic execution and counterparts<br>(a) The Parties acknowledge and agree that:<br>(i) a Party may sign this Agreement electronically and bind itself to this Agreement by executing in that manner;<br>(ii) a Party's signature (whether affixed electronically or in handwriting) may be witnessed remotely in accordance with applicable laws; and<br>(iii) a Party's signature appearing in this Agreement (whether affixed electronically or in handwriting) is their personal signature which has been duly authenticated.<br>(b) This Agreement may be executed in any number of counterparts, each signed by one or more Parties and if the signatures on behalf of one Party are on more than one copy of this, this shall be taken to be the same as, and have the same effect as, if all of those signatures were on the same counterpart of this Agreement. Each counterpart when so executed is deemed to be an original and all such counterparts taken together constitute one document.<br>(c) A Party that has executed a counterpart of this Agreement may exchange that counterpart with another Party by emailing it to the other Party or the other Party's legal representative.</p><p>12.8 Costs<br>Each party will pay its own costs associated with the preparation and finalisation of this Agreement and of any documentation ancillary to this Agreement or necessary to give effect to the terms of this Agreement.</p><p></p><p></p><p><strong>SCHEDULE 1 - DICTIONARY</strong><br>In this Agreement:<br><strong>Business Days</strong> means a day which is not a Saturday, Sunday, a public holiday<br>or a bank holiday in the place where the Services are to occur;<br><br><strong>Claims</strong> means, in relation to a person, a claim, demand, remedy, suit, injury,<br>damage, loss, cost, fine penalty, liability, action, proceeding, right of action,<br>chose in action, claim for compensation or reimbursement or liability incurred<br>by or to be made or recovered by or against the person, however arising and<br>whether ascertained or unascertained, or immediate, future or contingent;<br><br><strong>Client Services Agreement </strong>means an agreement entered into between Clue<br>Commercial and the Referred Client where the Referred Client has agreed to<br>Clue Commercial's terms and conditions to provide the Services;<br><br><strong>Commencement Date </strong>means the date set out in Item Error: Reference source not found of Error: Reference source not found ;<br><br><strong>Confidential Information</strong> means:<br>(a) all processes, systems, procedures, databases, manuals, notes, know<br>how, client lists, client details, client contracts or any other verbal<br>information or written data concerning a party or their operation and<br>marketing;<br>(b) all business and financial information and business records; or<br>(c) any information that would otherwise at law be considered secret or<br>confidential information;<br>whether or not marked confidential BUT does not include information which:<br>(a) at the time of first disclosure by a party is already in the public domain;<br>and<br>(b) after disclosure to a party, becomes part of the public domain otherwise<br>than by disclosure in breach of the terms of this Agreement;<br><br><strong>Contact Details</strong> means the contact details of any Referred Clients of the<br>Referrer;<br><br><strong>Contract</strong> means where a Referred Client has agreed to the Referrer's terms and<br>conditions of engagement for the Referrer Services or any of them including any<br>replacement, assignment, variation or novation thereof or ancillary agreements<br>arising under or by reason thereof;<br>Insolvency Event means the occurrence of any one or more of the following<br>events in relation to a party:<br>(a) an application is made to a court for an order that it be wound up,<br>declared bankrupt or that a provisional liquidator or receiver or receiver<br>and manager be appointed, unless the application is withdrawn, struck out<br>or dismissed within 21 days of it being made or any a writ of execution is<br>levied against it or its property;<br>(b) a liquidator or provisional liquidator is appointed;<br>(c) an administrator or a controller is appointed to any of its assets;<br>(d) it enters into an arrangement or composition with one or more of its<br>creditors, or an assignment for the benefit of one or more of its creditors<br>where the person is unable to pay their debts as and when they fall due;<br>(e) it proposes a reorganisation, moratorium, deed of company arrangement<br>or other administration involving one or more of its creditors, or its<br>winding up or dissolution;<br>(f) it is insolvent as disclosed in its accounts or otherwise, or it is insolvent<br>under an applicable law;<br>(g) it becomes an insolvent under administration as defined in section 9 of the<br>Corporations Act;<br>(h) it fails, or is taken to have failed, to comply with a statutory demand as a<br>result of section 459F(1) of the Corporations Act; or<br>(i) anything occurs under the law of any jurisdiction which has a substantially<br>similar effect to any of the above paragraphs of this definition.<br><br><strong>Intellectual Property (IP )</strong> or <strong>Intellectual Property Rights (IPR) </strong>means all<br>intellectual property or all intellectual property rights, registered or<br>unregistered, including but not limited to the following rights:<br>(a) patents, copyright (including software), registered designs, trade marks,<br>know-how, inventions and the right to have confidential information<br>kept confidential; and<br>(b) any application or right to apply for registration of any of the rights<br>referred to in paragraph (a) above;<br><br><strong>Introduced</strong> means during the Term, a person, company, entity or their<br>Associates were first advised as to the existence of Clue Commercial or were<br>recommended the Services by the Referrer and or consented to the Referrer<br>providing their Contact Details to Clue Commercial and includes the Referred<br>Client using the Services. <strong>Introduce</strong> and <strong>Introduction</strong> shall the same<br>meaning;<br><br><strong>Lender</strong> means all banks, private equity providers, financial institutions and/or<br>other entities who are authorised and accredited to provide finance, a Loan or<br>other similar financial facilities;<br><br><strong>Loan</strong> refers to any loan obtained from a Lender obtained by the Clue<br>Commercial on behalf of the Referred Client;<br><br><strong>Loan Application</strong> refers to application(s) for the Loan which is made by Clue<br>Commercial on the Referred Client's behalf under the Client Services<br>Agreement;<br><br><strong>Loan Offer</strong> refers to any offer made by the Lender to the Referred Client for a<br>Loan;<br><br><strong>Method of Payment</strong> means the agreed payment terms of the Referral Fees<br>as set out in Item 7 of Schedule 3;<br><br><strong>Privacy Laws</strong> means the Privacy Act 1988 (Cth) as amended, any<br>corresponding State and Territory Acts, rules and regulations, as amended<br>from time to time and the National Privacy Principles, as amended from time to<br>time;<br><br><strong>Professional Business Standards</strong> means the professional expectations the<br>Referrer must comply with under relevant legislation, regulations, codes of<br>conduct and general industry procedures in undertaking the Referrer Services;</p><p><br><strong>Referral Fees </strong>means the fees described in Item 6 of Schedule 3 payable by Clue Commercial to the Referrer in accordance of this Agreement, being;</p><ul><li><p>Whereby the Referrer provides a name, mobile number and email address and brief account of the Referred Client to Clue Commercial, where Clue Commercial undertakes the full Loan Application process, Clue Commercial will pay 30% (inclusive of GST) of the net upfront commission and net trail commission received by Clue Commercial from the Lender.</p></li></ul><p><strong>Referred</strong> means that a person or entity is Introduced by the Referrer during<br>the Term and uses the Services and <strong>Refer</strong> and <strong>Referral</strong> shall have the same<br>meaning;<br><br><strong>Referred Client(s)</strong> means a person(s) or entity referred by the Referrer to<br>Clue Commercial or any related entity of Clue Commercial . A person will be<br>referred even if at any time they do not use the Services of the Clue<br>Commercial in the future;<br><br><strong>Referrer</strong> means the person or entity set out in Item 2 of Schedule 3;<br><br><strong>Referrer Services </strong>means the Services provided by the Referrer set out in<br>Item 4 of Schedule 3;</p><p><strong>Services</strong> means the services to be provided or procured by Clue Commercial<br>set out in Item 3 of Schedule 3;<br><br><strong>Settlement</strong> refers to the date of which drawdown of the Loan occurred.<br><br><strong>Term</strong> means from the Commencement Date until terminated in accordance<br>with clause 1; and<br><br><strong>Third Party Rebates</strong> means any payments due and payable to Clue<br>Commercial in connection with the Services from any Third Party which<br>includes but is not limited to Lenders, intermediaries, valuers, authorities,<br>accountants, credit reporting agencies and corporations that Clue Commercial<br>engages and/or liaises with in connection with the Services.</p><p><br><br><strong>SCHEDULE 2 - INTERPRETATION</strong><br>In this Agreement the following rules of interpretation apply unless the contrary<br>intention appears:<br>(a) headings are for convenience only and do not affect the interpretation of<br>this Agreement;<br>(b) the singular includes the plural and vice versa;<br>(c) where a word or phrase is given a particular meaning, other parts of<br>speech and grammatical forms of that word or phrase have corresponding<br>meanings;<br>(d) a reference to:<br>(i) a person includes a natural person, partnership, joint venture,<br>government agency, association, corporation or other body<br>corporate;<br>(ii) a party includes its successors, executors, administrators, and<br>permitted assigns;<br>(iii) a clause, term, party, schedule or attachment is a reference to a<br>clause or term of, or party, schedule or attachment to this<br>Agreement;<br>(iv) this Agreement includes all schedules and attachments to it;<br>(v) a law includes a constitutional provision, treaty, decree, convention,<br>statute, regulation, ordinance, by-law, judgment, rule of common<br>law or equity and is a reference to that law as amended,<br>consolidated or replaced;<br>(vi) an agency or body means, if that agency or body ceases to exist,<br>any reconstituted or renamed agency or body or, failing that, the<br>agency or body which most closely performs the previous functions<br>of such agency or body;<br>(vii) a monetary amount is in Australian dollars;<br>(e) when the day on which something must be done is not a Business Day,<br>that thing must be done on the following Business Day;<br>(f) where a day on which something must be done is specified, that obligation<br>must be done by 4:00pm on that day unless otherwise specified and if<br>done after 4.00pm on that day, it is taken to be done on the next day;<br>(g) in determining the time of day, where relevant to this Agreement, the<br>relevant time of day is:<br>(i) for the purposes of giving or receiving notices, the time of day where<br>a party receiving a notice is located; or<br>(ii) for any other purpose under this Agreement, time is Australian<br>Eastern Standard Time (AEST);<br>(h) no rule of construction applies to the disadvantage of a party because that<br>party was responsible for the preparation of this Agreement or any part of<br>it; and<br>(i) this Agreement binds a party's liquidators, receivers, managers and<br>administrators.</p><p></p><p></p>",
+      "value": "<p><strong>BACKGROUND</strong><br>A. Loanease is a provider of the Services.<br>B. The Referrer is a provider of the Referrer Services.<br>C. Subject to the terms of this Agreement:<br>a. Loanease shall offer the Services to Referred Clients who are Introduced by the Referrer; and<br>b. where the Referrer provides Loanease with a Referral, Loanease will pay the Referrer the Referral Fees.<br><br><strong>OPERATIVE PART</strong><br><strong>1.</strong> <strong>TERM</strong><br>1.1 Term<br>This Agreement commences on the Commencement Date and continues unless terminated in accordance with this clause 1.2.<br>1.2 Termination<br>(a) Loanease may terminate this Agreement without cause upon 30 days written notice to the other.<br>(b) Loanease may terminate this Agreement immediately on written notice to the Referrer if the Referrer is, or is in Loanease's reasonable opinion, likely to be;<br>(i) prohibited, restricted or adversely impacted by any applicable laws;<br>(ii) prohibited, restricted or suspended from holding any licences, registrations or accreditation that is required to provide the Referrer Services; or<br>(iii) in serious or persistent breach of Professional Business Standards.<br>(c) If either party (<strong>Defaulting Party</strong>):<br>(i) commits a breach of this Agreement and fails to remedy such breach within 14 days of receipt of a notice in writing setting out the breach and requiring such breach to be remedied; or<br>(ii) becomes subject to an Insolvency Event,<br>the other party may terminate this Agreement immediately by giving written notice of termination to the Defaulting Party.<br>(d) Upon termination or expiry of this Agreement:<br>(i) The Referrer's right to make Introductions shall cease;<br>(ii) any rights or obligations of one party to the other party which have accrued before the date of termination shall continue; and<br>(e) The Referrer acknowledges that in the event of any breach of the terms of the Agreement, any Referral Fees which have accrued or were to accrue or which are due and unpaid after any breach or Termination will no longer be payable by Loanease to the Referrer, including in connection with all Introductions which have already occurred.<br>(f) All covenants, indemnities, warranties and agreements in this Agreement which by their terms or by reasonable implication are to be performed in whole or in part after termination of this Agreement shall survive termination.<br><br><strong>2.</strong> <strong>CONDITION PRECEDENT</strong><br>The mutual obligations of Loanease and the Referrer pursuant to this Agreement, are subject to Loanease and the Referred Client entering into a Client Services Agreement, unless waived by Loanease in writing.<br><br><strong>3.</strong> <strong>REFERRALS AND FEES</strong><br><strong>3.1</strong> <strong>Authorisation and Referral</strong><br>The parties agree that:<br>(a) the Referrer may, at its discretion, Introduce Referred Clients to Loanease for Loanease to provide the Services to those Referred Clients;<br>(b) the Referrer must provide a Referred Client's Contact Details to Loanease;<br>(c) the Referrer has the written consent of the Referred Client to make an Introduction to Loanease;<br>(d) Loanease agrees to provide the Services to Referred Clients Introduced by the Referrer to the extent that it is reasonably able to do so;<br>(e) Loanease may, prior to and during the Term or otherwise from time to time, request any information it reasonably requires in respect of the Referrer and the business operated by the Referrer, including but not limited to copies of any licences all and any current licenses, certifications and accreditations of the Referrer as are required by law to undertake and offer any of the Referrer Services (collectively)<strong>Referrer Information'</strong>);<br>(f) the Referrer must provide any Referrer Information to Loanease within five (5) Business Days of written request from Loanease. Should any Referrer Information given to Loanease change, the Referrer agrees to update Loanease within five (5) Business Days of becoming aware of this change;<br>(g) in addition to the Referrer Information, the Referrer must advise and disclose to Loanease any specific Professional Business Standards relating to its industry and that upon such disclosure, Loanease reserves the right to make appropriate amendments to the Agreement;<br>(h) the Referrer must and covenants that it will, at minimum in relation to any Client Introduced during the Term;<br>(i) comply with all applicable laws;<br>(ii) devote sufficient time, staff and resources to Introduce any Referred Clients to Loanease and take any other steps reasonably necessary to enable Loanease to offer the Services to the Referred Client;<br>(iii) maintain Professional Business Standards;<br>(iv) verify any information which it obtains in respect of the Referred Client and must provide such information to Loanease;<br>(v) promptly notify Loanease in writing if it becomes aware or has reason to believe that the Referred Client has provided misleading and deceptive or false information to either the Referrer or to Loanease; and<br>(vi) promptly notify Loanease in writing of and use reasonable endeavours to resolve any Claims in relation to the Referrer Services or Referred Clients.<br><strong>3.2</strong> <strong>Referral Fee</strong><br>(a) The Referrer acknowledges and agrees that the payment of the Referral Fees by Loanease is conditional upon;<br>(i) the Referred Client entering into and executing a Client Services Agreement with Loanease;<br>(ii) the Referred Client's Loan Application being successful;<br>(iii) the Referred Client's ability to satisfy all or any of the conditions stipulated by the Lender whether in the Loan Offer or subsequent to its issue;<br>(iv) Settlement of the Loan;<br>(v) receipt by Loanease of any Third Party Rebates, which the Referrer acknowledges may only be received by Loanease approximately thirty (30) to sixty (60) days after Settlement of the Loan; and<br>(vi) the Referrer providing a tax invoice for the Referral Fees to Loanease.<br>(b) The Referrer acknowledges and agrees that the Referral Fees will not be due and payable if;<br>(i) any Loan Offer from the Lender is cancelled;<br>(ii) the Referred Client fails or declines to sign a Loan Offer from the Lender; and<br>(iii) Loanease does not for any reason receive any Third Party Rebates.<br>(c) The Referrer acknowledges and agrees that in circumstances where the Referred Client refinances or pays out any finance from a Lender procured by Loanease as part of the Services within two (2) years from the execution of the Loan or facility, or undertakes any other action which would give rise to a clawback of any Third Party Rebates paid to Loanease, Loanease may seek to recover from the Referrer and/or the Client, at its discretion, the whole or part of any rebates so clawed back.<br><strong>3.3</strong> <strong>Nature of Relationship</strong><br>Each Party acknowledges and agrees that nothing in this Agreement will or is capable of creating a relationship of employee/employer, partnership, joint venture or otherwise.<br><br><strong>4.</strong> <strong>ACKNOWLEDGEMENTS</strong><br>4.1 For the avoidance of doubt, the Referrer acknowledges and agrees that in providing the Services, Loanease;<br>(a) will only be acting as the Referred Client's finance broker and the Services do not include nor does this Agreement constitute the provision of finance or any financial accommodation;<br>(b) will not provide or offer financial, investment or taxation advice as part of the Services;<br>(c) does not guarantee that any Loan Application of the Referred Client will be approved;<br>(d) does not have any control over the Lender who may vary or withdraw the Loan Offer at any time prior to Settlement; and<br>(e) will not be liable for any loss incurred by either the Referrer and/or Referred Client in the event any Loan Application is not approved, varied or withdrawn in accordance with sub-clauses (c) and (d).<br><br><strong>5.</strong> <strong>DIRECTOR'S GUARANTEE</strong><br>5.1 The director(s) of the Referrer irrevocably and unconditionally guarantee to Loanease the;<br>(a) performance by the Referrer of its obligations under this Agreement; and<br>(b) continual compliance with and satisfaction of Professional Business Standards.<br>5.2 The director(s) of the Referrer agree that by signing this Agreement they are jointly and severally liable for all obligations of the Referrer under this Agreement.<br><br><strong>6.</strong> <strong>WARRANTIES</strong><br>6.1 The Referrer warrants to Loanease that:<br>(a) it will keep accurate records of all Referrer Services, Introductions and Referred Clients;<br>(b) it will keep accurate records of any and all Claims or complaints made in connection with the Referrer Services;<br>(c) all provision of the Referrer Services to Referred Clients will comply with all applicable laws;<br>(d) it holds any and all current required licenses, certifications and accreditations as may be required by law to undertake and offer any of the Referrer Services;<br>(e) all information, including Referrer Information and documentation which it has provided to Loanease is accurate, complete and correct; and<br>(f) it is not subject to an Insolvency Event at the time of entering into this Agreement.<br>6.2 Loanease gives no warranties about or in relation to the Referred Clients or any Services, Contract with or payment to the Referrer by the Referred Clients.<br><br><strong>7.</strong> <strong>LIABILITY AND INDEMNITY</strong><br>7.1 The Referrer acknowledges, and agrees that:<br>(a) it is solely responsible for the provision of the Referrer Services and Loanease shall have no liability whatsoever for any Referrer Services provided by the Referrer and indemnifies and releases Loanease from all Claims arising in relation to the provision of the Referrer Services and any related services;<br>(b) it indemnifies Loanease in respect of any Claims suffered or incurred by Loanease in connection with:<br>(i) any breach the Referrer's obligations and warranties under this Agreement by its or its directors, officer, employees, agents or persons under its control; or<br>(ii) any wilful or negligent actions or omissions by the Referrer's directors, officer, employees, agents or persons under its control in connection with this Agreement;<br>(c) it enters into any agreements or arrangements with any third parties at its own risk and after making its own enquiries and Loanease shall not be liable for any Claims suffered or incurred by the Referrer arising under or in relation to any such agreements or arrangements for any reason;<br>(d) it will ensure that it has any and all required liability and other insurance and will provide Loanease with copies of such, on request;<br>(e) Loanease shall not be responsible or liable for any inaccuracy in any Contact Details given by the Referrer and the Referrer shall be responsible for confirming and validating any Contact Details prior to providing them to Loanease; and<br>(f) Loanease shall have no liability whatsoever in connection with;<br>(i) Payment and reporting of any Income Tax;<br>(ii) Payment and reporting of any Goods and Services Tax (or other value added tax) imposed or to be imposed by any relevant Commonwealth, State or Territory law in effect from time to time;<br>(iii) Obtaining and maintaining an Australian Business Number (ABN);<br>(iv) Any other costs incidental to the performance of this Agreement that are not specified herein; and<br>(v) obtaining and maintaining WorkCover insurance and the insurances in clause 7.1(c).<br>7.2 The indemnities in this Agreement are continuing and do not merge on termination and expiry.<br>7.3 This clause shall operate as an agreement in favour of each member of Loanease.</p><p><strong>8.</strong> <strong>ACCESS TO INFORMATION</strong><br>8.1 The Referrer shall provide Loanease upon reasonable request with access to any of the following information on written request by Loanease for the purposes of confirming or verifying the same:<br>(a) whether any Introduced party has entered into a Contract;<br>(b) all payments notified or received from Referred Clients in respect of any Contract; and<br>(c) any other information reasonably requested to verify the identity of the Referred Client and the Referred Services.<br>8.2 Clause 8.1 shall survive termination.<br><br><strong>9.</strong> <strong>PRIVACY</strong><br>Loanease and the Referrer each:<br>(a) acknowledge and agree that information provided in respect of the Referred Clients (including any Contact Details provided), may be personal information as defined in the Privacy Laws (Personal Information);<br>(b) must deal with any Personal Information it receives from the other Party under this Agreement in accordance with the Privacy Laws;<br>(c) must only use Personal Information held by it as permitted by the Privacy Laws;<br>(d) must take all reasonable steps to ensure that Personal Information held by it is protected from misuse, loss, unauthorised access, modification or disclosure; and<br>(e) to the extent that the Personal Information concerns the Contact Details of any Referred Client that does not ultimately engage Loanease, Loanease must not use those Contact Details for any other purpose than making the complimentary Initial Contact with the Referred Client, share those Contact Details with any third party or otherwise cause do or omit to do anything with may place the Referrer in breach of its obligations under any Privacy Laws.</p><p><strong>10.</strong> <strong>CONFIDENTIAL INFORMATION AND INTELLECTUAL PROPERTY</strong><br>10.1 The parties will maintain as confidential at all times any information about the terms and conditions set out in this Agreement and any Confidential Information of the other party and will not at any time disclose or permit such information to be disclosed except:<br>(a) as required by law;<br>(b) to its advisers;<br>(c) to comply with its obligations under this Agreement or to enforce its rights under this Agreement; or<br>(d) if at the time of first disclosure between the parties, the information is already in the public domain.<br>10.2 Subject to clause 10.3, if this Agreement is terminated in accordance with its terms, any party may require the other party to return or destroy any of its Confidential Information. That party must attend to such return or destruction within 2 Business Days of the termination or expiry, unless and to the extent a copy is required to be kept for the purposes of legal compliance or in order to enforce its rights under this Agreement.<br>10.3 If this Agreement is terminated in accordance with its terms, the Referrer acknowledges and agrees that Loanease may continue to hold Confidential Information relating to the Referrer and any Referred Clients for a duration of up to seven (7) years or for any period longer in circumstances where Settlement of a Loan has occurred, and the advance is to be repaid to the Lender beyond seven (7) years.<br>10.4 All Intellectual Property of Loanease, of any nature, obtained by or used by the Referrer in the course of providing the Services will be the property of Loanease at all times, and the Referrer will have no claim to or interest of any nature in such Intellectual Property and further, will be the property of Loanease at all times, and the Referrer will have no claim to or interest of any nature in such Intellectual Property.<br>10.5 Unless otherwise provided for under this Agreement, or agreed to in writing by Loanease, the Referrer may not make use of or reproduce any of the Intellectual Property (which includes any and all Confidential Information) which is the property of Loanease.<br>10.6 Notwithstanding anything contained in this Agreement, upon termination of this Agreement, this obligation of confidentiality and restraint on the use of Loanease's Intellectual Property will remain in full force and effect and survive termination of this Agreement. For the avoidance of doubt, the Referrer will be liable for all Claims in respect of a breach of Loanease's Confidential Information and Intellectual Property Rights notwithstanding that such breach may have occurred by an associate, agent, representative, director, shareholder or adviser of the Referrer.<br><br><strong>11.</strong> <strong>DISPUTE RESOLUTION</strong><br>11.1 Best Endeavours to Resolve<br>If there is a reasonable dispute in relation to the interpretation of this Agreement or about the performance of any party of its obligations under this Agreement (<strong>Dispute</strong>), the parties must use their best endeavours to resolve the Dispute between themselves without delay.<br>11.2 Referral to Mediation<br>If the parties cannot resolve the Dispute within 14 days of the dispute arising, either party may require, by written notice, the Dispute to be referred to mediation and conducted in accordance with any legislation or codes of conduct applicable in the relevant jurisdiction (<strong>Mediation</strong>).<br>11.3 Appointment of Mediator<br>The Mediator to be appointed must be agreed by the parties involved in the Dispute within 14 days of the written notice, but failing agreement, appointed by the then President of the Law Institute of Victoria.<br>11.4 Timeframe for Mediation<br>Mediation must occur within 14 days of selection or nomination of a Mediator.<br>11.5 Costs of Mediation<br>Other than the costs of them and their advisers considering, preparing for and attending a Mediation, the costs of any Mediation must be shared equally by the parties involved in the Dispute, unless otherwise agreed.<br>11.6 Bar to Proceedings<br>Unless a party has complied with clauses 11.1 to 11.5, that party may not commence court proceedings or arbitration relating to a Dispute except where that party seeks urgent interlocutory relief in which case that party need not comply with this clause before seeking relief.<br><br><strong>12.</strong> <strong>MISCELLANEOUS</strong><br>12.1 Victorian Law and Jurisdiction<br>The law of Victoria from time to time governs this Agreement. The parties agree to the exclusive jurisdiction of the courts of Victoria, the Federal Court of Australia, and of courts entitled to hear appeals from those courts.<br>12.2 Agreement<br>The parties agree that the Schedules form part of this Agreement. Furthermore, an amendment to this Agreement is only effective once it is executed by all parties.<br>12.3 Counterparts<br>This document may be executed in any number of counterparts all of which taken together constitute one instrument.<br>12.4 Notices<br>(a) A notice by a party must be in writing and must be given to each other party. A notice may be given to a party in any of these ways:<br>(i) delivered by hand to the party and is deemed delivered when handed over;<br>(ii) sent by prepaid mail or document exchange to the address of the party and is deemed delivered 5 Business Days after posting;<br>(iii) sent by email or other electronic means to the parties nominated e-mail address and is deemed delivered immediately after sending unless a delivery failure notification is given concerning the email.<br>(b) A notice given on a day which is not a Business Day is treated as given on the next Business Day.</p><p>12.5 Severability<br>If all or any part of a provision of this Agreement is held to be unenforceable or invalid, then that provision (or part of it) must:<br>(a) where possible, be interpreted as narrowly as necessary to allow it to be enforceable and valid; or<br>(b) be severed from this Agreement,<br>and in either case the validity and enforceability of the remaining provisions is not affected.<br>12.6 No Waiver<br>A party may exercise its rights at any time and does not waive those rights even if that party previously waived a breach or default of all or part of the same or other provision or delayed or omitted to exercise its rights.<br>12.7 Electronic execution and counterparts<br>(a) The Parties acknowledge and agree that:<br>(i) a Party may sign this Agreement electronically and bind itself to this Agreement by executing in that manner;<br>(ii) a Party's signature (whether affixed electronically or in handwriting) may be witnessed remotely in accordance with applicable laws; and<br>(iii) a Party's signature appearing in this Agreement (whether affixed electronically or in handwriting) is their personal signature which has been duly authenticated.<br>(b) This Agreement may be executed in any number of counterparts, each signed by one or more Parties and if the signatures on behalf of one Party are on more than one copy of this, this shall be taken to be the same as, and have the same effect as, if all of those signatures were on the same counterpart of this Agreement. Each counterpart when so executed is deemed to be an original and all such counterparts taken together constitute one document.<br>(c) A Party that has executed a counterpart of this Agreement may exchange that counterpart with another Party by emailing it to the other Party or the other Party's legal representative.</p><p>12.8 Costs<br>Each party will pay its own costs associated with the preparation and finalisation of this Agreement and of any documentation ancillary to this Agreement or necessary to give effect to the terms of this Agreement.</p><p></p><p></p><p><strong>SCHEDULE 1 - DICTIONARY</strong><br>In this Agreement:<br><strong>Business Days</strong> means a day which is not a Saturday, Sunday, a public holiday<br>or a bank holiday in the place where the Services are to occur;<br><br><strong>Claims</strong> means, in relation to a person, a claim, demand, remedy, suit, injury,<br>damage, loss, cost, fine penalty, liability, action, proceeding, right of action,<br>chose in action, claim for compensation or reimbursement or liability incurred<br>by or to be made or recovered by or against the person, however arising and<br>whether ascertained or unascertained, or immediate, future or contingent;<br><br><strong>Client Services Agreement </strong>means an agreement entered into between Loanease and the Referred Client where the Referred Client has agreed to<br>Loanease's terms and conditions to provide the Services;<br><br><strong>Commencement Date </strong>means the date set out in Item Error: Reference source not found of Error: Reference source not found ;<br><br><strong>Confidential Information</strong> means:<br>(a) all processes, systems, procedures, databases, manuals, notes, know<br>how, client lists, client details, client contracts or any other verbal<br>information or written data concerning a party or their operation and<br>marketing;<br>(b) all business and financial information and business records; or<br>(c) any information that would otherwise at law be considered secret or<br>confidential information;<br>whether or not marked confidential BUT does not include information which:<br>(a) at the time of first disclosure by a party is already in the public domain;<br>and<br>(b) after disclosure to a party, becomes part of the public domain otherwise<br>than by disclosure in breach of the terms of this Agreement;<br><br><strong>Contact Details</strong> means the contact details of any Referred Clients of the<br>Referrer;<br><br><strong>Contract</strong> means where a Referred Client has agreed to the Referrer's terms and<br>conditions of engagement for the Referrer Services or any of them including any<br>replacement, assignment, variation or novation thereof or ancillary agreements<br>arising under or by reason thereof;<br>Insolvency Event means the occurrence of any one or more of the following<br>events in relation to a party:<br>(a) an application is made to a court for an order that it be wound up,<br>declared bankrupt or that a provisional liquidator or receiver or receiver<br>and manager be appointed, unless the application is withdrawn, struck out<br>or dismissed within 21 days of it being made or any a writ of execution is<br>levied against it or its property;<br>(b) a liquidator or provisional liquidator is appointed;<br>(c) an administrator or a controller is appointed to any of its assets;<br>(d) it enters into an arrangement or composition with one or more of its<br>creditors, or an assignment for the benefit of one or more of its creditors<br>where the person is unable to pay their debts as and when they fall due;<br>(e) it proposes a reorganisation, moratorium, deed of company arrangement<br>or other administration involving one or more of its creditors, or its<br>winding up or dissolution;<br>(f) it is insolvent as disclosed in its accounts or otherwise, or it is insolvent<br>under an applicable law;<br>(g) it becomes an insolvent under administration as defined in section 9 of the<br>Corporations Act;<br>(h) it fails, or is taken to have failed, to comply with a statutory demand as a<br>result of section 459F(1) of the Corporations Act; or<br>(i) anything occurs under the law of any jurisdiction which has a substantially<br>similar effect to any of the above paragraphs of this definition.<br><br><strong>Intellectual Property (IP )</strong> or <strong>Intellectual Property Rights (IPR) </strong>means all<br>intellectual property or all intellectual property rights, registered or<br>unregistered, including but not limited to the following rights:<br>(a) patents, copyright (including software), registered designs, trade marks,<br>know-how, inventions and the right to have confidential information<br>kept confidential; and<br>(b) any application or right to apply for registration of any of the rights<br>referred to in paragraph (a) above;<br><br><strong>Introduced</strong> means during the Term, a person, company, entity or their<br>Associates were first advised as to the existence of Loanease or were<br>recommended the Services by the Referrer and or consented to the Referrer<br>providing their Contact Details to Loanease and includes the Referred<br>Client using the Services. <strong>Introduce</strong> and <strong>Introduction</strong> shall the same<br>meaning;<br><br><strong>Lender</strong> means all banks, private equity providers, financial institutions and/or<br>other entities who are authorised and accredited to provide finance, a Loan or<br>other similar financial facilities;<br><br><strong>Loan</strong> refers to any loan obtained from a Lender obtained by the Loanease on behalf of the Referred Client;<br><br><strong>Loan Application</strong> refers to application(s) for the Loan which is made by Loanease on the Referred Client's behalf under the Client Services<br>Agreement;<br><br><strong>Loan Offer</strong> refers to any offer made by the Lender to the Referred Client for a<br>Loan;<br><br><strong>Method of Payment</strong> means the agreed payment terms of the Referral Fees<br>as set out in Item 7 of Schedule 3;<br><br><strong>Privacy Laws</strong> means the Privacy Act 1988 (Cth) as amended, any<br>corresponding State and Territory Acts, rules and regulations, as amended<br>from time to time and the National Privacy Principles, as amended from time to<br>time;<br><br><strong>Professional Business Standards</strong> means the professional expectations the<br>Referrer must comply with under relevant legislation, regulations, codes of<br>conduct and general industry procedures in undertaking the Referrer Services;</p><p><br><strong>Referral Fees </strong>means the fees described in Item 6 of Schedule 3 payable by Loanease to the Referrer in accordance of this Agreement, being;</p><ul><li><p>Whereby the Referrer provides a name, mobile number and email address and brief account of the Referred Client to Loanease, where Loanease undertakes the full Loan Application process, Loanease will pay 30% (inclusive of GST) of the net upfront commission and net trail commission received by Loanease from the Lender.</p></li></ul><p><strong>Referred</strong> means that a person or entity is Introduced by the Referrer during<br>the Term and uses the Services and <strong>Refer</strong> and <strong>Referral</strong> shall have the same<br>meaning;<br><br><strong>Referred Client(s)</strong> means a person(s) or entity referred by the Referrer to<br>Loanease or any related entity of Loanease . A person will be<br>referred even if at any time they do not use the Services of the Loanease in the future;<br><br><strong>Referrer</strong> means the person or entity set out in Item 2 of Schedule 3;<br><br><strong>Referrer Services </strong>means the Services provided by the Referrer set out in<br>Item 4 of Schedule 3;</p><p><strong>Services</strong> means the services to be provided or procured by Loanease<br>set out in Item 3 of Schedule 3;<br><br><strong>Settlement</strong> refers to the date of which drawdown of the Loan occurred.<br><br><strong>Term</strong> means from the Commencement Date until terminated in accordance<br>with clause 1; and<br><br><strong>Third Party Rebates</strong> means any payments due and payable to Loanease in connection with the Services from any Third Party which<br>includes but is not limited to Lenders, intermediaries, valuers, authorities,<br>accountants, credit reporting agencies and corporations that Loanease<br>engages and/or liaises with in connection with the Services.</p><p><br><br><strong>SCHEDULE 2 - INTERPRETATION</strong><br>In this Agreement the following rules of interpretation apply unless the contrary<br>intention appears:<br>(a) headings are for convenience only and do not affect the interpretation of<br>this Agreement;<br>(b) the singular includes the plural and vice versa;<br>(c) where a word or phrase is given a particular meaning, other parts of<br>speech and grammatical forms of that word or phrase have corresponding<br>meanings;<br>(d) a reference to:<br>(i) a person includes a natural person, partnership, joint venture,<br>government agency, association, corporation or other body<br>corporate;<br>(ii) a party includes its successors, executors, administrators, and<br>permitted assigns;<br>(iii) a clause, term, party, schedule or attachment is a reference to a<br>clause or term of, or party, schedule or attachment to this<br>Agreement;<br>(iv) this Agreement includes all schedules and attachments to it;<br>(v) a law includes a constitutional provision, treaty, decree, convention,<br>statute, regulation, ordinance, by-law, judgment, rule of common<br>law or equity and is a reference to that law as amended,<br>consolidated or replaced;<br>(vi) an agency or body means, if that agency or body ceases to exist,<br>any reconstituted or renamed agency or body or, failing that, the<br>agency or body which most closely performs the previous functions<br>of such agency or body;<br>(vii) a monetary amount is in Australian dollars;<br>(e) when the day on which something must be done is not a Business Day,<br>that thing must be done on the following Business Day;<br>(f) where a day on which something must be done is specified, that obligation<br>must be done by 4:00pm on that day unless otherwise specified and if<br>done after 4.00pm on that day, it is taken to be done on the next day;<br>(g) in determining the time of day, where relevant to this Agreement, the<br>relevant time of day is:<br>(i) for the purposes of giving or receiving notices, the time of day where<br>a party receiving a notice is located; or<br>(ii) for any other purpose under this Agreement, time is Australian<br>Eastern Standard Time (AEST);<br>(h) no rule of construction applies to the disadvantage of a party because that<br>party was responsible for the preparation of this Agreement or any part of<br>it; and<br>(i) this Agreement binds a party's liquidators, receivers, managers and<br>administrators.</p><p></p><p></p>",
       "description": null,
       "_id": "5e73cea3-eb42-4318-a2f3-9325d55fa589"
     },
@@ -10292,7 +10292,7 @@
       "created_at": "2025-12-06T08:16:58.189008+00:00",
       "updated_at": "2025-12-06T08:16:58.189008+00:00",
       "key": "new_signup_email_subject",
-      "value": "Welcome to Clue Finance - {Entity Name}",
+      "value": "Welcome to Loanease - {Entity Name}",
       "description": "Subject for welcome email sent to new referrers",
       "_id": "258e289c-a03b-48e3-be44-465a65ab0b62"
     },
@@ -10300,7 +10300,7 @@
       "created_at": "2025-12-06T08:16:59.128361+00:00",
       "updated_at": "2025-12-06T08:16:59.128361+00:00",
       "key": "new_signup_email_content",
-      "value": "<p>Congratulations {Name}!</p>\n\n<p>Your Clue Finance registration has been a success. In order to access the portal and submit your first opportunity, please use the details below.</p>\n\n<p>Username: {UserName}<br>\nPassword: {Password}</p>\n\n<p>You can reset your password at any time by going to https://app.cluefinance.com.au/reset-password</p>\n\n<p></p>\n<p>Thanks,</p>\n<p>The Clue Finance Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">apps@cluefinance.com.au</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">partners@cluefinance.com.au</a>\n</p>",
+      "value": "<p>Congratulations {Name}!</p>\n\n<p>Your Loanease registration has been a success. In order to access the portal and submit your first opportunity, please use the details below.</p>\n\n<p>Username: {UserName}<br>\nPassword: {Password}</p>\n\n<p>You can reset your password at any time by going to https://app.loanease.com/reset-password</p>\n\n<p></p>\n<p>Thanks,</p>\n<p>The Loanease Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@loanease.com\" target=\"_blank\" rel=\"noopener\">apps@loanease.com</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@loanease.com\" target=\"_blank\" rel=\"noopener\">partners@loanease.com</a>\n</p>",
       "description": "Content for welcome email sent to new referrers. Variables: {Name}, {UserName}, {Password}, {Entity Name}",
       "_id": "37e175d2-7260-4597-9025-47bef081fa7e"
     },
@@ -10308,7 +10308,7 @@
       "created_at": "2025-12-06T08:17:00.020443+00:00",
       "updated_at": "2025-12-06T08:17:00.020443+00:00",
       "key": "referrer_agreement_subject",
-      "value": "Clue Finance - Referrer Agreement - {Entity Name}",
+      "value": "Loanease - Referrer Agreement - {Entity Name}",
       "description": "Subject for referrer agreement email",
       "_id": "69a17832-d668-4f6d-94a6-a7622f2be6f6"
     },
@@ -10316,7 +10316,7 @@
       "created_at": "2025-12-06T08:17:00.924106+00:00",
       "updated_at": "2025-12-06T08:17:00.924106+00:00",
       "key": "referrer_agreement_content",
-      "value": "<p>Dear {Name}</p>\n\n<p>Welcome to Clue Finance! We are excited to have you on board and look forward to a successful partnership.</p>\n\n<p>Attached to this email is the agreement outlining the terms and conditions you agreed to while signing up. Please review it for your reference. If you have any questions, feel free to reach out to us.</p>\n\n<p>We appreciate your trust and look forward to working together.</p>\n\n<p>&nbsp;</p>\n<p>Thanks,</p>\n<p>The Clue Finance Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">apps@cluefinance.com.au</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">partners@cluefinance.com.au</a>\n</p>",
+      "value": "<p>Dear {Name}</p>\n\n<p>Welcome to Loanease! We are excited to have you on board and look forward to a successful partnership.</p>\n\n<p>Attached to this email is the agreement outlining the terms and conditions you agreed to while signing up. Please review it for your reference. If you have any questions, feel free to reach out to us.</p>\n\n<p>We appreciate your trust and look forward to working together.</p>\n\n<p>&nbsp;</p>\n<p>Thanks,</p>\n<p>The Loanease Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@loanease.com\" target=\"_blank\" rel=\"noopener\">apps@loanease.com</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@loanease.com\" target=\"_blank\" rel=\"noopener\">partners@loanease.com</a>\n</p>",
       "description": "Content for referrer agreement email with PDF attachment. Variables: {Name}, {Entity Name}",
       "_id": "084bed2f-9308-476c-a915-64a04e96adde"
     },
@@ -10332,7 +10332,7 @@
       "created_at": "2025-12-06T08:17:02.732847+00:00",
       "updated_at": "2025-12-06T08:17:02.732847+00:00",
       "key": "new_broker_email_content",
-      "value": "<p>A new Referrer has signed-up to Clue Finance. Please find the details below:</p>\n<ul>\n   <li><strong>Company Name: </strong>{Company-Name}</li>\n   <li><strong>Director Name: </strong>{Director-Name}</li>\n   <li><strong>Contact Phone: </strong>{Contact-Phone}</li>\n   <li><strong>Contact Email: </strong>{Contact-Email}</li>\n   <li><strong>ABN: </strong>{ABN}</li>\n   <li><strong>Trading Name: </strong>{Trading-Name}</li>\n   <li><strong>Address: </strong>{Address}</li>\n   <li><strong>Industry Type: </strong>{Industry-Type}</li>\n</ul>\n<p>Best Regards</p>",
+      "value": "<p>A new Referrer has signed-up to Loanease. Please find the details below:</p>\n<ul>\n   <li><strong>Company Name: </strong>{Company-Name}</li>\n   <li><strong>Director Name: </strong>{Director-Name}</li>\n   <li><strong>Contact Phone: </strong>{Contact-Phone}</li>\n   <li><strong>Contact Email: </strong>{Contact-Email}</li>\n   <li><strong>ABN: </strong>{ABN}</li>\n   <li><strong>Trading Name: </strong>{Trading-Name}</li>\n   <li><strong>Address: </strong>{Address}</li>\n   <li><strong>Industry Type: </strong>{Industry-Type}</li>\n</ul>\n<p>Best Regards</p>",
       "description": "Content for new referrer alert email. Variables: {Company-Name}, {Director-Name}, {Contact-Phone}, {Contact-Email}, {ABN}, {Trading-Name}, {Address}, {Industry-Type}, {Referrer-Entity-Name}",
       "_id": "9b7cf6ca-d4b0-4bb0-985e-5938578f77f6"
     },
@@ -10340,7 +10340,7 @@
       "created_at": "2025-12-06T08:17:03.627454+00:00",
       "updated_at": "2025-12-06T08:17:03.627454+00:00",
       "key": "new_broker_alert",
-      "value": "partners@cluefinance.com.au",
+      "value": "partners@loanease.com",
       "description": "Email addresses to receive new referrer alerts (one per line)",
       "_id": "0ceca0da-c976-4c81-be33-6dfec02aa39f"
     },
@@ -10348,7 +10348,7 @@
       "created_at": "2025-12-06T08:17:04.528494+00:00",
       "updated_at": "2025-12-06T08:17:04.528494+00:00",
       "key": "new_user_subject",
-      "value": "Welcome to Clue Finance",
+      "value": "Welcome to Loanease",
       "description": "Subject for welcome email sent to new team members",
       "_id": "0174d85a-d4dd-4a37-a44d-cae85f6864df"
     },
@@ -10356,7 +10356,7 @@
       "created_at": "2025-12-06T08:17:05.43873+00:00",
       "updated_at": "2025-12-06T08:17:05.43873+00:00",
       "key": "new_user_content",
-      "value": "<p>Congratulations {Name}!</p>\n\n<p>Your Clue Finance registration has been a success. In order to access the portal, please use the details below.</p>\n\n<p>Username: {UserName}<br>\nPassword: {Password}</p>\n\n<p>You can reset your password at any time by going to https://app.cluefinance.com.au/reset-password</p>\n\n<p>&nbsp;</p>\n<p>Thanks,</p>\n<p>The Clue Finance Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">apps@cluefinance.com.au</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@cluefinance.com.au\" target=\"_blank\" rel=\"noopener\">partners@cluefinance.com.au</a>\n</p>",
+      "value": "<p>Congratulations {Name}!</p>\n\n<p>Your Loanease registration has been a success. In order to access the portal, please use the details below.</p>\n\n<p>Username: {UserName}<br>\nPassword: {Password}</p>\n\n<p>You can reset your password at any time by going to https://app.loanease.com/reset-password</p>\n\n<p>&nbsp;</p>\n<p>Thanks,</p>\n<p>The Loanease Team |\n   <a href=\"tel:+611300007878\" target=\"_blank\" rel=\"noopener\">+61 1300 00 78 78</a>\n</p>\n<p>For application status updates please email\n   <a href=\"mailto:apps@loanease.com\" target=\"_blank\" rel=\"noopener\">apps@loanease.com</a>\n</p>\n<p>For Referral Partner queries please email\n   <a href=\"mailto:partners@loanease.com\" target=\"_blank\" rel=\"noopener\">partners@loanease.com</a>\n</p>",
       "description": "Content for welcome email sent to new team members. Variables: {Name}, {UserName}, {Password}",
       "_id": "cbb2cffb-6003-43b2-b069-60d16f9757e8"
     }
@@ -10428,7 +10428,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.202",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10448,7 +10448,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10468,7 +10468,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10478,7 +10478,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10488,7 +10488,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10498,7 +10498,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10508,7 +10508,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10518,7 +10518,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10528,7 +10528,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10538,7 +10538,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10548,7 +10548,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10588,7 +10588,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.204",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10598,7 +10598,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.229",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10608,7 +10608,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.243",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10628,7 +10628,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.148.116",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10638,7 +10638,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.148.116",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10648,7 +10648,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.148.116",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10658,7 +10658,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10668,7 +10668,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10678,7 +10678,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10688,7 +10688,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10698,7 +10698,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0",
@@ -10708,7 +10708,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10718,7 +10718,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10728,7 +10728,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.128.198",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10738,7 +10738,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.128.198",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10748,7 +10748,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.128.198",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10758,7 +10758,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "180.214.128.198",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36",
@@ -10768,7 +10768,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.210",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10778,7 +10778,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10788,7 +10788,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10818,7 +10818,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10828,7 +10828,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "103.87.58.134",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10838,7 +10838,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10848,7 +10848,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10938,7 +10938,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10948,7 +10948,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10958,7 +10958,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -10998,7 +10998,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -11038,7 +11038,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -11048,7 +11048,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -11118,7 +11118,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -11128,7 +11128,7 @@
     },
     {
       "user_id": "6e637af3-a849-4ac2-94e4-090c487581cb",
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "success",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0",
@@ -11598,7 +11598,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "180.214.147.246",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
@@ -11618,7 +11618,7 @@
     },
     {
       "user_id": null,
-      "email": "admin@cluefinance.com.au",
+      "email": "admin@loanease.com",
       "status": "failed",
       "ip_address": "180.214.147.246",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",

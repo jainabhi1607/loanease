@@ -416,7 +416,7 @@ Public-facing loan pre-assessment calculator for potential referrers to evaluate
 - **Results Page** (`/pre-assessment/results`):
   - Displays ICR and LVR
   - Shows color-coded outcome with messaging
-  - Call-to-action: "Become a Clue Referral Partner"
+  - Call-to-action: "Become a Loanease Referral Partner"
   - Link to registration page
 - **Data Storage**:
   - Saves only basic contact info (first_name, last_name, email, phone) to `pre_assessment_contacts` table

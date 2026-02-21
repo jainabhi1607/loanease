@@ -232,8 +232,8 @@ async function migrateOrganisations() {
   console.log('Starting organisation migration...\n');
 
   // Read SQL files
-  const usersPath = path.join(__dirname, '..', 'clue_staging_db_table_users.sql');
-  const userDetailsPath = path.join(__dirname, '..', 'clue_staging_db_table_user_details.sql');
+  const usersPath = path.join(__dirname, '..', 'loanease_staging_db_table_users.sql');
+  const userDetailsPath = path.join(__dirname, '..', 'loanease_staging_db_table_user_details.sql');
 
   const usersSql = fs.readFileSync(usersPath, 'utf-8');
   const userDetailsSql = fs.readFileSync(userDetailsPath, 'utf-8');

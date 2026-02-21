@@ -489,7 +489,7 @@ Red: ICR < 1.5 OR LVR > 80
 
 - **App Name**: Loanease
 - **Logo File**: `/logo.jpg` (web), `mobile/assets/loanease_logo.png` (mobile)
-- **Company Name**: Loanease (formerly Clue Commercial)
+- **Company Name**: Loanease
 - **Email Domain**: `loanease.com`
 - **PDF Agreement Party**: LOANEASE PTY LTD
 - **Mobile Bundle ID**: `com.loanease.referrer`

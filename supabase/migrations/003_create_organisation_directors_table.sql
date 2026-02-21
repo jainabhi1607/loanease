@@ -24,8 +24,8 @@ CREATE TRIGGER update_organisation_directors_updated_at
   EXECUTE PROCEDURE update_updated_at_column();
 
 -- Create policies
--- Clue Finance can view all directors
-CREATE POLICY "Clue Finance can view all directors" ON public.organisation_directors
+-- Loanease can view all directors
+CREATE POLICY "Loanease can view all directors" ON public.organisation_directors
   FOR SELECT
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')
@@ -42,8 +42,8 @@ CREATE POLICY "Organisation members can view own directors" ON public.organisati
     )
   );
 
--- Clue Finance can manage directors
-CREATE POLICY "Clue Finance can manage directors" ON public.organisation_directors
+-- Loanease can manage directors
+CREATE POLICY "Loanease can manage directors" ON public.organisation_directors
   FOR ALL
   USING (
     auth.jwt() ->> 'role' IN ('super_admin', 'admin_team')

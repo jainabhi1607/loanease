@@ -120,7 +120,7 @@ async function migratePreAssessmentContacts() {
   console.log('Starting pre-assessment contacts migration...\n');
 
   // Read SQL file
-  const contactsPath = path.join(__dirname, '..', 'clue_staging_db_table_contact_details.sql');
+  const contactsPath = path.join(__dirname, '..', 'loanease_staging_db_table_contact_details.sql');
   const contactsSql = fs.readFileSync(contactsPath, 'utf-8');
   const contacts = parseInsertStatements(contactsSql) as OldContactDetails[];
 
