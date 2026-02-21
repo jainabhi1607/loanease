@@ -48,19 +48,9 @@ export interface EmailTemplate {
 }
 
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
-  try {
-    const result = await getPostmarkClient().sendEmailWithTemplate({
-      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
-      To: to,
-      TemplateAlias: templateAlias,
-      TemplateModel: templateModel,
-    });
-
-    return { success: true, messageId: result.MessageID };
-  } catch (error) {
-    console.error('Error sending email:', error);
-    return { success: false, error };
-  }
+  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
+  console.log(`[EMAIL DISABLED] Would send template "${templateAlias}" to ${to}`);
+  return { success: true, messageId: 'disabled' };
 }
 
 // Helper to convert HTML to plain text for email
@@ -192,23 +182,9 @@ export function emailInfoTable(rows: Array<{ label: string; value: string }>): s
 }
 
 export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: string; subject: string; htmlBody: string; from?: string }) {
-  try {
-    const textBody = htmlToPlainText(htmlBody);
-
-    const result = await getPostmarkClient().sendEmail({
-      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
-      To: to,
-      Subject: subject,
-      HtmlBody: htmlBody,
-      TextBody: textBody,
-      MessageStream: 'outbound',
-    });
-
-    return { success: true, messageId: result.MessageID };
-  } catch (error) {
-    console.error('Error sending HTML email:', error);
-    return { success: false, error };
-  }
+  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
+  console.log(`[EMAIL DISABLED] Would send "${subject}" to ${to}`);
+  return { success: true, messageId: 'disabled' };
 }
 
 export async function sendHtmlEmailWithAttachment({
@@ -226,29 +202,9 @@ export async function sendHtmlEmailWithAttachment({
     ContentType: string;
   };
 }) {
-  try {
-    const textBody = htmlToPlainText(htmlBody);
-
-    const emailData: any = {
-      From: 'partners@loanease.com',
-      To: to,
-      Subject: subject,
-      HtmlBody: htmlBody,
-      TextBody: textBody,
-      MessageStream: 'outbound',
-    };
-
-    if (attachment) {
-      emailData.Attachments = [attachment];
-    }
-
-    const result = await getPostmarkClient().sendEmail(emailData);
-
-    return { success: true, messageId: result.MessageID };
-  } catch (error) {
-    console.error('Error sending HTML email with attachment:', error);
-    return { success: false, error };
-  }
+  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
+  console.log(`[EMAIL DISABLED] Would send "${subject}" to ${to}${attachment ? ' (with attachment)' : ''}`);
+  return { success: true, messageId: 'disabled' };
 }
 
 // Specific email functions

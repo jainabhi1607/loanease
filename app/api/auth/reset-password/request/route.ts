@@ -41,18 +41,18 @@ export async function POST(request: Request) {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
       const resetLink = `${appUrl}/reset-password/confirm?token=${resetToken}`;
 
-      // Send email with reset link
-      try {
-        const emailResult = await sendPasswordResetEmail({
-          to: email.toLowerCase().trim(),
-          userName: user.first_name || 'User',
-          resetLink: resetLink,
-        });
-        console.log('Password reset email result:', emailResult);
-      } catch (emailError) {
-        console.error('Error sending reset email:', emailError);
-        // Log but don't expose error to prevent enumeration
-      }
+      // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+      // try {
+      //   const emailResult = await sendPasswordResetEmail({
+      //     to: email.toLowerCase().trim(),
+      //     userName: user.first_name || 'User',
+      //     resetLink: resetLink,
+      //   });
+      //   console.log('Password reset email result:', emailResult);
+      // } catch (emailError) {
+      //   console.error('Error sending reset email:', emailError);
+      // }
+      console.log(`[EMAIL DISABLED] Password reset email for ${email.toLowerCase().trim()}`);
 
       // Log the password reset request
       await createAuditLog({

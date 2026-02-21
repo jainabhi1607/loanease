@@ -20,17 +20,17 @@ export async function POST(request: NextRequest) {
     // Create 2FA code in database
     const twoFACode = await createTwoFACode(userId);
 
-    // Send email with code
-    const emailResult = await send2FACode(
-      email,
-      twoFACode.code,
-      user?.first_name
-    );
-
-    if (!emailResult.success) {
-      console.error('Error sending 2FA email');
-      // Still return success - code is in database even if email fails
-    }
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // const emailResult = await send2FACode(
+    //   email,
+    //   twoFACode.code,
+    //   user?.first_name
+    // );
+    //
+    // if (!emailResult.success) {
+    //   console.error('Error sending 2FA email');
+    // }
+    console.log(`[EMAIL DISABLED] 2FA code for ${email}: ${twoFACode.code}`);
 
     return NextResponse.json({
       success: true,

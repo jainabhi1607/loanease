@@ -114,56 +114,9 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // Send welcome emails
-    try {
-      const organisationId = invitation.organisation_id;
-
-      if (organisationId) {
-        // Get organisation details for welcome email
-        const org = await findOrganisationById(organisationId);
-
-        const { sendNewUserWelcomeEmail } = await import('@/lib/email/signup-emails');
-
-        // Send welcome email
-        await sendNewUserWelcomeEmail({
-          email: invitation.email,
-          firstName: firstName,
-          password: '(You set your own password during registration)',
-          companyName: org?.company_name || '',
-        });
-      } else {
-        // For admin users, send a branded HTML welcome email
-        const { sendHtmlEmail, wrapInBrandedTemplate, emailButton } = await import('@/lib/email/postmark');
-
-        const statusBadge = `<span style="display: inline-block; background-color: #d1fae5; color: #065f46; padding: 6px 16px; border-radius: 20px; font-size: 14px; font-weight: 600;">Account Created</span>`;
-
-        const content = `
-          <p style="font-size: 16px; color: #374151; margin: 0 0 15px 0;">Hi ${firstName},</p>
-
-          <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Welcome to <strong>Loanease</strong>! Your account has been created successfully.</p>
-
-          <div style="text-align: center; margin: 25px 0;">${statusBadge}</div>
-
-          <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">You can now log in to access the platform.</p>
-
-          <div style="text-align: center; margin: 25px 0;">
-            ${emailButton('Login to Loanease', `${process.env.NEXT_PUBLIC_APP_URL}/login`)}
-          </div>
-
-          <p style="font-size: 15px; color: #374151; margin: 0;">Thank you for joining Loanease.</p>
-        `;
-
-        await sendHtmlEmail({
-          to: invitation.email,
-          subject: 'Welcome to Loanease',
-          htmlBody: await wrapInBrandedTemplate(content, 'Welcome'),
-          from: 'partners@loanease.com',
-        });
-      }
-    } catch (emailError) {
-      console.error('Error sending welcome email:', emailError);
-      // Don't fail the registration if email fails
-    }
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // Welcome emails commented out - uncomment when new email provider is ready.
+    console.log(`[EMAIL DISABLED] Welcome email for ${invitation.email}`);
 
     return NextResponse.json({
       success: true,

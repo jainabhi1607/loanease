@@ -417,7 +417,6 @@ MONGODB_DB=loancase
 JWT_SECRET=your-jwt-secret-key
 JWT_REFRESH_SECRET=your-refresh-secret-key
 POSTMARK_API_KEY=
-ABR_API_GUID=
 NEXT_PUBLIC_APP_URL=
 ```
 

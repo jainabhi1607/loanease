@@ -88,21 +88,22 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // Send verification email
-    try {
-      await sendVerificationEmail(
-        email,
-        user.first_name || 'User',
-        verificationToken,
-        orgName
-      );
-    } catch (emailError) {
-      console.error('Error sending verification email:', emailError);
-      return NextResponse.json(
-        { error: 'Failed to send verification email' },
-        { status: 500 }
-      );
-    }
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // try {
+    //   await sendVerificationEmail(
+    //     email,
+    //     user.first_name || 'User',
+    //     verificationToken,
+    //     orgName
+    //   );
+    // } catch (emailError) {
+    //   console.error('Error sending verification email:', emailError);
+    //   return NextResponse.json(
+    //     { error: 'Failed to send verification email' },
+    //     { status: 500 }
+    //   );
+    // }
+    console.log(`[EMAIL DISABLED] Verification email for ${email}`);
 
     // Update rate limiting
     const currentAttempts = resendAttempts.get(attemptKey) || { count: 0, lastAttempt: now };

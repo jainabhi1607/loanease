@@ -97,38 +97,23 @@ export async function POST(request: NextRequest) {
     const inviter = await db.collection('users').findOne({ _id: user.userId as any });
     const inviterName = inviter ? `${inviter.first_name} ${inviter.surname}` : 'Admin';
 
-    // Send invitation email
-    try {
-      const { sendUserInvitation } = await import('@/lib/email/postmark');
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.loanease.com';
-      const inviteUrl = `${baseUrl}/auth/complete-registration?token=${token}`;
-
-      const emailResult = await sendUserInvitation(
-        email,
-        inviteUrl,
-        organisation.company_name,
-        inviterName,
-        expiresAt
-      );
-
-      if (!emailResult.success) {
-        // Delete the invitation if email fails
-        await db.collection('user_invitations').deleteOne({ _id: invitationId as any });
-
-        console.error('Error sending invitation email');
-        return NextResponse.json({
-          error: 'Failed to send invitation email'
-        }, { status: 500 });
-      }
-    } catch (error) {
-      // Delete the invitation if email fails
-      await db.collection('user_invitations').deleteOne({ _id: invitationId as any });
-
-      console.error('Error sending invitation email:', error);
-      return NextResponse.json({
-        error: 'Failed to send invitation email'
-      }, { status: 500 });
-    }
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // try {
+    //   const { sendUserInvitation } = await import('@/lib/email/postmark');
+    //   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.loanease.com';
+    //   const inviteUrl = `${baseUrl}/auth/complete-registration?token=${token}`;
+    //   const emailResult = await sendUserInvitation(email, inviteUrl, organisation.company_name, inviterName, expiresAt);
+    //   if (!emailResult.success) {
+    //     await db.collection('user_invitations').deleteOne({ _id: invitationId as any });
+    //     console.error('Error sending invitation email');
+    //     return NextResponse.json({ error: 'Failed to send invitation email' }, { status: 500 });
+    //   }
+    // } catch (error) {
+    //   await db.collection('user_invitations').deleteOne({ _id: invitationId as any });
+    //   console.error('Error sending invitation email:', error);
+    //   return NextResponse.json({ error: 'Failed to send invitation email' }, { status: 500 });
+    // }
+    console.log(`[EMAIL DISABLED] Referrer invitation email for ${email}`);
 
     // Log the invitation
     await createAuditLog({

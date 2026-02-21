@@ -336,84 +336,10 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // Step 5: Send opportunity alert emails (only for submitted opportunities, not drafts)
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // Step 5: Opportunity alert emails disabled
     if (status === 'opportunity') {
-      try {
-        // Fetch common data needed for all emails
-        const org = await db.collection(COLLECTIONS.ORGANISATIONS).findOne({
-          _id: user.organisationId as any
-        });
-
-        const referrerUserData = await db.collection(COLLECTIONS.USERS).findOne({
-          _id: referrer_user_id as any
-        });
-
-        console.log('Referrer user data for email:', referrerUserData);
-
-        const clientData = await db.collection(COLLECTIONS.CLIENTS).findOne({
-          _id: clientId as any
-        });
-
-        // Send admin alert emails
-        const alertSetting = await db.collection(COLLECTIONS.GLOBAL_SETTINGS).findOne({
-          key: 'opportunity_alert_emails'
-        });
-
-        if (alertSetting?.value) {
-          const emails = alertSetting.value
-            .split('\n')
-            .map((email: string) => email.trim())
-            .filter((email: string) => email && email.includes('@'));
-
-          const alertDetails = {
-            opportunityId: nextOpportunityId,
-            borrowerEntityName: clientData?.entity_name || '',
-            borrowerEmail: clientData?.contact_email || '',
-            referrerEntity: org?.company_name || '',
-            referrerEmail: referrerUserData?.email || '',
-            assetType: formatAssetType(asset_type),
-            loanAmount: formatCurrency(parseCurrency(loan_amount) || undefined),
-            loanType: formatLoanType(loan_type),
-            loanPurpose: formatLoanPurpose(loan_purpose),
-            icr: icr ? `${icr.toFixed(2)}` : '-',
-            lvr: lvr ? `${lvr.toFixed(2)}` : '-',
-          };
-
-          await Promise.all(
-            emails.map((email: string) => sendNewOpportunityAlert(email, alertDetails))
-          );
-        }
-
-        // Send confirmation email to referrer
-        if (referrerUserData?.email) {
-          const referrerName = referrerUserData
-            ? `${referrerUserData.first_name || ''} ${referrerUserData.surname || ''}`.trim()
-            : 'Referrer';
-
-          await sendOpportunityConfirmationToReferrer({
-            referrerEmail: referrerUserData.email,
-            referrerName: referrerName || 'Referrer',
-            entityName: clientData?.entity_name || 'your client',
-          });
-          console.log('Sent opportunity confirmation email to referrer:', referrerUserData.email);
-        }
-
-        // Send confirmation email to client
-        if (clientData?.contact_email) {
-          const clientName = clientData
-            ? `${clientData.contact_first_name || ''} ${clientData.contact_last_name || ''}`.trim()
-            : 'Client';
-
-          await sendOpportunityConfirmationToClient({
-            clientEmail: clientData.contact_email,
-            clientName: clientName || 'Client',
-            entityName: clientData?.entity_name || 'your application',
-          });
-          console.log('Sent opportunity confirmation email to client:', clientData.contact_email);
-        }
-      } catch (emailError) {
-        console.error('Error sending opportunity alert emails:', emailError);
-      }
+      console.log(`[EMAIL DISABLED] Opportunity alert emails for ${nextOpportunityId}`);
     }
 
     return NextResponse.json({

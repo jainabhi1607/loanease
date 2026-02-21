@@ -102,24 +102,23 @@ export async function POST(request: NextRequest) {
     // Get organization details for the welcome email
     const orgData = await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any });
 
-    // Send welcome email only (referrer agreement email is only sent during initial referrer signup)
-    try {
-      const emailResult = await sendNewUserWelcomeEmail({
-        email: email,
-        firstName: first_name,
-        password: tempPassword,
-        companyName: orgData?.company_name || 'Loanease',
-      });
-
-      if (!emailResult.success) {
-        console.error('Failed to send welcome email');
-      } else {
-        console.log('Welcome email sent successfully to:', email);
-      }
-    } catch (emailError) {
-      console.error('Error sending welcome email:', emailError);
-      // Don't fail the user creation if email fails
-    }
+    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+    // try {
+    //   const emailResult = await sendNewUserWelcomeEmail({
+    //     email: email,
+    //     firstName: first_name,
+    //     password: tempPassword,
+    //     companyName: orgData?.company_name || 'Loanease',
+    //   });
+    //   if (!emailResult.success) {
+    //     console.error('Failed to send welcome email');
+    //   } else {
+    //     console.log('Welcome email sent successfully to:', email);
+    //   }
+    // } catch (emailError) {
+    //   console.error('Error sending welcome email:', emailError);
+    // }
+    console.log(`[EMAIL DISABLED] Welcome email for ${email}`);
 
     // Log the action in audit_logs
     await db.collection(COLLECTIONS.AUDIT_LOGS).insertOne({

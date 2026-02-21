@@ -215,7 +215,9 @@ export async function POST(request: NextRequest) {
     if (user.two_fa_enabled || isAdmin) {
       try {
         const twoFACode = await createTwoFACode(user._id);
-        await send2FACode(user.email, twoFACode.code, user.first_name);
+        // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+        // await send2FACode(user.email, twoFACode.code, user.first_name);
+        console.log(`[EMAIL DISABLED] 2FA code for ${user.email}: ${twoFACode.code}`);
       } catch (error) {
         console.error('Error sending 2FA code:', error);
       }

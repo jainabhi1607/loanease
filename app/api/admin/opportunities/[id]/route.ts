@@ -456,67 +456,8 @@ export async function PATCH(
       ];
 
       if (statusesThatTriggerEmail.includes(body.status)) {
-        try {
-          const clients = opportunityDetails.clients || {};
-          const clientName = `${clients.contact_first_name || ''} ${clients.contact_last_name || ''}`.trim() || 'Client';
-          const clientEmail = clients.contact_email || '';
-          const entityName = clients.entity_name || '';
-          const applicationId = opportunityDetails.opportunity_id || '';
-
-          // Get referrer user details
-          let referrerName = '';
-          let referrerEmail = '';
-          if (opportunityDetails.created_by) {
-            const referrerUser = await db.collection(COLLECTIONS.USERS).findOne({ _id: opportunityDetails.created_by });
-
-            if (referrerUser) {
-              referrerName = `${(referrerUser as any).first_name || ''} ${(referrerUser as any).surname || ''}`.trim() || 'Partner';
-              referrerEmail = (referrerUser as any).email || '';
-            }
-          }
-
-          // Get reason for declined/withdrawn if applicable
-          let reasonDeclined = '';
-          if (body.status === 'declined' || body.status === 'withdrawn') {
-            // Check if reason is in the body
-            reasonDeclined = body.reason_declined || body.declined_reason || body.withdrawn_reason || '';
-
-            // If not in body, try to get from opportunity_details
-            if (!reasonDeclined) {
-              const details = await db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({ opportunity_id: id });
-              if (details) {
-                reasonDeclined = (details as any).reason_declined || (details as any).withdrawn_reason || '';
-              }
-            }
-          }
-
-          console.log('Sending status change emails:', {
-            newStatus: body.status,
-            oldStatus,
-            clientEmail,
-            clientName,
-            referrerEmail,
-            referrerName,
-            applicationId,
-            entityName
-          });
-
-          // Send emails
-          await sendStatusChangeEmails({
-            clientEmail,
-            clientName,
-            referrerEmail,
-            referrerName,
-            applicationId,
-            entityName,
-            newStatus: body.status,
-            reasonDeclined
-          });
-
-        } catch (emailError) {
-          // Log error but don't fail the request
-          console.error('Error sending status change emails:', emailError);
-        }
+        // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
+        console.log(`[EMAIL DISABLED] Status change email for opportunity ${opportunityDetails.opportunity_id || id}, new status: ${body.status}`);
       }
     }
 
