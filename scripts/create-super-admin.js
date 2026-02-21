@@ -1,16 +1,18 @@
 /**
- * Script to create a Super Admin user
+ * Script to create a Super Admin user in MongoDB
  *
- * This creates a super admin user in the system.
  * Run with: node scripts/create-super-admin.js
  *
  * Make sure your .env.local has:
- * - NEXT_PUBLIC_SUPABASE_URL
- * - SUPABASE_SERVICE_KEY
+ * - MONGODB_URI
+ * - MONGODB_DB
  */
 
 const fs = require('fs');
 const path = require('path');
+const { MongoClient } = require('mongodb');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 // Load .env.local manually
 const envPath = path.join(__dirname, '..', '.env.local');
@@ -25,122 +27,83 @@ if (fs.existsSync(envPath)) {
   });
 }
 
-const { createClient } = require('@supabase/supabase-js');
-
 // Super Admin Credentials
-const SUPER_ADMIN_EMAIL = 'admin@loanease.com';
-const SUPER_ADMIN_PASSWORD = 'Admin123!@#';
-const SUPER_ADMIN_FIRST_NAME = 'Loanease';
-const SUPER_ADMIN_LAST_NAME = 'Admin';
+const SUPER_ADMIN = {
+  email: 'jainabhi1607@gmail.com',
+  password: 'Qwert!2345',
+  first_name: 'Loanease',
+  surname: 'Admin',
+};
 
-async function createSuperAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+async function main() {
+  const uri = process.env.MONGODB_URI;
+  const dbName = process.env.MONGODB_DB || 'loancase';
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.error('❌ Error: Missing Supabase credentials in .env.local');
-    console.error('Please ensure NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_KEY are set');
+  if (!uri) {
+    console.error('ERROR: MONGODB_URI not found in .env.local');
     process.exit(1);
   }
 
-  console.log('🔧 Initializing Supabase client...');
-  const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
+  const client = new MongoClient(uri);
 
   try {
-    console.log('\n📧 Creating super admin user...');
-    console.log(`Email: ${SUPER_ADMIN_EMAIL}`);
+    await client.connect();
+    console.log('Connected to MongoDB');
+
+    const db = client.db(dbName);
+    const passwordHash = await bcrypt.hash(SUPER_ADMIN.password, 12);
 
     // Check if user already exists
-    const { data: existingUsers } = await supabase.auth.admin.listUsers();
-    const userExists = existingUsers?.users?.some(user => user.email === SUPER_ADMIN_EMAIL);
+    const existing = await db.collection('users').findOne({ email: SUPER_ADMIN.email });
 
-    if (userExists) {
-      console.log('⚠️  User already exists, updating role...');
-
-      const existingUser = existingUsers.users.find(u => u.email === SUPER_ADMIN_EMAIL);
-
-      // Update user profile to super_admin
-      const { error: updateError } = await supabase
-        .from('users')
-        .upsert({
-          id: existingUser.id,
-          email: SUPER_ADMIN_EMAIL,
-          first_name: SUPER_ADMIN_FIRST_NAME,
-          surname: SUPER_ADMIN_LAST_NAME,
-          role: 'super_admin',
-          two_fa_enabled: false, // Set to true if you want to enforce 2FA
-          organisation_id: null
-        }, {
-          onConflict: 'id'
-        });
-
-      if (updateError) {
-        console.error('❌ Error updating user profile:', updateError);
-        throw updateError;
-      }
-
-      console.log('✅ User role updated to super_admin');
-
-    } else {
-      // Create new user
-      const { data: userData, error: createError } = await supabase.auth.admin.createUser({
-        email: SUPER_ADMIN_EMAIL,
-        password: SUPER_ADMIN_PASSWORD,
-        email_confirm: true, // Auto-confirm email
-        user_metadata: {
-          first_name: SUPER_ADMIN_FIRST_NAME,
-          last_name: SUPER_ADMIN_LAST_NAME
+    if (existing) {
+      console.log('User already exists. Updating to super_admin with new password...');
+      await db.collection('users').updateOne(
+        { email: SUPER_ADMIN.email },
+        {
+          $set: {
+            password_hash: passwordHash,
+            role: 'super_admin',
+            first_name: SUPER_ADMIN.first_name,
+            surname: SUPER_ADMIN.surname,
+            is_active: true,
+            email_verified: true,
+            two_fa_enabled: false,
+          }
         }
+      );
+      console.log('User updated successfully!');
+      console.log('User ID:', existing._id);
+    } else {
+      const userId = uuidv4();
+      await db.collection('users').insertOne({
+        _id: userId,
+        email: SUPER_ADMIN.email,
+        password_hash: passwordHash,
+        first_name: SUPER_ADMIN.first_name,
+        surname: SUPER_ADMIN.surname,
+        phone: '',
+        role: 'super_admin',
+        organisation_id: null,
+        two_fa_enabled: false,
+        is_active: true,
+        email_verified: true,
+        created_at: new Date().toISOString(),
       });
-
-      if (createError) {
-        console.error('❌ Error creating user:', createError);
-        throw createError;
-      }
-
-      console.log('✅ User created successfully');
-      console.log('User ID:', userData.user.id);
-
-      // Create user profile
-      console.log('\n👤 Creating user profile...');
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert({
-          id: userData.user.id,
-          email: SUPER_ADMIN_EMAIL,
-          first_name: SUPER_ADMIN_FIRST_NAME,
-          surname: SUPER_ADMIN_LAST_NAME,
-          role: 'super_admin',
-          two_fa_enabled: false, // Set to true if you want to enforce 2FA
-          organisation_id: null
-        });
-
-      if (profileError) {
-        console.error('❌ Error creating profile:', profileError);
-        throw profileError;
-      }
-
-      console.log('✅ Profile created successfully');
+      console.log('Super admin created successfully!');
+      console.log('User ID:', userId);
     }
 
-    console.log('\n🎉 Super Admin Setup Complete!\n');
-    console.log('═══════════════════════════════════════');
-    console.log('📧 Email:    ', SUPER_ADMIN_EMAIL);
-    console.log('🔑 Password: ', SUPER_ADMIN_PASSWORD);
-    console.log('═══════════════════════════════════════');
-    console.log('\n⚠️  IMPORTANT: Change the password after first login!');
-    console.log('💡 You can now login at: http://localhost:3000/login');
-    console.log('\n');
+    console.log('\nEmail:', SUPER_ADMIN.email);
+    console.log('Role: super_admin');
+    console.log('Done!');
 
   } catch (error) {
-    console.error('\n❌ Failed to create super admin:', error.message);
+    console.error('Error:', error);
     process.exit(1);
+  } finally {
+    await client.close();
   }
 }
 
-createSuperAdmin();
+main();
