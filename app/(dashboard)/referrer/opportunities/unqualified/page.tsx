@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { SortableTableHead, SortDirection } from '@/components/ui/sortable-table-head';
 import { Pagination } from '@/components/ui/pagination';
 
@@ -154,9 +162,9 @@ function UnqualifiedOpportunitiesContent() {
           </div>
         ) : (
           <div className="overflow-hidden">
-            <table className="w-full">
-              <thead className="border-b border-orange-200">
-                <tr>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-orange-200">
                   <SortableTableHead
                     label="Deal ID"
                     sortKey="opportunity_id"
@@ -199,33 +207,31 @@ function UnqualifiedOpportunitiesContent() {
                     currentSortDirection={sortDirection}
                     onSort={handleSort}
                   />
-                  <th className="px-6 py-3 text-left text-xs font-medium text-[#787274] uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-orange-100">
+                  <TableHead className="text-[#787274] font-normal">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {paginatedOpportunities.map((opp) => (
-                  <tr key={opp.id} className="hover:bg-orange-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#02383B]">
+                  <TableRow key={opp.id} className="hover:bg-orange-50">
+                    <TableCell className="font-medium text-[#02383B]">
                       {opp.opportunity_id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#787274]">
+                    </TableCell>
+                    <TableCell className="text-[#787274]">
                       {formatDate(opp.created_at)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#02383B]">
+                    </TableCell>
+                    <TableCell className="text-[#02383B]">
                       {opp.client_entity_name || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#02383B]">
+                    </TableCell>
+                    <TableCell className="text-[#02383B]">
                       {opp.client_contact_name || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#02383B]">
+                    </TableCell>
+                    <TableCell className="text-[#02383B]">
                       {formatCurrency(opp.loan_amount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-[#787274]">
+                    </TableCell>
+                    <TableCell className="text-[#787274]">
                       {formatDate(opp.unqualified_date)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    </TableCell>
+                    <TableCell>
                       <Button
                         variant="outline"
                         size="sm"
@@ -235,11 +241,11 @@ function UnqualifiedOpportunitiesContent() {
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </Button>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 

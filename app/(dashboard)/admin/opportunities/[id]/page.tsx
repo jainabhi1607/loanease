@@ -803,17 +803,22 @@ function OpportunityDetailPage() {
     }).format(amount);
   };
 
-  const formatEntityType = (type: string) => {
+  const formatEntityType = (type: string | number) => {
     const types: { [key: string]: string } = {
+      '1': 'Private Company',
+      '2': 'Sole Trader',
+      '3': 'SMSF Trust',
+      '4': 'Trust',
+      '5': 'Partnership',
+      '6': 'Individual',
       'private_company': 'Private Company',
-      'public_company': 'Public Company',
       'sole_trader': 'Sole Trader',
       'partnership': 'Partnership',
       'trust': 'Trust',
       'smsf_trust': 'SMSF Trust',
       'individual': 'Individual',
     };
-    return types[type] || type || '-';
+    return types[String(type)] || String(type) || '-';
   };
 
   const formatAssetType = (type: string) => {
@@ -830,7 +835,7 @@ function OpportunityDetailPage() {
       'construction': 'Construction',
       'lease_doc': 'Lease Doc',
       'low_doc': 'Low Doc',
-      'private_short_term': 'Private Short Term',
+      'private_short_term': 'Private / Short Term',
       'unsure': 'Unsure',
     };
     return types[type] || type || '-';
@@ -1597,7 +1602,7 @@ function OpportunityDetailPage() {
           <Textarea value={withdrawnReason} onChange={(e) => setWithdrawnReason(e.target.value)} rows={3} />
           <DialogFooter>
             <Button variant="outline" onClick={() => setWithdrawnReasonOpen(false)}>Cancel</Button>
-            <Button onClick={handleWithdrawnReasonConfirm} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
+            <Button onClick={handleWithdrawnReasonConfirm} disabled={!withdrawnReason.trim()} className="bg-[#00D37F] hover:bg-[#00b86d]">Submit</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1754,7 +1759,7 @@ function OpportunityDetailPage() {
                     <SelectItem value="construction">Construction</SelectItem>
                     <SelectItem value="lease_doc">Lease Doc</SelectItem>
                     <SelectItem value="low_doc">Low Doc</SelectItem>
-                    <SelectItem value="private_short_term">Private Short Term</SelectItem>
+                    <SelectItem value="private_short_term">Private / Short Term</SelectItem>
                     <SelectItem value="unsure">Unsure</SelectItem>
                   </SelectContent>
                 </Select>

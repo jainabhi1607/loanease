@@ -333,25 +333,9 @@ export default function AddOpportunityPage() {
       level = 3; // Red
     }
 
-    // If all questions are "No" and not already green, show green
-    if (noCount === 5 && !isGreen) {
-      level = 1;
-      isGreen = true;
-    }
-
-    // If some questions are "No" and none are "Yes", show green
-    if (noCount > 0 && yesCount === 0 && !isGreen) {
-      level = 1;
-      isGreen = true;
-    }
-
-    // If any question is "Yes" and was green, override to yellow
-    if (yesCount > 0 && isGreen) {
-      level = 2;
-    }
-
-    // If any question is "Yes", show yellow
-    if (yesCount > 0) {
+    // Risk questions can only worsen the outcome, not improve it
+    // If any question is "Yes", bump to at least yellow
+    if (yesCount > 0 && level < 2) {
       level = 2;
     }
 

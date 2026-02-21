@@ -334,12 +334,13 @@ function OpportunitiesContent() {
 
       autoTable(doc, {
         startY: hasActiveFilters ? 42 : 38,
-        head: [['Deal ID', 'Date Created', 'Borrowing Entity', 'Loan Type', 'Loan Amount', 'Status']],
+        head: [['Deal ID', 'Date Created', 'Borrowing Entity', 'Loan Type', 'Referrer Name', 'Loan Amount', 'Status']],
         body: filteredOpportunities.map(opp => [
           opp.deal_id || '',
           formatDate(opp.date_created),
           opp.borrowing_entity || '',
           formatLoanType(opp.loan_type),
+          opp.referrer_name || '-',
           opp.loan_amount ? formatCurrency(opp.loan_amount) : '-',
           formatStatus(opp.status)
         ]),

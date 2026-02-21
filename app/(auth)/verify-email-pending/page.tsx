@@ -64,7 +64,7 @@ function VerifyEmailPendingContent() {
         <CardContent className="space-y-4">
           <div className="text-sm text-gray-600 text-center">
             <p>Please check your email and click the verification link to complete your registration.</p>
-            <p className="mt-2">The link will expire in 24 hours.</p>
+            <p className="mt-2">The link will expire shortly. Please check your email promptly.</p>
           </div>
 
           {resendSuccess && (

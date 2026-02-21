@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
               If an account exists for <strong>{email}</strong>, you will receive an email with instructions to reset your password.
             </p>
             <p className="text-sm text-muted-foreground text-center">
-              The link will expire in 1 hour for security reasons.
+              The link will expire shortly for security reasons.
             </p>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">

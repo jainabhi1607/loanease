@@ -18,6 +18,16 @@ import {
 } from 'lucide-react';
 import { TrashIcon } from '@/components/icons/TrashIcon';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { EditClientDialog } from '@/components/EditClientDialog';
 import { useToast } from '@/hooks/use-toast';
 
@@ -55,6 +65,8 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
   const [upcomingSettlements, setUpcomingSettlements] = useState(0);
   const [loading, setLoading] = useState(true);
   const [editClientOpen, setEditClientOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [clientId, setClientId] = useState<string>('');
 
   useEffect(() => {
@@ -95,6 +107,35 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
       description: 'Client details have been updated successfully.',
     });
     fetchClientDetails();
+  };
+
+  const handleDeleteClient = async () => {
+    setDeleting(true);
+    try {
+      const response = await fetch(`/api/admin/clients/${clientId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete client');
+      }
+
+      toast({
+        title: 'Client deleted',
+        description: 'Client has been deleted successfully.',
+      });
+      router.push('/admin/clients');
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to delete client',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -312,7 +353,11 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
             </div>
 
             {/* Delete Button */}
-            <Button variant="outline" className="w-full flex items-center justify-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200">
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
               <TrashIcon size={16} />
               Delete Client
             </Button>
@@ -326,6 +371,28 @@ export default function ClientDetailPage({ params }: { params: Promise<{ id: str
           onOpenChange={setEditClientOpen}
           onSuccess={handleEditSuccess}
         />
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will delete the client <strong>{client.entity_name}</strong>. Clients with active opportunities cannot be deleted.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDeleteClient}
+                className="bg-red-600 hover:bg-red-700"
+                disabled={deleting}
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

@@ -866,9 +866,9 @@ export default function ViewReferrerPage() {
       <Dialog open={commissionDialogOpen} onOpenChange={setCommissionDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Add Custom Commission Split</DialogTitle>
+            <DialogTitle>{commissionSplit ? 'Edit' : 'Add'} Custom Commission Split</DialogTitle>
             <DialogDescription>
-              Add a custom commission split for this Referrer below.
+              {commissionSplit ? 'Edit the' : 'Add a'} custom commission split for this Referrer below.
               This will display inside the Referrer portal only.
             </DialogDescription>
           </DialogHeader>

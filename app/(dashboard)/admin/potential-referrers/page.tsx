@@ -24,6 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { SortableTableHead, SortDirection } from '@/components/ui/sortable-table-head';
+import { Pagination } from '@/components/ui/pagination';
 
 interface Contact {
   id: string;
@@ -45,6 +46,8 @@ function PotentialReferrersContent() {
   const { toast } = useToast();
   const [sortKey, setSortKey] = useState<string | null>('created_at');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 20;
 
   useEffect(() => {
     fetchContacts();
@@ -180,6 +183,10 @@ function PotentialReferrersContent() {
     }
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   const sortedContacts = [...filteredContacts].sort((a, b) => {
     if (!sortKey) return 0;
 
@@ -308,9 +315,9 @@ function PotentialReferrersContent() {
                   </TableCell>
                 </TableRow>
               ) : (
-                sortedContacts.map((contact, index) => (
+                sortedContacts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((contact, index) => (
                   <TableRow key={contact.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
                     <TableCell>{formatDate(contact.created_at)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -337,11 +344,15 @@ function PotentialReferrersContent() {
           </Table>
         </div>
 
-        {/* Footer with count */}
-        {filteredContacts.length > 0 && (
-          <div className="px-6 py-3 border-t border-gray-200 text-sm text-gray-500">
-            Showing {filteredContacts.length} of {contacts.length} potential referrer{contacts.length !== 1 ? 's' : ''}
-          </div>
+        {/* Pagination */}
+        {sortedContacts.length > 0 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(sortedContacts.length / itemsPerPage)}
+            onPageChange={setCurrentPage}
+            itemsPerPage={itemsPerPage}
+            totalItems={sortedContacts.length}
+          />
         )}
       </div>
 

@@ -1,5 +1,12 @@
 import { SignJWT, jwtVerify } from 'jose';
 
+if (!process.env.JWT_SECRET) {
+  console.warn('WARNING: JWT_SECRET environment variable is not set. Using insecure fallback.');
+}
+if (!process.env.JWT_REFRESH_SECRET) {
+  console.warn('WARNING: JWT_REFRESH_SECRET environment variable is not set. Using insecure fallback.');
+}
+
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || 'loanease-jwt-secret-change-in-production-2024'
 );

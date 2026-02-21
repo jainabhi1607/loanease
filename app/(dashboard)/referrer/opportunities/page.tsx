@@ -336,7 +336,7 @@ export default function ReferrerOpportunitiesPage() {
                       <TableCell className="py-4 font-bold text-[#787274]">{opp.borrowing_entity || '-'}</TableCell>
                       <TableCell className="py-4 text-[#787274]">{formatLoanType(opp.loan_type)}</TableCell>
                       <TableCell className="py-4 text-[#787274]">{opp.referrer_name || '-'}</TableCell>
-                      <TableCell className="py-4 text-[#787274]">{opp.referrer_type || 'Mortgage Broker'}</TableCell>
+                      <TableCell className="py-4 text-[#787274]">{opp.referrer_type || '-'}</TableCell>
                       <TableCell className="py-4 font-bold text-[#787274]">{formatCurrency(opp.loan_amount)}</TableCell>
                       <TableCell className="py-4">
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(opp.status)}`}>

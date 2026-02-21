@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import { SortableTableHead, SortDirection } from '@/components/ui/sortable-table-head';
 import { Pagination } from '@/components/ui/pagination';
 
@@ -147,9 +155,9 @@ function UnqualifiedOpportunitiesContent() {
           </div>
         ) : (
           <div className="overflow-hidden p-10">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
-                <tr>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50 border-b">
                   <SortableTableHead
                     label="Deal ID"
                     sortKey="opportunity_id"
@@ -198,33 +206,31 @@ function UnqualifiedOpportunitiesContent() {
                     onSort={handleSort}
                     className="text-[#787274]"
                   />
-                  <th className="px-6 py-3 text-left text-xs font-normal text-[#787274] uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+                  <TableHead className="text-[#787274] font-normal">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {paginatedOpportunities.map((opp) => (
-                  <tr key={opp.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <TableRow key={opp.id} className="hover:bg-gray-50">
+                    <TableCell className="font-medium text-gray-900">
                       {opp.opportunity_id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    </TableCell>
+                    <TableCell className="text-gray-500">
                       {formatDate(opp.created_at)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    </TableCell>
+                    <TableCell className="text-gray-900">
                       {opp.client_entity_name || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    </TableCell>
+                    <TableCell className="text-gray-900">
                       {opp.client_contact_name || '-'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    </TableCell>
+                    <TableCell className="text-gray-900">
                       {formatCurrency(opp.loan_amount)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    </TableCell>
+                    <TableCell className="text-gray-500">
                       {formatDate(opp.unqualified_date)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    </TableCell>
+                    <TableCell>
                       <Button
                         variant="outline"
                         size="sm"
@@ -234,11 +240,11 @@ function UnqualifiedOpportunitiesContent() {
                         <Eye className="h-4 w-4 mr-2" />
                         View
                       </Button>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 

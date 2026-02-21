@@ -98,8 +98,6 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    console.log('Middleware: User role:', userRole, 'Path:', url.pathname);
-
     // Admin routes - only super_admin and admin_team can access
     if (url.pathname.startsWith('/admin')) {
       if (userRole !== 'super_admin' && userRole !== 'admin_team') {
@@ -107,17 +105,22 @@ export async function middleware(request: NextRequest) {
         url.pathname = '/dashboard';
         return NextResponse.redirect(url);
       }
+
+      // Super admin only pages - Users and Settings
+      if (url.pathname.startsWith('/admin/users') || url.pathname.startsWith('/admin/settings')) {
+        if (userRole !== 'super_admin') {
+          url.pathname = '/admin/dashboard';
+          return NextResponse.redirect(url);
+        }
+      }
     }
 
     // Dashboard route - redirect based on role
     if (url.pathname === '/dashboard') {
-      console.log('Checking dashboard redirect for role:', userRole);
       if (userRole === 'super_admin' || userRole === 'admin_team') {
-        console.log('Redirecting admin to /admin/dashboard');
         url.pathname = '/admin/dashboard';
         return NextResponse.redirect(url);
       } else if (userRole === 'referrer_admin' || userRole === 'referrer_team') {
-        console.log('Redirecting referrer to /referrer/dashboard');
         url.pathname = '/referrer/dashboard';
         return NextResponse.redirect(url);
       }
