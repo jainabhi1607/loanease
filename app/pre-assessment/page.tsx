@@ -144,10 +144,16 @@ export default function PreAssessmentPage() {
       let determinedOutcome: 'good' | 'caution' | 'risk' = 'risk';
       if (calculatedIcr >= 2 && calculatedLvr <= 65) {
         determinedOutcome = 'good';
-      } else if (calculatedIcr < 1.5 || calculatedLvr > 80) {
-        determinedOutcome = 'risk';
-      } else {
+      } else if (calculatedIcr >= 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
         determinedOutcome = 'caution';
+      } else if (calculatedIcr >= 2 && calculatedLvr > 80) {
+        determinedOutcome = 'caution';
+      } else if (calculatedIcr < 2 && calculatedLvr <= 65) {
+        determinedOutcome = 'caution';
+      } else if (calculatedIcr < 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
+        determinedOutcome = 'caution';
+      } else if (calculatedIcr < 2 && calculatedLvr > 80) {
+        determinedOutcome = 'risk';
       }
 
       // Risk questions can only worsen outcome

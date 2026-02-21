@@ -261,26 +261,33 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     setIcr(calculatedIcr);
 
     let level = 0;
-    if (calculatedIcr >= 2 && calculatedLvr <= 65) level = 1;
-    else if (calculatedIcr >= 2 && calculatedLvr > 65 && calculatedLvr <= 80) level = 2;
-    else if (calculatedLvr > 80) level = 3;
-    else if (calculatedIcr < 2 && calculatedIcr >= 1.5) level = 2;
-    else if (calculatedIcr < 1.5 && calculatedIcr > 0) level = 3;
+    if (calculatedIcr >= 2 && calculatedLvr <= 65) {
+      level = 1; // Green
+    } else if (calculatedIcr >= 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
+      level = 2; // Yellow
+    } else if (calculatedIcr >= 2 && calculatedLvr > 80) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr <= 65) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr > 80) {
+      level = 3; // Red
+    }
 
-    // Risk questions can only worsen outcome (never improve)
-    const riskAnswers = [
+    // Risk questions can only worsen the outcome, not improve it
+    const yesCount = [
       financialDetails.existingLiabilities,
       financialDetails.additionalSecurity,
       financialDetails.smsf,
       financialDetails.existingATO,
       financialDetails.creditIssues
-    ];
-    const yesCount = riskAnswers.filter(a => a === 'yes').length;
+    ].filter(q => q === 'yes').length;
     if (yesCount > 0 && level < 2) {
       level = 2;
     }
 
-    // ICR < 1.5 always red regardless
+    // ICR < 1.5 always shows red (final override)
     if (calculatedIcr < 1.5 && calculatedIcr > 0) {
       level = 3;
     }

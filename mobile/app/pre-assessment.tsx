@@ -160,44 +160,39 @@ export default function PreAssessmentScreen() {
 
     let status: 'green' | 'yellow' | 'red' = 'green';
     let message = '';
-    let isGreen = false;
+    const yellowMessage = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+    const redMessage = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
 
     if (icr >= 2 && lvr <= 65) {
       status = 'green';
       message = 'Deal looks good. Submit now!';
-      isGreen = true;
     } else if (icr >= 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     } else if (icr >= 2 && lvr > 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     } else if (icr < 2 && lvr <= 65) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     } else if (icr < 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     } else if (icr < 2 && lvr > 80) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+      message = redMessage;
     }
 
-    // If any Yes answers and was green, change to yellow
-    if (hasYesAnswers && isGreen) {
-      status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    }
-
+    // Risk questions can only worsen outcome (never improve)
     if (hasYesAnswers && status === 'green') {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     }
 
     // ICR < 1.5 always red (final override)
     if (icr < 1.5 && icr > 0) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+      message = redMessage;
     }
 
     return { icr, lvr, status, message };

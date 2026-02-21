@@ -121,34 +121,40 @@ function PreAssessmentContent() {
 
     let status: 'green' | 'yellow' | 'red' = 'green';
     let message = '';
+    const yellowMessage = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+    const redMessage = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+
     // Determine outcome based on ICR and LVR
     if (icr >= 2 && lvr <= 65) {
       status = 'green';
       message = 'Deal looks good. Submit now!';
     } else if (icr >= 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (lvr > 80) {
-      status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (icr < 2 && icr >= 1.5) {
+      message = yellowMessage;
+    } else if (icr >= 2 && lvr > 80) {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else {
+      message = yellowMessage;
+    } else if (icr < 2 && lvr <= 65) {
+      status = 'yellow';
+      message = yellowMessage;
+    } else if (icr < 2 && lvr > 65 && lvr <= 80) {
+      status = 'yellow';
+      message = yellowMessage;
+    } else if (icr < 2 && lvr > 80) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+      message = redMessage;
     }
 
     // Risk questions can only worsen outcome (never improve)
     if (hasYesAnswers && status === 'green') {
       status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
+      message = yellowMessage;
     }
 
     // ICR < 1.5 always shows red (final override)
     if (icr < 1.5 && icr > 0) {
       status = 'red';
-      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+      message = redMessage;
     }
 
     setOutcome({ icr, lvr, status, message });

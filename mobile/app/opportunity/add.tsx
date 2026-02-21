@@ -320,10 +320,12 @@ export default function AddOpportunityScreen() {
       level = 3;
     }
 
-    if (noCount === 5 && !isGreen) { level = 1; isGreen = true; }
-    if (noCount > 0 && yesCount === 0 && !isGreen) { level = 1; isGreen = true; }
-    if (yesCount > 0 && isGreen) level = 2;
-    if (yesCount > 0) level = 2;
+    // Risk questions can only worsen the outcome, not improve it
+    if (yesCount > 0 && level < 2) {
+      level = 2;
+    }
+
+    // ICR < 1.5 always shows red (final override)
     if (calcIcr < 1.5 && calcIcr > 0) level = 3;
 
     return { icr: calcIcr, lvr: calcLvr, outcomeLevel: level };

@@ -448,35 +448,28 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     ].filter(q => q === 'no').length;
 
     if (calculatedIcr >= 2 && calculatedLvr <= 65) {
-      level = 1;
+      level = 1; // Green
       isGreen = true;
     } else if (calculatedIcr >= 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
-      level = 2;
+      level = 2; // Yellow
     } else if (calculatedIcr >= 2 && calculatedLvr > 80) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr <= 65) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr > 65 && calculatedLvr <= 80) {
+      level = 2; // Yellow
+    } else if (calculatedIcr < 2 && calculatedLvr > 80) {
+      level = 3; // Red
+    }
+
+    // Risk questions can only worsen the outcome, not improve it
+    if (yesCount > 0 && level < 2) {
       level = 2;
-    } else if (calculatedIcr < 2 && calculatedIcr >= 1.5 && calculatedLvr <= 65) {
-      level = 2;
-    } else if (calculatedIcr < 2 && calculatedIcr >= 1.5 && calculatedLvr > 65 && calculatedLvr <= 80) {
-      level = 2;
-    } else if (calculatedIcr < 2 && calculatedIcr >= 1.5 && calculatedLvr > 80) {
+    }
+
+    // ICR < 1.5 always shows red (final override)
+    if (calculatedIcr < 1.5 && calculatedIcr > 0) {
       level = 3;
-    } else if (calculatedIcr < 1.5 && calculatedIcr > 0) {
-      level = 3;
-    }
-
-    if (noCount === 5 && !isGreen) {
-      level = 1;
-      isGreen = true;
-    }
-
-    if (yesCount > 0 && isGreen) {
-      level = 2;
-    } else if (yesCount > 0) {
-      level = 2;
-    }
-
-    if (noCount > 0 && yesCount === 0 && !isGreen) {
-      level = 1;
     }
 
     setOutcomeLevel(level);
