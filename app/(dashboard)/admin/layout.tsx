@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LoadingLink } from '@/components/ui/loading-link';
 import {
@@ -39,6 +39,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -134,19 +135,21 @@ export default function AdminLayout({
             {/* Desktop navigation */}
             <nav className="hidden xl:flex items-center space-x-1">
               {filteredNavigation.map((item) => {
-                // Check if viewing opportunity from applications (via ?from=applications)
-                const isFromApplications = typeof window !== 'undefined' && window.location.search.includes('from=applications');
+                const isFromApplications = searchParams.get('from') === 'applications';
+                const isFromSettlements = searchParams.get('from') === 'settlements';
                 const isOpportunityDetail = pathname.startsWith('/admin/opportunities/') && pathname !== '/admin/opportunities';
 
                 let isActive = pathname === item.href ||
                   (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
 
-                // Special case: highlight Applications instead of Opportunities when viewing from applications
-                if (isFromApplications && isOpportunityDetail) {
-                  if (item.href === '/admin/applications') {
-                    isActive = true;
-                  } else if (item.href === '/admin/opportunities') {
-                    isActive = false;
+                // When viewing opportunity detail from applications or settlements, highlight the correct menu
+                if (isOpportunityDetail) {
+                  if (isFromApplications) {
+                    if (item.href === '/admin/applications') isActive = true;
+                    else if (item.href === '/admin/opportunities') isActive = false;
+                  } else if (isFromSettlements) {
+                    if (item.href === '/admin/settlements/upcoming') isActive = true;
+                    else if (item.href === '/admin/opportunities') isActive = false;
                   }
                 }
 
@@ -197,17 +200,20 @@ export default function AdminLayout({
           <div className="xl:hidden border-t border-[#0f2a2a]">
             <nav className="px-2 pt-2 pb-3 space-y-1">
               {filteredNavigation.map((item) => {
-                const isFromApplications = typeof window !== 'undefined' && window.location.search.includes('from=applications');
+                const isFromApplications = searchParams.get('from') === 'applications';
+                const isFromSettlements = searchParams.get('from') === 'settlements';
                 const isOpportunityDetail = pathname.startsWith('/admin/opportunities/') && pathname !== '/admin/opportunities';
 
                 let isActive = pathname === item.href ||
                   (item.href !== '/admin/dashboard' && pathname.startsWith(item.href));
 
-                if (isFromApplications && isOpportunityDetail) {
-                  if (item.href === '/admin/applications') {
-                    isActive = true;
-                  } else if (item.href === '/admin/opportunities') {
-                    isActive = false;
+                if (isOpportunityDetail) {
+                  if (isFromApplications) {
+                    if (item.href === '/admin/applications') isActive = true;
+                    else if (item.href === '/admin/opportunities') isActive = false;
+                  } else if (isFromSettlements) {
+                    if (item.href === '/admin/settlements/upcoming') isActive = true;
+                    else if (item.href === '/admin/opportunities') isActive = false;
                   }
                 }
 
