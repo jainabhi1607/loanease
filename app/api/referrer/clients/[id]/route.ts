@@ -101,6 +101,8 @@ export async function GET(
         email: client.contact_email || '-',
         industry: client.industry || '-',
         company_address: client.address || '-',
+        abn: client.abn || '-',
+        time_in_business: client.time_in_business || '-',
       },
       total_finance_amount: totalFinanceAmount,
       upcoming_settlements: upcomingSettlements.length,

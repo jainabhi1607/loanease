@@ -267,6 +267,24 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
     else if (calculatedIcr < 2 && calculatedIcr >= 1.5) level = 2;
     else if (calculatedIcr < 1.5 && calculatedIcr > 0) level = 3;
 
+    // Risk questions can only worsen outcome (never improve)
+    const riskAnswers = [
+      financialDetails.existingLiabilities,
+      financialDetails.additionalSecurity,
+      financialDetails.smsf,
+      financialDetails.existingATO,
+      financialDetails.creditIssues
+    ];
+    const yesCount = riskAnswers.filter(a => a === 'yes').length;
+    if (yesCount > 0 && level < 2) {
+      level = 2;
+    }
+
+    // ICR < 1.5 always red regardless
+    if (calculatedIcr < 1.5 && calculatedIcr > 0) {
+      level = 3;
+    }
+
     setOutcomeLevel(level);
   }, [financialDetails, opportunityData, INTEREST_RATE]);
 
@@ -582,7 +600,9 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
                       <div className="flex items-center space-x-2"><RadioGroupItem value="purchase_investment" id="p2" /><Label htmlFor="p2">Purchase - Investment</Label></div>
                       <div className="flex items-center space-x-2"><RadioGroupItem value="refinance" id="p3" /><Label htmlFor="p3">Refinance</Label></div>
                       <div className="flex items-center space-x-2"><RadioGroupItem value="equity_release" id="p4" /><Label htmlFor="p4">Equity Release</Label></div>
-                      <div className="flex items-center space-x-2"><RadioGroupItem value="business_use" id="p5" /><Label htmlFor="p5">Business Use</Label></div>
+                      <div className="flex items-center space-x-2"><RadioGroupItem value="land_bank" id="p5" /><Label htmlFor="p5">Land Bank</Label></div>
+                      <div className="flex items-center space-x-2"><RadioGroupItem value="business_use" id="p6" /><Label htmlFor="p6">Business Use</Label></div>
+                      <div className="flex items-center space-x-2"><RadioGroupItem value="commercial_equipment" id="p7" /><Label htmlFor="p7">Commercial Equipment</Label></div>
                     </div>
                   </RadioGroup>
                 </div>
@@ -760,19 +780,19 @@ export default function EditOpportunityPage({ params }: { params: Promise<{ id: 
           <CardContent className="space-y-4">
             <div className="flex items-start space-x-3">
               <Checkbox id="term1" checked={termsAccepted.term1} onCheckedChange={(c) => setTermsAccepted(prev => ({ ...prev, term1: c as boolean }))} />
-              <Label htmlFor="term1" className="font-normal">I confirm that all information is true and correct.</Label>
+              <Label htmlFor="term1" className="font-normal leading-normal">I confirm that all the information being submitted is true and correct to my knowledge at the time of submission.</Label>
             </div>
             <div className="flex items-start space-x-3">
               <Checkbox id="term2" checked={termsAccepted.term2} onCheckedChange={(c) => setTermsAccepted(prev => ({ ...prev, term2: c as boolean }))} />
-              <Label htmlFor="term2" className="font-normal">I confirm the client has consented to submitting their information.</Label>
+              <Label htmlFor="term2" className="font-normal leading-normal">I confirm that the client (on whose behalf I am submitting this application) is fully aware of and has consented to me submitting their information to Loanease, and that I have advised the client that Loanease will be making contact with them via email, text and/or call.</Label>
             </div>
             <div className="flex items-start space-x-3">
               <Checkbox id="term3" checked={termsAccepted.term3} onCheckedChange={(c) => setTermsAccepted(prev => ({ ...prev, term3: c as boolean }))} />
-              <Label htmlFor="term3" className="font-normal">I have advised the client about the referral fee.</Label>
+              <Label htmlFor="term3" className="font-normal leading-normal">I confirm that I have advised the client that I will be receiving a referral fee (upfront and/or trailing) from Loanease, for the loan I am submitting on their behalf, once the loan is settled.</Label>
             </div>
             <div className="flex items-start space-x-3">
               <Checkbox id="term4" checked={termsAccepted.term4} onCheckedChange={(c) => setTermsAccepted(prev => ({ ...prev, term4: c as boolean }))} />
-              <Label htmlFor="term4" className="font-normal">I have advised the client about the Service Fee.</Label>
+              <Label htmlFor="term4" className="font-normal leading-normal">I confirm that I have advised the client that Loanease will charge a Service Fee in relation to their application and that this will be communicated directly to the client upon application.</Label>
             </div>
           </CardContent>
         </Card>

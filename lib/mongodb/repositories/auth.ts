@@ -22,8 +22,8 @@ export async function createTwoFACode(userId: string): Promise<TwoFACode> {
     used: false
   });
 
-  // Generate a 6-digit code
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  // TODO: Remove hardcoded OTP before production launch
+  const code = '998877';
 
   // Expires based on DB setting (default 10 minutes)
   const expiryMinutes = await getTwoFACodeExpiryMinutes();

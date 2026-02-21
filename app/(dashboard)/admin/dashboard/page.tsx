@@ -92,7 +92,7 @@ export default function AdminDashboard() {
       'construction': 'Construction',
       'lease_doc': 'Lease Doc',
       'low_doc': 'Low Doc',
-      'private_short_term': 'Private Short Term',
+      'private_short_term': 'Private / Short Term',
       'unsure': 'Unsure',
     };
     return loanTypeMap[loanType] || loanType;
@@ -223,11 +223,11 @@ export default function AdminDashboard() {
                       className="border-b border-gray-200 hover:bg-white/50 cursor-pointer"
                       onClick={() => router.push(`/admin/opportunities/${opp.id}`)}
                     >
-                      <TableCell className="font-bold text-[#02383B]">{opp.deal_id}</TableCell>
-                      <TableCell className="text-teal-700">{opp.borrower_name}</TableCell>
-                      <TableCell className="text-teal-700">{opp.referrer_name}</TableCell>
-                      <TableCell>{formatLoanType(opp.loan_type)}</TableCell>
-                      <TableCell className="text-teal-700">{formatCurrency(opp.loan_amount)}</TableCell>
+                      <TableCell className="font-bold text-black">{opp.deal_id}</TableCell>
+                      <TableCell className="font-semibold text-[#02383B]">{opp.borrower_name}</TableCell>
+                      <TableCell className="text-black">{opp.referrer_name}</TableCell>
+                      <TableCell className="text-black">{formatLoanType(opp.loan_type)}</TableCell>
+                      <TableCell className="text-black">{formatCurrency(opp.loan_amount)}</TableCell>
                     </TableRow>
                   ))
                 )}

@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Eye } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Table,
@@ -207,12 +207,11 @@ function UnqualifiedOpportunitiesContent() {
                     currentSortDirection={sortDirection}
                     onSort={handleSort}
                   />
-                  <TableHead className="text-[#787274] font-normal">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedOpportunities.map((opp) => (
-                  <TableRow key={opp.id} className="hover:bg-orange-50">
+                  <TableRow key={opp.id} className="hover:bg-orange-50 cursor-pointer" onClick={() => router.push(`/referrer/opportunities/${opp.id}`)}>
                     <TableCell className="font-medium text-[#02383B]">
                       {opp.opportunity_id}
                     </TableCell>
@@ -230,17 +229,6 @@ function UnqualifiedOpportunitiesContent() {
                     </TableCell>
                     <TableCell className="text-[#787274]">
                       {formatDate(opp.unqualified_date)}
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => router.push(`/referrer/opportunities/${opp.id}`)}
-                        className="bg-white border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

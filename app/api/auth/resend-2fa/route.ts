@@ -62,8 +62,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
-    // Check if user has 2FA enabled
-    if (!user.two_fa_enabled) {
+    // Check if user has 2FA enabled (mandatory for admin roles)
+    const isAdmin = user.role === 'super_admin' || user.role === 'admin_team';
+    if (!user.two_fa_enabled && !isAdmin) {
       return NextResponse.json({ success: true });
     }
 

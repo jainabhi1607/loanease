@@ -37,7 +37,6 @@ function Verify2FAContent() {
 
         if (!response.ok) {
           // No valid session, redirect to login
-          document.cookie = 'cf_2fa_verified=; path=/; max-age=0';
           router.push('/login');
           return;
         }
@@ -49,7 +48,6 @@ function Verify2FAContent() {
         if (sessionEmail?.toLowerCase() !== email.toLowerCase()) {
           // Logout and redirect
           await fetch('/api/auth/logout', { method: 'POST' });
-          document.cookie = 'cf_2fa_verified=; path=/; max-age=0';
           router.push('/login');
           return;
         }
@@ -140,12 +138,18 @@ function Verify2FAContent() {
 
     try {
       // Use API route for verification with rate limiting
+      // Get userId from session for ownership validation
+      const meResponse = await fetch('/api/auth/me');
+      const meData = meResponse.ok ? await meResponse.json() : null;
+      const sessionUserId = meData?.user?.id || meData?.user?._id || null;
+
       const response = await fetch('/api/auth/verify-2fa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           code: finalCode,
-          email: email
+          email: email,
+          userId: sessionUserId
         }),
       });
 
@@ -242,10 +246,8 @@ function Verify2FAContent() {
   };
 
   const handleBackToLogin = async () => {
-    // Logout the user
+    // Logout the user (server-side clears all cookies including httpOnly ones)
     await fetch('/api/auth/logout', { method: 'POST' });
-    // Clear any cookies
-    document.cookie = 'cf_2fa_verified=; path=/; max-age=0';
     router.push('/login');
   };
 

@@ -121,37 +121,25 @@ function PreAssessmentContent() {
 
     let status: 'green' | 'yellow' | 'red' = 'green';
     let message = '';
-    let isGreen = false;
-
     // Determine outcome based on ICR and LVR
     if (icr >= 2 && lvr <= 65) {
       status = 'green';
       message = 'Deal looks good. Submit now!';
-      isGreen = true;
     } else if (icr >= 2 && lvr > 65 && lvr <= 80) {
       status = 'yellow';
       message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (icr >= 2 && lvr > 80) {
+    } else if (lvr > 80) {
+      status = 'red';
+      message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
+    } else if (icr < 2 && icr >= 1.5) {
       status = 'yellow';
       message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (icr < 2 && lvr <= 65) {
-      status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (icr < 2 && lvr > 65 && lvr <= 80) {
-      status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    } else if (icr < 2 && lvr > 80) {
+    } else {
       status = 'red';
       message = 'Deal does not meet the streamlined process and will require further assessment. Submit now and a Loanease team member will be in touch to discuss.';
     }
 
-    // If any Yes answers and was green, change to yellow
-    if (hasYesAnswers && isGreen) {
-      status = 'yellow';
-      message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';
-    }
-
-    // If any Yes answers (regardless of other conditions), show yellow
+    // Risk questions can only worsen outcome (never improve)
     if (hasYesAnswers && status === 'green') {
       status = 'yellow';
       message = 'Deal looks ok, we just need further confirmation. Submit now and a Loanease team member will be in touch to discuss.';

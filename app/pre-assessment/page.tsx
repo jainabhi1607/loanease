@@ -150,6 +150,17 @@ export default function PreAssessmentPage() {
         determinedOutcome = 'caution';
       }
 
+      // Risk questions can only worsen outcome
+      const hasYesAnswers = Object.values(otherQuestionsData).some(v => v === 'yes');
+      if (hasYesAnswers && determinedOutcome === 'good') {
+        determinedOutcome = 'caution';
+      }
+
+      // ICR < 1.5 always red (final override)
+      if (calculatedIcr < 1.5 && calculatedIcr > 0) {
+        determinedOutcome = 'risk';
+      }
+
       // Save contact details
       const response = await fetch('/api/pre-assessment/contact', {
         method: 'POST',

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Eye, Edit, Plus, CircleMinus } from 'lucide-react';
+import { Edit, Plus, CircleMinus } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -325,12 +325,11 @@ export default function ReferrerOpportunitiesPage() {
                       onSort={handleSort}
                       className="font-normal text-[#787274] py-4"
                     />
-                    <TableHead className="font-normal text-[#787274] py-4 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {paginatedOpportunities.map((opp) => (
-                    <TableRow key={opp.id} className="bg-[#EDFFD7] border-b border-[#d4f0b8]">
+                    <TableRow key={opp.id} className="bg-[#EDFFD7] border-b border-[#d4f0b8] cursor-pointer hover:bg-[#e0f5c8]" onClick={() => handleViewOpportunity(opp.id)}>
                       <TableCell className="py-4 font-bold text-[#787274]">{opp.opportunity_id}</TableCell>
                       <TableCell className="py-4 text-[#787274]">{formatDate(opp.created_at)}</TableCell>
                       <TableCell className="py-4 font-bold text-[#787274]">{opp.borrowing_entity || '-'}</TableCell>
@@ -342,17 +341,6 @@ export default function ReferrerOpportunitiesPage() {
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(opp.status)}`}>
                           {formatStatus(opp.status)}
                         </span>
-                      </TableCell>
-                      <TableCell className="py-4 text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleViewOpportunity(opp.id)}
-                          className="bg-[#EDFFD7] border-[#c8d6bf] text-[#787274] hover:bg-[#e0f5c8] hover:border-[#b8c6af]"
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

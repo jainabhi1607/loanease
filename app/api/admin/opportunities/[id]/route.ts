@@ -321,7 +321,16 @@ export async function PATCH(
     for (const field of opportunitiesFields) {
       if (field in body) {
         // Convert empty strings to null for database
-        opportunitiesUpdateData[field] = body[field] === '' ? null : body[field];
+        let value = body[field] === '' ? null : body[field];
+        // Ensure entity_type is stored as integer
+        if (field === 'entity_type' && value != null) {
+          const entityTypeMap: { [key: string]: number } = {
+            'private_company': 1, 'sole_trader': 2, 'smsf_trust': 3,
+            'trust': 4, 'partnership': 5, 'individual': 6
+          };
+          value = entityTypeMap[value] || parseInt(String(value), 10) || value;
+        }
+        opportunitiesUpdateData[field] = value;
       }
     }
 

@@ -4,7 +4,6 @@ import { verify2FACode, deleteUsed2FACodes } from '@/lib/mongodb/repositories/au
 import { findUserById } from '@/lib/mongodb/repositories/users';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { set2FAVerifiedCookie } from '@/lib/auth/session';
-import { getMaxLoginAttempts, getLockoutDurationMinutes } from '@/lib/mongodb/repositories/global-settings';
 
 // In-memory rate limiting (consider Redis for production)
 const attemptStore = new Map<string, { count: number; firstAttempt: number; lockedUntil?: number }>();
@@ -55,9 +54,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fetch security settings from DB
-    const maxAttempts = await getMaxLoginAttempts();
-    const lockoutMinutes = await getLockoutDurationMinutes();
+    // 2FA: max 3 attempts, lockout for 10 minutes
+    const maxAttempts = 3;
+    const lockoutMinutes = 10;
     const lockoutMs = lockoutMinutes * 60 * 1000;
 
     // Verify the 2FA code (pass userId to validate ownership if available)

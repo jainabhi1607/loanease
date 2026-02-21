@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Eye, Search, ChevronDown, Check } from 'lucide-react';
+import { Search, ChevronDown, Check } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -379,12 +379,11 @@ function ApplicationsContent() {
                     onSort={handleSort}
                     className="text-[#787274] min-w-[180px]"
                   />
-                  <TableHead className="text-[#787274] font-normal text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedApplications.map((app) => (
-                  <TableRow key={app.id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <TableRow key={app.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => handleViewApplication(app.id)}>
                     <TableCell className="font-medium">{app.deal_id}</TableCell>
                     <TableCell>{formatDate(app.date_created)}</TableCell>
                     <TableCell className="font-semibold">{app.borrowing_entity}</TableCell>
@@ -399,17 +398,6 @@ function ApplicationsContent() {
                       >
                         {formatStatus(app.status)}
                       </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewApplication(app.id)}
-                        className="bg-[#EDFFD7] border-[#c8d6bf] text-[#787274] hover:bg-[#e0f5c8] hover:border-[#b8c6af]"
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View
-                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -203,6 +203,11 @@ export default function EditOpportunityScreen() {
       if (formData.client_industry) payload.industry = formData.client_industry;
       if (formData.time_in_business) payload.time_in_business = formData.time_in_business;
       if (formData.client_abn) payload.abn = formData.client_abn;
+      if (formData.client_entity_name) payload.entity_name = formData.client_entity_name;
+      if (formData.contact_first_name) payload.contact_first_name = formData.contact_first_name;
+      if (formData.contact_last_name) payload.contact_last_name = formData.contact_last_name;
+      if (formData.client_email) payload.client_email = formData.client_email;
+      if (formData.client_mobile) payload.client_mobile = formData.client_mobile;
       if (formData.loan_type) payload.loan_type = formData.loan_type;
       if (formData.loan_purpose) payload.loan_purpose = formData.loan_purpose;
       if (formData.asset_type) payload.asset_type = formData.asset_type;
@@ -460,7 +465,7 @@ export default function EditOpportunityScreen() {
 
       <PhoneInput
         label="Mobile"
-        placeholder="412 345 678"
+        placeholder="98765 43210"
         countryCode="+91"
         value={formData.client_mobile}
         onChangeText={(v) => updateField('client_mobile', v)}

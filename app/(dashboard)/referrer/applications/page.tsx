@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -333,12 +331,11 @@ export default function ReferrerApplicationsPage() {
                       onSort={handleSort}
                       className="font-normal text-[#787274] py-4"
                     />
-                    <TableHead className="font-normal text-[#787274] py-4 text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {paginatedApplications.map((app) => (
-                    <TableRow key={app.id} className="bg-[#EDFFD7] border-b border-[#F9FFF2]">
+                    <TableRow key={app.id} className="bg-[#EDFFD7] border-b border-[#F9FFF2] cursor-pointer hover:bg-[#e0f5c8]" onClick={() => handleViewApplication(app.id)}>
                       <TableCell className="py-4 font-bold text-[#787274]">{app.opportunity_id}</TableCell>
                       <TableCell className="py-4 text-[#787274]">{formatDate(app.created_at)}</TableCell>
                       <TableCell className="py-4 font-bold text-[#787274]">{app.borrowing_entity || '-'}</TableCell>
@@ -349,17 +346,6 @@ export default function ReferrerApplicationsPage() {
                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(app.status)}`}>
                           {formatStatus(app.status)}
                         </span>
-                      </TableCell>
-                      <TableCell className="py-4 text-right">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleViewApplication(app.id)}
-                          className="bg-[#EDFFD7] border-[#c8d6bf] text-[#787274] hover:bg-[#e0f5c8] hover:border-[#b8c6af]"
-                        >
-                          <Eye className="h-4 w-4 mr-2" />
-                          View
-                        </Button>
                       </TableCell>
                     </TableRow>
                   ))}

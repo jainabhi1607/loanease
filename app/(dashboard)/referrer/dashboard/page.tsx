@@ -289,8 +289,23 @@ export default function ReferrerDashboard() {
                           {formatAssetType(opp.asset_type)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge className="bg-[#1a3a3a] text-white hover:bg-[#1a3a3a]">
-                            {opp.status === 'opportunity' ? 'Submitted' : opp.status.replace(/_/g, ' ')}
+                          <Badge className={`text-white hover:opacity-90 ${
+                            opp.status === 'opportunity' ? 'bg-blue-600' :
+                            opp.status === 'draft' ? 'bg-gray-500' :
+                            opp.status === 'application_created' ? 'bg-purple-600' :
+                            opp.status === 'application_submitted' ? 'bg-indigo-600' :
+                            opp.status === 'conditionally_approved' ? 'bg-yellow-600' :
+                            opp.status === 'approved' ? 'bg-green-600' :
+                            opp.status === 'declined' ? 'bg-red-600' :
+                            opp.status === 'settled' ? 'bg-teal-600' :
+                            opp.status === 'withdrawn' ? 'bg-gray-500' :
+                            'bg-[#1a3a3a]'
+                          }`}>
+                            {opp.status === 'opportunity' ? 'Submitted' :
+                             opp.status === 'application_created' ? 'App Created' :
+                             opp.status === 'application_submitted' ? 'App Submitted' :
+                             opp.status === 'conditionally_approved' ? 'Cond. Approved' :
+                             opp.status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                           </Badge>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-[#787274]">

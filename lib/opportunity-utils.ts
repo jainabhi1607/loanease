@@ -49,18 +49,29 @@ export const formatTime = (dateString?: string) => {
   });
 };
 
-export const formatEntityType = (type?: string) => {
-  if (!type) return '-';
-  const types: { [key: string]: string } = {
+export const formatEntityType = (type?: string | number) => {
+  if (!type && type !== 0) return '-';
+  // Integer keys (stored in MongoDB as 1-6)
+  const intTypes: { [key: number]: string } = {
+    1: 'Private Company',
+    2: 'Sole Trader',
+    3: 'SMSF Trust',
+    4: 'Trust',
+    5: 'Partnership',
+    6: 'Individual'
+  };
+  // String keys (legacy/form values)
+  const strTypes: { [key: string]: string } = {
     'private_company': 'Private Company',
-    'public_company': 'Public Company', // Legacy - kept for backwards compatibility
     'sole_trader': 'Sole Trader',
     'smsf_trust': 'SMSF Trust',
     'trust': 'Trust',
     'partnership': 'Partnership',
     'individual': 'Individual'
   };
-  return types[type] || type;
+  const numType = typeof type === 'string' ? parseInt(type, 10) : type;
+  if (!isNaN(numType) && intTypes[numType]) return intTypes[numType];
+  return strTypes[String(type)] || String(type);
 };
 
 export const formatAssetType = (type?: string) => {
@@ -100,7 +111,7 @@ export const formatLoanType = (type?: string) => {
     'construction': 'Construction',
     'lease_doc': 'Lease Doc',
     'low_doc': 'Low Doc',
-    'private_short_term': 'Private/Short Term',
+    'private_short_term': 'Private / Short Term',
     'unsure': 'Unsure'
   };
   return types[type] || type;

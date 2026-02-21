@@ -168,7 +168,7 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
         {/* Left Column - Client Details */}
         <div className="lg:col-span-2 space-y-6">
           {/* Client Details Card */}
-          <div className="bg-white rounded-lg border border-gray-200 p-10">
+          <div className="bg-[#EDFFD7] rounded-lg border border-gray-200 p-10">
             <h3 className="text-lg font-semibold text-[#02383B] mb-6">Client Details</h3>
             <div className="divide-y divide-gray-200">
               <div className="grid grid-cols-3 gap-4 py-4">
@@ -264,7 +264,7 @@ export default function ReferrerClientDetailPage({ params }: { params: Promise<{
 
           {/* Upcoming Settlements */}
           <div className="bg-white rounded-lg p-[40px] border border-[#E7EBEF]">
-            <h4 className="text-base font-semibold text-[#02383B] mb-2">Upcoming Settlements</h4>
+            <h4 className="text-base font-semibold text-[#02383B] mb-2">Settlements</h4>
             <p className="text-[#787274] text-sm">
               {upcomingSettlements > 0
                 ? `There are ${upcomingSettlements} upcoming settlement${upcomingSettlements !== 1 ? 's' : ''}.`
