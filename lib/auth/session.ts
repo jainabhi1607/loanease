@@ -7,6 +7,7 @@ import { getDatabase } from '@/lib/mongodb/client';
 export const ACCESS_TOKEN_COOKIE = 'cf_access_token';
 export const REFRESH_TOKEN_COOKIE = 'cf_refresh_token';
 export const TWO_FA_VERIFIED_COOKIE = 'cf_2fa_verified';
+export const REMEMBER_ME_COOKIE = 'cf_remember_me';
 
 // Cookie options
 const COOKIE_OPTIONS = {
@@ -19,9 +20,13 @@ const COOKIE_OPTIONS = {
 /**
  * Set auth cookies after successful login
  */
-export async function setAuthCookies(payload: JWTPayload): Promise<void> {
+export async function setAuthCookies(payload: JWTPayload, rememberMe: boolean = false): Promise<void> {
   const cookieStore = await cookies();
-  const { accessToken, refreshToken } = await generateTokenPair(payload);
+  const { accessToken, refreshToken } = await generateTokenPair(payload, rememberMe);
+
+  const refreshMaxAge = rememberMe
+    ? 30 * 24 * 60 * 60 // 30 days
+    : 7 * 24 * 60 * 60; // 7 days
 
   cookieStore.set(ACCESS_TOKEN_COOKIE, accessToken, {
     ...COOKIE_OPTIONS,
@@ -30,8 +35,18 @@ export async function setAuthCookies(payload: JWTPayload): Promise<void> {
 
   cookieStore.set(REFRESH_TOKEN_COOKIE, refreshToken, {
     ...COOKIE_OPTIONS,
-    maxAge: 7 * 24 * 60 * 60, // 7 days
+    maxAge: refreshMaxAge,
   });
+
+  // Store remember me preference so token refresh preserves it
+  if (rememberMe) {
+    cookieStore.set(REMEMBER_ME_COOKIE, 'true', {
+      ...COOKIE_OPTIONS,
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+  } else {
+    cookieStore.delete(REMEMBER_ME_COOKIE);
+  }
 }
 
 /**
@@ -43,17 +58,22 @@ export async function clearAuthCookies(): Promise<void> {
   cookieStore.delete(ACCESS_TOKEN_COOKIE);
   cookieStore.delete(REFRESH_TOKEN_COOKIE);
   cookieStore.delete(TWO_FA_VERIFIED_COOKIE);
+  cookieStore.delete(REMEMBER_ME_COOKIE);
 }
 
 /**
  * Set 2FA verified cookie
  */
-export async function set2FAVerifiedCookie(userId: string): Promise<void> {
+export async function set2FAVerifiedCookie(userId: string, rememberMe: boolean = false): Promise<void> {
   const cookieStore = await cookies();
+
+  const maxAge = rememberMe
+    ? 30 * 24 * 60 * 60 // 30 days
+    : 7 * 24 * 60 * 60; // 7 days
 
   cookieStore.set(TWO_FA_VERIFIED_COOKIE, userId, {
     ...COOKIE_OPTIONS,
-    maxAge: 7 * 24 * 60 * 60, // 7 days - match refresh token duration
+    maxAge,
   });
 }
 
@@ -82,8 +102,11 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
     const refreshPayload = await verifyRefreshToken(refreshToken);
     if (!refreshPayload) return null;
 
+    // Preserve remember me preference on token refresh
+    const rememberMe = cookieStore.get(REMEMBER_ME_COOKIE)?.value === 'true';
+
     // Generate new tokens and set cookies
-    await setAuthCookies(refreshPayload);
+    await setAuthCookies(refreshPayload, rememberMe);
     return refreshPayload;
   }
 

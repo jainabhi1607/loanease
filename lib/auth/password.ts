@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 const SALT_ROUNDS = 12;
 
@@ -23,7 +24,7 @@ export function generateRandomPassword(length: number = 12): string {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
   let password = '';
   for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
+    password += chars.charAt(crypto.randomInt(0, chars.length));
   }
   return password;
 }

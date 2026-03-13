@@ -31,6 +31,7 @@ export async function GET(
     const opportunity = await db.collection(COLLECTIONS.OPPORTUNITIES).findOne({
       _id: id as any,
       organization_id: user.organisationId,
+      deleted_at: null,
     });
 
     if (!opportunity) {

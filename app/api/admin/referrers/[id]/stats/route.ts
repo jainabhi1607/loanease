@@ -32,80 +32,38 @@ export async function GET(
 
     const organisationId = referrerData.organisation_id;
 
-    // Get all users in the organization (for filtering opportunities)
-    const orgUsers = await db.collection('users')
-      .find({ organisation_id: organisationId })
-      .toArray();
-
-    const userIds = orgUsers?.map((u: any) => u._id) || [];
-    if (userIds.length === 0) {
-      // No users, return zeros
-      return NextResponse.json({
-        stats: {
-          open_opportunities: 0,
-          opportunities_value: 0,
-          open_applications: 0,
-          settled_applications: 0,
-          total_settled_value: 0,
-          conversion_ratio: 0
+    // Calculate all stats in a single aggregation pipeline
+    const statsResult = await db.collection('opportunities').aggregate([
+      { $match: { organization_id: organisationId, deleted_at: null } },
+      {
+        $group: {
+          _id: null,
+          openOpportunities: { $sum: { $cond: [{ $eq: ['$status', 'opportunity'] }, 1, 0] } },
+          opportunitiesValue: { $sum: { $cond: [{ $eq: ['$status', 'opportunity'] }, { $ifNull: ['$loan_amount', 0] }, 0] } },
+          openApplications: { $sum: { $cond: [{ $in: ['$status', ['application_created', 'application_submitted', 'conditionally_approved', 'approved']] }, 1, 0] } },
+          settledApplications: { $sum: { $cond: [{ $eq: ['$status', 'settled'] }, 1, 0] } },
+          totalSettledValue: { $sum: { $cond: [{ $eq: ['$status', 'settled'] }, { $ifNull: ['$loan_amount', 0] }, 0] } },
+          totalApplications: { $sum: { $cond: [{ $and: [{ $ne: ['$status', 'withdrawn'] }, { $ne: ['$status', 'draft'] }, { $ne: ['$status', 'declined'] }] }, 1, 0] } },
         }
-      });
-    }
+      }
+    ]).toArray();
 
-    // Fetch all opportunities for this organization
-    const opportunities = await db.collection('opportunities')
-      .find({
-        organization_id: organisationId,
-        deleted_at: null
-      })
-      .toArray();
+    const stats = statsResult[0] || {
+      openOpportunities: 0, opportunitiesValue: 0, openApplications: 0,
+      settledApplications: 0, totalSettledValue: 0, totalApplications: 0
+    };
 
-    // Calculate statistics based on old logic
-    // application_status: 1 = opportunity (open leads)
-    // application_status: 2 = application (open applications)
-    // application_status: 20 = some special status to exclude
-    // Status mapping:
-    // - opportunity = open leads (status: 'opportunity')
-    // - application_created, application_submitted = open applications
-    // - settled = settled applications
-    // - NOT withdrawn/declined = total applications
-
-    const openOpportunities = opportunities.filter((o: any) => o.status === 'opportunity').length;
-
-    const opportunitiesValue = opportunities
-      .filter((o: any) => o.status === 'opportunity')
-      .reduce((sum: number, o: any) => sum + (o.loan_amount || 0), 0);
-
-    const openApplications = opportunities.filter((o: any) =>
-      o.status === 'application_created' ||
-      o.status === 'application_submitted' ||
-      o.status === 'conditionally_approved' ||
-      o.status === 'approved'
-    ).length;
-
-    const settledApplications = opportunities.filter((o: any) => o.status === 'settled').length;
-
-    const totalSettledValue = opportunities
-      .filter((o: any) => o.status === 'settled')
-      .reduce((sum: number, o: any) => sum + (o.loan_amount || 0), 0);
-
-    // Total applications = all except withdrawn and draft
-    const totalApplications = opportunities.filter((o: any) =>
-      o.status !== 'withdrawn' && o.status !== 'draft' && o.status !== 'declined'
-    ).length;
-
-    // Conversion ratio = settled / total * 100
-    const conversionRatio = totalApplications > 0
-      ? Number((settledApplications * 100 / totalApplications).toFixed(2))
+    const conversionRatio = stats.totalApplications > 0
+      ? Number((stats.settledApplications * 100 / stats.totalApplications).toFixed(2))
       : 0;
 
     return NextResponse.json({
       stats: {
-        open_opportunities: openOpportunities,
-        opportunities_value: opportunitiesValue,
-        open_applications: openApplications,
-        settled_applications: settledApplications,
-        total_settled_value: totalSettledValue,
+        open_opportunities: stats.openOpportunities,
+        opportunities_value: stats.opportunitiesValue,
+        open_applications: stats.openApplications,
+        settled_applications: stats.settledApplications,
+        total_settled_value: stats.totalSettledValue,
         conversion_ratio: conversionRatio
       }
     });

@@ -7,7 +7,7 @@ import { JWTPayload, generateTokenPair } from '@/lib/auth/jwt';
 import { findUserByEmail, updateLastLogin } from '@/lib/mongodb/repositories/users';
 import { logSuccessfulLogin, logFailedLogin, logBlockedLogin } from '@/lib/mongodb/repositories/login-history';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
-import { createTwoFACode } from '@/lib/mongodb/repositories/auth';
+import { createTwoFACode, createUserSession } from '@/lib/mongodb/repositories/auth';
 import { send2FACode } from '@/lib/email/postmark';
 import { getMaxLoginAttempts, getLockoutDurationMinutes } from '@/lib/mongodb/repositories/global-settings';
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     // Parse and validate input
     const body = await request.json();
     const validatedData = loginSchema.parse(body);
-    const { email, password } = validatedData;
+    const { email, password, rememberMe } = validatedData;
 
     // Rate limiting check
     const attemptKey = `${email}-${ip}`;
@@ -215,9 +215,7 @@ export async function POST(request: NextRequest) {
     if (user.two_fa_enabled || isAdmin) {
       try {
         const twoFACode = await createTwoFACode(user._id);
-        // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-        // await send2FACode(user.email, twoFACode.code, user.first_name);
-        console.log(`[EMAIL DISABLED] 2FA code for ${user.email}: ${twoFACode.code}`);
+        await send2FACode(user.email, twoFACode.code, user.first_name);
       } catch (error) {
         console.error('Error sending 2FA code:', error);
       }
@@ -233,17 +231,20 @@ export async function POST(request: NextRequest) {
     };
 
     // Set auth cookies (for web)
-    await setAuthCookies(jwtPayload);
+    await setAuthCookies(jwtPayload, rememberMe === true);
 
     // Generate tokens for mobile app
     const isMobileApp = validatedData.mobile_app === true;
     let tokens = null;
     if (isMobileApp) {
       tokens = await generateTokenPair(jwtPayload);
+      // Store refresh token session for token rotation
+      await createUserSession(user._id, tokens.refreshToken, ip, userAgent);
     }
 
     const responseData: Record<string, unknown> = {
       success: true,
+      rememberMe: rememberMe === true,
       user: {
         id: user._id,
         email: user.email,

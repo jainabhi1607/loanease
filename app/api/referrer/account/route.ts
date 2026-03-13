@@ -33,27 +33,25 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'No organization found' }, { status: 404 });
     }
 
-    // Fetch organization details
-    const organization = await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any });
+    // Fetch organization, directors, and users in parallel
+    const [organization, directors, users] = await Promise.all([
+      db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any }),
+      db.collection(COLLECTIONS.ORGANISATION_DIRECTORS)
+        .find({ organisation_id: organisationId })
+        .sort({ created_at: 1 })
+        .toArray(),
+      db.collection(COLLECTIONS.USERS)
+        .find({
+          organisation_id: organisationId,
+          role: { $in: ['referrer_admin', 'referrer_team'] }
+        })
+        .sort({ created_at: -1 })
+        .toArray()
+    ]);
 
     if (!organization) {
       return NextResponse.json({ error: 'Organization not found' }, { status: 404 });
     }
-
-    // Fetch directors
-    const directors = await db.collection(COLLECTIONS.ORGANISATION_DIRECTORS)
-      .find({ organisation_id: organisationId })
-      .sort({ created_at: 1 })
-      .toArray();
-
-    // Fetch only referrer users in the organization (referrer_admin and referrer_team)
-    const users = await db.collection(COLLECTIONS.USERS)
-      .find({
-        organisation_id: organisationId,
-        role: { $in: ['referrer_admin', 'referrer_team'] }
-      })
-      .sort({ created_at: -1 })
-      .toArray();
 
     // Ensure is_active and state have defaults if not present
     const usersWithDefaults = users.map((u: any) => ({

@@ -48,9 +48,19 @@ export interface EmailTemplate {
 }
 
 export async function sendEmail({ to, templateAlias, templateModel, from }: EmailTemplate) {
-  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
-  console.log(`[EMAIL DISABLED] Would send template "${templateAlias}" to ${to}`);
-  return { success: true, messageId: 'disabled' };
+  try {
+    const client = getPostmarkClient();
+    const result = await client.sendEmailWithTemplate({
+      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
+      To: to,
+      TemplateAlias: templateAlias,
+      TemplateModel: templateModel,
+    });
+    return { success: true, messageId: result.MessageID };
+  } catch (error) {
+    console.error(`Failed to send template email "${templateAlias}" to ${to}:`, error);
+    return { success: false, error };
+  }
 }
 
 // Helper to convert HTML to plain text for email
@@ -76,8 +86,8 @@ function htmlToPlainText(html: string): string {
 }
 
 // Loanease brand colors
-const LOANCASE_GREEN = '#00D37F';
-const LOANCASE_DARK = '#02383B';
+const LOANEASE_GREEN = '#00D37F';
+const LOANEASE_DARK = '#02383B';
 
 // Standard branded email template wrapper
 export async function wrapInBrandedTemplate(content: string, title?: string): Promise<string> {
@@ -104,7 +114,7 @@ export async function wrapInBrandedTemplate(content: string, title?: string): Pr
         <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
           <!-- Header -->
           <tr>
-            <td style="background-color: ${LOANCASE_DARK}; padding: 30px 40px; border-radius: 12px 12px 0 0;">
+            <td style="background-color: ${LOANEASE_DARK}; padding: 30px 40px; border-radius: 12px 12px 0 0;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td>
@@ -124,19 +134,19 @@ export async function wrapInBrandedTemplate(content: string, title?: string): Pr
 
           <!-- Footer -->
           <tr>
-            <td style="background-color: ${LOANCASE_DARK}; padding: 30px 40px; border-radius: 0 0 12px 12px;">
+            <td style="background-color: ${LOANEASE_DARK}; padding: 30px 40px; border-radius: 0 0 12px 12px;">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td style="color: #ffffff; font-size: 14px; line-height: 1.6;">
                     <p style="margin: 0 0 15px 0; font-weight: 600;">The Loanease Team</p>
                     <p style="margin: 0 0 5px 0;">
-                      <a href="tel:${phoneDigits}" style="color: ${LOANCASE_GREEN}; text-decoration: none;">${companyPhone}</a>
+                      <a href="tel:${phoneDigits}" style="color: ${LOANEASE_GREEN}; text-decoration: none;">${companyPhone}</a>
                     </p>
                     <p style="margin: 0 0 5px 0;">
-                      Applications: <a href="mailto:apps@loanease.com" style="color: ${LOANCASE_GREEN}; text-decoration: none;">apps@loanease.com</a>
+                      Applications: <a href="mailto:apps@loanease.com" style="color: ${LOANEASE_GREEN}; text-decoration: none;">apps@loanease.com</a>
                     </p>
                     <p style="margin: 0 0 20px 0;">
-                      Partners: <a href="mailto:${companyEmail}" style="color: ${LOANCASE_GREEN}; text-decoration: none;">${companyEmail}</a>
+                      Partners: <a href="mailto:${companyEmail}" style="color: ${LOANEASE_GREEN}; text-decoration: none;">${companyEmail}</a>
                     </p>
                   </td>
                 </tr>
@@ -161,12 +171,12 @@ export async function wrapInBrandedTemplate(content: string, title?: string): Pr
 
 // Section header for email content
 export function emailSectionHeader(title: string): string {
-  return `<h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${LOANCASE_DARK}; border-bottom: 2px solid ${LOANCASE_GREEN}; padding-bottom: 10px;">${title}</h2>`;
+  return `<h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: ${LOANEASE_DARK}; border-bottom: 2px solid ${LOANEASE_GREEN}; padding-bottom: 10px;">${title}</h2>`;
 }
 
 // Primary button style
 export function emailButton(text: string, url: string): string {
-  return `<a href="${url}" style="display: inline-block; background-color: ${LOANCASE_GREEN}; color: ${LOANCASE_DARK}; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">${text}</a>`;
+  return `<a href="${url}" style="display: inline-block; background-color: ${LOANEASE_GREEN}; color: ${LOANEASE_DARK}; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 600; font-size: 16px;">${text}</a>`;
 }
 
 // Info table style
@@ -174,7 +184,7 @@ export function emailInfoTable(rows: Array<{ label: string; value: string }>): s
   const rowsHtml = rows.map(row => `
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; font-weight: 600; color: #6b7280; width: 40%;">${row.label}</td>
-      <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: ${LOANCASE_DARK};">${row.value}</td>
+      <td style="padding: 12px 0; border-bottom: 1px solid #e5e7eb; color: ${LOANEASE_DARK};">${row.value}</td>
     </tr>
   `).join('');
 
@@ -182,9 +192,21 @@ export function emailInfoTable(rows: Array<{ label: string; value: string }>): s
 }
 
 export async function sendHtmlEmail({ to, subject, htmlBody, from }: { to: string; subject: string; htmlBody: string; from?: string }) {
-  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
-  console.log(`[EMAIL DISABLED] Would send "${subject}" to ${to}`);
-  return { success: true, messageId: 'disabled' };
+  try {
+    const client = getPostmarkClient();
+    const result = await client.sendEmail({
+      From: from || process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
+      To: to,
+      Subject: subject,
+      HtmlBody: htmlBody,
+      TextBody: htmlToPlainText(htmlBody),
+      MessageStream: 'outbound',
+    });
+    return { success: true, messageId: result.MessageID };
+  } catch (error) {
+    console.error(`Failed to send email "${subject}" to ${to}:`, error);
+    return { success: false, error };
+  }
 }
 
 export async function sendHtmlEmailWithAttachment({
@@ -202,9 +224,25 @@ export async function sendHtmlEmailWithAttachment({
     ContentType: string;
   };
 }) {
-  // EMAIL DISABLED: All email sending is disabled until a new email service provider is configured.
-  console.log(`[EMAIL DISABLED] Would send "${subject}" to ${to}${attachment ? ' (with attachment)' : ''}`);
-  return { success: true, messageId: 'disabled' };
+  try {
+    const client = getPostmarkClient();
+    const emailData: any = {
+      From: process.env.POSTMARK_FROM_EMAIL || 'noreply@loanease.com',
+      To: to,
+      Subject: subject,
+      HtmlBody: htmlBody,
+      TextBody: htmlToPlainText(htmlBody),
+      MessageStream: 'outbound',
+    };
+    if (attachment) {
+      emailData.Attachments = [attachment];
+    }
+    const result = await client.sendEmail(emailData);
+    return { success: true, messageId: result.MessageID };
+  } catch (error) {
+    console.error(`Failed to send email "${subject}" to ${to}:`, error);
+    return { success: false, error };
+  }
 }
 
 // Specific email functions
@@ -215,7 +253,7 @@ export async function send2FACode(email: string, code: string, firstName?: strin
     <p style="font-size: 16px; color: #374151; margin: 0 0 20px 0;">Your verification code for <strong>Loanease</strong> is:</p>
 
     <div style="text-align: center; margin: 25px 0;">
-      <span style="display: inline-block; background-color: #f3f4f6; color: ${LOANCASE_DARK}; padding: 20px 40px; border-radius: 8px; font-size: 32px; font-weight: 700; letter-spacing: 8px; font-family: monospace;">${code}</span>
+      <span style="display: inline-block; background-color: #f3f4f6; color: ${LOANEASE_DARK}; padding: 20px 40px; border-radius: 8px; font-size: 32px; font-weight: 700; letter-spacing: 8px; font-family: monospace;">${code}</span>
     </div>
 
     <p style="font-size: 15px; color: #374151; margin: 0 0 15px 0;">This code will expire in <strong>10 minutes</strong>.</p>
@@ -313,9 +351,9 @@ export async function sendNewIPAlert(email: string, ipAddress: string, location?
 
     <div style="text-align: center; margin: 25px 0;">
       <div style="display: inline-block; background-color: #f3f4f6; padding: 20px 30px; border-radius: 8px; text-align: left;">
-        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">IP Address: <strong style="color: ${LOANCASE_DARK};">${ipAddress}</strong></p>
-        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">Location: <strong style="color: ${LOANCASE_DARK};">${location || 'Unknown'}</strong></p>
-        <p style="margin: 0; font-size: 14px; color: #6b7280;">Time: <strong style="color: ${LOANCASE_DARK};">${formatIndianDateTime()}</strong></p>
+        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">IP Address: <strong style="color: ${LOANEASE_DARK};">${ipAddress}</strong></p>
+        <p style="margin: 0 0 8px 0; font-size: 14px; color: #6b7280;">Location: <strong style="color: ${LOANEASE_DARK};">${location || 'Unknown'}</strong></p>
+        <p style="margin: 0; font-size: 14px; color: #6b7280;">Time: <strong style="color: ${LOANEASE_DARK};">${formatIndianDateTime()}</strong></p>
       </div>
     </div>
 

@@ -288,11 +288,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date()
     });
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // Step 4: Opportunity alert emails disabled
-    if (status === 'opportunity') {
-      console.log(`[EMAIL DISABLED] Opportunity alert emails for ${nextOpportunityId}`);
-    }
+    // TODO: Send opportunity alert emails when email templates are configured
 
     return NextResponse.json({
       success: true,

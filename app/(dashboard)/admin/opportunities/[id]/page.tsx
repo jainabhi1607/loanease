@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Download, Edit, Pencil, CheckCircle2, Circle, X } from 'lucide-react';
+import { ArrowLeft, Download, Edit, Pencil, CheckCircle2, Circle, X, Calendar, MapPin, Check } from 'lucide-react';
 import { TrashIcon } from '@/components/icons/TrashIcon';
 import {
   Dialog,
@@ -1220,160 +1220,246 @@ function OpportunityDetailPage() {
           </div>
 
           {/* Right Sidebar */}
-          <div className="space-y-6">
-            {/* Dates Card - Dark teal background */}
-            <div style={{ backgroundColor: '#02383B' }} className="rounded-lg p-6 text-white">
-              <div className="space-y-4">
-                <div>
-                  <p className="text-[#00D37F] text-sm mb-1">Date Created</p>
-                  <p className="font-semibold text-white">{formatDate(opportunity.created_at)}</p>
-                </div>
-                <div>
-                  <p className="text-[#00D37F] text-sm mb-1">Target Settlement</p>
-                  {targetDate ? (
+          <div className="space-y-5">
+            {/* Key Dates Card */}
+            <div className="rounded-xl overflow-hidden shadow-md">
+              <div style={{ backgroundColor: '#02383B' }} className="p-6 text-white">
+                <h3 className="text-[#00D37F] font-semibold text-base mb-5">Key Dates</h3>
+
+                <div className="space-y-4">
+                  {/* Created */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <Calendar className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-300">Created</span>
+                    </div>
+                    <span className="font-semibold text-white text-sm">{formatDate(opportunity.created_at)}</span>
+                  </div>
+
+                  <div className="border-t border-white/10" />
+
+                  {/* Target Settlement */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <MapPin className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-300">Target Settlement</span>
+                    </div>
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-white">{formatDate(targetDate.toISOString())}</p>
-                      {userRole === 'super_admin' && (
+                      {targetDate ? (
                         <>
-                          <button onClick={() => setTargetDateOpen(true)} className="text-gray-400 hover:text-white">
-                            <Pencil className="h-3.5 w-3.5" />
-                          </button>
-                          <button onClick={handleClearTargetDate} className="text-gray-400 hover:text-white">
-                            <X className="h-4 w-4" />
-                          </button>
+                          {userRole === 'super_admin' && (
+                            <button onClick={handleClearTargetDate} className="text-gray-400 hover:text-white transition-colors">
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          <span className="font-semibold text-white text-sm">{formatDate(targetDate.toISOString())}</span>
                         </>
+                      ) : (
+                        userRole === 'super_admin' ? (
+                          <button onClick={() => setTargetDateOpen(true)} className="text-[#00D37F] text-sm font-medium hover:underline transition-colors">
+                            Set Date
+                          </button>
+                        ) : (
+                          <span className="text-gray-400 text-sm">-</span>
+                        )
                       )}
                     </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-gray-300 text-sm">A target settlement date has not yet been set.</p>
-                      {userRole === 'super_admin' && (
-                        <button onClick={() => setTargetDateOpen(true)} className="text-gray-400 hover:text-white">
-                          <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                      )}
+                  </div>
+
+                  {/* Settled */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <Calendar className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-300">Settled</span>
                     </div>
-                  )}
-                </div>
-                <div>
-                  <p className="text-[#00D37F] text-sm mb-1">Date Settled</p>
-                  {settledDate ? (
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-white">{formatDate(settledDate.toISOString())}</p>
-                      {userRole === 'super_admin' && (
+                      {settledDate ? (
                         <>
-                          <button onClick={() => setSettledDateOpen(true)} className="text-gray-400 hover:text-white">
-                            <Pencil className="h-3.5 w-3.5" />
-                          </button>
-                          <button onClick={handleClearSettledDate} className="text-gray-400 hover:text-white">
-                            <X className="h-4 w-4" />
-                          </button>
+                          {userRole === 'super_admin' && (
+                            <button onClick={handleClearSettledDate} className="text-gray-400 hover:text-white transition-colors">
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                          <span className="font-semibold text-white text-sm">{formatDate(settledDate.toISOString())}</span>
                         </>
+                      ) : (
+                        userRole === 'super_admin' ? (
+                          <button onClick={() => setSettledDateOpen(true)} className="text-[#00D37F] text-sm font-medium hover:underline transition-colors">
+                            Set Date
+                          </button>
+                        ) : (
+                          <span className="text-gray-400 text-sm">-</span>
+                        )
                       )}
                     </div>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      <p className="text-gray-300 text-sm">A date settled date has not yet been set</p>
-                      {userRole === 'super_admin' && (
-                        <button onClick={() => setSettledDateOpen(true)} className="text-gray-400 hover:text-white">
-                          <Pencil className="h-3.5 w-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  )}
+                  </div>
                 </div>
-                <div className="pt-4 border-t border-white/20">
-                  <p className="text-gray-400 text-sm mb-1">Deal Finalisation Information</p>
-                  <p className="text-gray-300 text-sm">
-                    {opportunity.deal_finalisation_status ? `Status: ${opportunity.deal_finalisation_status}` : 'No deal finalisation info yet'}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setDealFinalisationOpen(true)}
-                  className="flex items-center gap-1 text-white text-sm hover:text-[#00D37F]"
-                >
-                  <Edit className="h-4 w-4" />
-                  Edit
-                </button>
               </div>
             </div>
 
-            {/* Application Progress */}
-            <div style={{ backgroundColor: 'rgb(237, 255, 215)' }} className="rounded-xl p-6">
-              <h3 className="font-bold text-[#02383B] text-lg mb-4">Application Progress</h3>
-              {/* Progress Bar */}
-              <div className="mb-1">
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="bg-[#00D37F] h-2.5 rounded-full transition-all duration-500"
-                    style={{ width: `${getProgressPercentage(opportunity.status)}%` }}
-                  />
+            {/* Deal Finalisation Card */}
+            <div className="rounded-xl overflow-hidden shadow-md">
+              <div style={{ backgroundColor: '#02383B' }} className="p-6 text-white">
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-[#00D37F] font-semibold text-base">Deal Finalisation</h3>
+                  <button
+                    onClick={() => setDealFinalisationOpen(true)}
+                    className="text-gray-400 hover:text-white transition-colors"
+                    title="Edit deal finalisation"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-300">Loan Acc Ref</span>
+                    <span className="font-semibold text-white text-sm">{opportunity.loan_acc_ref_no || '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-300">Flex ID</span>
+                    <span className="font-semibold text-white text-sm">{opportunity.flex_id || '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-300">Payment Received</span>
+                    <span className="font-semibold text-white text-sm">
+                      {opportunity.payment_received_date ? formatDate(opportunity.payment_received_date) : '-'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-300">Payment Amount</span>
+                    <span className="font-semibold text-white text-sm">
+                      {opportunity.payment_amount ? formatCurrency(opportunity.payment_amount) : '-'}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <p className="text-[#00D37F] text-sm mb-6">{getProgressPercentage(opportunity.status)} % completed</p>
+            </div>
 
-              <div className="space-y-4">
-                <ProgressItem
-                  label="Opportunity"
-                  completed={isStatusCompleted('opportunity', opportunity.status)}
-                  active={opportunity.status === 'opportunity'}
-                  onClick={() => handleStatusClick('opportunity')}
-                />
-                <ProgressItem
-                  label="Application Created"
-                  completed={isStatusCompleted('application_created', opportunity.status)}
-                  active={opportunity.status === 'application_created'}
-                  onClick={() => handleStatusClick('application_created')}
-                />
-                <ProgressItem
-                  label="Application Submitted"
-                  completed={isStatusCompleted('application_submitted', opportunity.status)}
-                  active={opportunity.status === 'application_submitted'}
-                  onClick={() => handleStatusClick('application_submitted')}
-                />
-                <div>
-                  <ProgressItem
-                    label="Application Decision"
-                    completed={isStatusCompleted('conditionally_approved', opportunity.status) || isStatusCompleted('approved', opportunity.status) || isDecisionDeclined}
-                    active={['conditionally_approved', 'approved'].includes(opportunity.status) || isDecisionDeclined}
-                    onClick={() => {}}
-                  />
-                  <div className="ml-8 mt-2 space-y-2">
-                    <button onClick={() => handleStatusClick('conditionally_approved')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', opportunity.status === 'conditionally_approved' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Conditionally Approved</span>
-                    </button>
-                    <button onClick={() => handleStatusClick('approved')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', opportunity.status === 'approved' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Approved</span>
-                    </button>
-                    <button onClick={() => handleStatusClick('declined', 'decision_declined')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', isDecisionDeclined ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Declined</span>
-                    </button>
+            {/* Application Progress Card */}
+            <div className="rounded-xl overflow-hidden shadow-md bg-white">
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-[#02383B] text-lg">Application Progress</h3>
+                  <span className="text-[#00D37F] font-semibold text-sm">{getProgressPercentage(opportunity.status)}%</span>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="mb-8">
+                  <div className="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      className="bg-[#00D37F] h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${getProgressPercentage(opportunity.status)}%` }}
+                    />
                   </div>
                 </div>
-                <div>
-                  <ProgressItem
-                    label="Application Completed"
-                    completed={opportunity.status === 'settled' || opportunity.status === 'withdrawn' || isCompletedDeclined}
-                    active={['settled', 'withdrawn'].includes(opportunity.status) || isCompletedDeclined}
-                    onClick={() => {}}
+
+                {/* Timeline */}
+                <div className="relative">
+                  {/* Opportunity */}
+                  <AdminTimelineStep
+                    label="Opportunity"
+                    completed={isStatusCompleted('opportunity', opportunity.status)}
+                    showLine
+                    onClick={() => handleStatusClick('opportunity')}
                   />
-                  <div className="ml-8 mt-2 space-y-2">
-                    <button onClick={() => handleStatusClick('settled')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', opportunity.status === 'settled' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Settled</span>
-                    </button>
-                    <button onClick={() => handleStatusClick('completed_declined', 'completed_declined')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', isCompletedDeclined ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Declined</span>
-                    </button>
-                    <button onClick={() => handleStatusClick('withdrawn', 'withdrawn')} className="flex items-center gap-2 w-full text-left">
-                      <Circle className={cn('h-4 w-4', opportunity.status === 'withdrawn' ? 'text-[#00D37F] fill-[#00D37F]' : 'text-gray-400')} />
-                      <span className="text-sm text-black">Withdrawn</span>
-                    </button>
-                  </div>
+
+                  {/* Application Created */}
+                  <AdminTimelineStep
+                    label="Application Created"
+                    completed={isStatusCompleted('application_created', opportunity.status)}
+                    showLine
+                    onClick={() => handleStatusClick('application_created')}
+                  />
+
+                  {/* Application Submitted */}
+                  <AdminTimelineStep
+                    label="Application Submitted"
+                    completed={isStatusCompleted('application_submitted', opportunity.status)}
+                    showLine
+                    onClick={() => handleStatusClick('application_submitted')}
+                  />
+
+                  {/* Application Decision */}
+                  <AdminTimelineStep
+                    label="Application Decision"
+                    completed={isStatusCompleted('conditionally_approved', opportunity.status) || isStatusCompleted('approved', opportunity.status) || isDecisionDeclined}
+                    showLine
+                  >
+                    <div className="flex flex-wrap gap-2 mt-2 ml-9">
+                      <button
+                        onClick={() => handleStatusClick('conditionally_approved')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          opportunity.status === 'conditionally_approved'
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Conditional
+                      </button>
+                      <button
+                        onClick={() => handleStatusClick('approved')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          opportunity.status === 'approved'
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Approved
+                      </button>
+                      <button
+                        onClick={() => handleStatusClick('declined', 'decision_declined')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          isDecisionDeclined
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Declined
+                      </button>
+                    </div>
+                  </AdminTimelineStep>
+
+                  {/* Completed */}
+                  <AdminTimelineStep
+                    label="Completed"
+                    completed={opportunity.status === 'settled' || opportunity.status === 'withdrawn' || isCompletedDeclined}
+                    showLine={false}
+                  >
+                    <div className="flex flex-wrap gap-2 mt-2 ml-9">
+                      <button
+                        onClick={() => handleStatusClick('settled')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          opportunity.status === 'settled'
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Settled
+                      </button>
+                      <button
+                        onClick={() => handleStatusClick('completed_declined', 'completed_declined')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          isCompletedDeclined
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Declined
+                      </button>
+                      <button
+                        onClick={() => handleStatusClick('withdrawn', 'withdrawn')}
+                        className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border transition-colors ${
+                          opportunity.status === 'withdrawn'
+                            ? 'bg-[#00D37F] text-white border-[#00D37F]'
+                            : 'bg-white text-gray-500 border-gray-300 hover:border-gray-400'
+                        }`}
+                      >
+                        Withdrawn
+                      </button>
+                    </div>
+                  </AdminTimelineStep>
                 </div>
               </div>
             </div>
@@ -1933,17 +2019,49 @@ function DetailRow({ label, value, isLink }: { label: string; value: string; isL
   );
 }
 
-function ProgressItem({ label, completed, active, onClick }: { label: string; completed: boolean; active: boolean; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2.5 w-full text-left">
-      {completed ? (
-        <CheckCircle2 className="h-5 w-5 text-[#00D37F] flex-shrink-0" />
-      ) : (
-        <Circle className="h-5 w-5 text-gray-300 flex-shrink-0" />
-      )}
-      <span className="text-[15px] text-black">
+function AdminTimelineStep({
+  label,
+  completed,
+  showLine,
+  onClick,
+  children,
+}: {
+  label: string;
+  completed: boolean;
+  showLine: boolean;
+  onClick?: () => void;
+  children?: React.ReactNode;
+}) {
+  const content = (
+    <div className="flex items-start gap-3">
+      <div className="flex flex-col items-center">
+        <div
+          className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+            completed ? 'bg-[#00D37F]' : 'bg-gray-200'
+          }`}
+        >
+          {completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+        </div>
+        {showLine && (
+          <div className={`w-0.5 flex-1 min-h-[28px] ${completed ? 'bg-[#00D37F]' : 'bg-gray-200'}`} />
+        )}
+      </div>
+      <span className={`text-[15px] font-medium pt-0.5 ${completed ? 'text-[#02383B]' : 'text-gray-400'}`}>
         {label}
       </span>
-    </button>
+    </div>
+  );
+
+  return (
+    <div className="relative">
+      {onClick ? (
+        <button onClick={onClick} className="w-full text-left">
+          {content}
+        </button>
+      ) : (
+        content
+      )}
+      {children}
+    </div>
   );
 }

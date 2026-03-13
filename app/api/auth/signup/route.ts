@@ -332,18 +332,16 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // try {
-    //   await sendVerificationEmail(
-    //     sanitizedData.contactEmail,
-    //     sanitizedData.directorFirstName,
-    //     verificationToken,
-    //     sanitizedData.companyName
-    //   );
-    // } catch (emailError) {
-    //   console.error('Error sending verification email:', emailError);
-    // }
-    console.log(`[EMAIL DISABLED] Verification email for ${sanitizedData.contactEmail}`);
+    try {
+      await sendVerificationEmail(
+        sanitizedData.contactEmail,
+        sanitizedData.directorFirstName,
+        verificationToken,
+        sanitizedData.companyName
+      );
+    } catch (emailError) {
+      console.error('Error sending verification email:', emailError);
+    }
 
     // Don't auto-login - redirect to verification pending page
     return NextResponse.json({

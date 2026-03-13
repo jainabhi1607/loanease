@@ -21,6 +21,18 @@ export async function GET(request: NextRequest) {
     // Fetch unqualified opportunities using aggregation pipeline
     const pipeline = [
       { $match: { deleted_at: null } },
+      // Join with opportunity_details first to filter early
+      {
+        $lookup: {
+          from: COLLECTIONS.OPPORTUNITY_DETAILS,
+          localField: '_id',
+          foreignField: 'opportunity_id',
+          as: 'opportunity_details'
+        }
+      },
+      { $unwind: { path: '$opportunity_details', preserveNullAndEmptyArrays: true } },
+      // Filter to only unqualified opportunities early (avoids full table scan)
+      { $match: { 'opportunity_details.is_unqualified': 1 } },
       // Join with clients
       {
         $lookup: {
@@ -41,25 +53,13 @@ export async function GET(request: NextRequest) {
         }
       },
       { $unwind: { path: '$organisations', preserveNullAndEmptyArrays: true } },
-      // Join with opportunity_details
-      {
-        $lookup: {
-          from: COLLECTIONS.OPPORTUNITY_DETAILS,
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'opportunity_details'
-        }
-      },
-      { $unwind: { path: '$opportunity_details', preserveNullAndEmptyArrays: true } },
       // Sort by created_at descending
       { $sort: { created_at: -1 } }
     ];
 
     const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate(pipeline).toArray();
 
-    // Filter opportunities with is_unqualified = 1
     const unqualifiedOpportunities = opportunities
-      .filter((opp: any) => opp.opportunity_details?.is_unqualified === 1)
       .map((opp: any) => {
         return {
           id: opp._id,

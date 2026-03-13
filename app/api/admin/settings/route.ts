@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!['super_admin', 'admin_team'].includes(user.role)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    if (user.role !== 'super_admin') {
+      return NextResponse.json({ error: 'Forbidden — super_admin only' }, { status: 403 });
     }
 
     const body = await request.json();

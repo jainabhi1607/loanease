@@ -68,32 +68,14 @@ export async function GET(
 
     const opp = results[0] as any;
 
-    // Log RAW opportunity data from database
-    console.log('Admin API GET - RAW DB VALUES:', {
-      id: opp._id,
-      entity_type: opp.entity_type,
-      industry: opp.industry,
-      time_in_business: opp.time_in_business,
-      abn: opp.abn
-    });
-
-    // Fetch opportunity details from the details collection
-    const oppDetails = await db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({ opportunity_id: id });
+    // Fetch opportunity details and creator in parallel
+    const [oppDetails, creator] = await Promise.all([
+      db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({ opportunity_id: id }),
+      opp.created_by ? db.collection(COLLECTIONS.USERS).findOne({ _id: opp.created_by }) : null,
+    ]);
 
     // Type assertion for details data
     const details = (oppDetails || {}) as any;
-
-    // Log details fetch for debugging
-    console.log('Admin API - Opportunity details fetch:', {
-      opportunityId: id,
-      hasDetails: !!oppDetails,
-      detailsKeys: oppDetails ? Object.keys(oppDetails) : [],
-      client_address: details.client_address,
-      time_in_business: details.time_in_business
-    });
-
-    // Fetch creator user separately (no FK relationship exists)
-    const creator = await db.collection(COLLECTIONS.USERS).findOne({ _id: opp.created_by });
 
     // Clean up invalid legacy data to match current database constraints
     // Valid asset_type values: commercial_property, residential_property, vacant_land
@@ -213,17 +195,6 @@ export async function GET(
       created_by: opp.created_by || '',
       client_id: opp.client_id || '',
     };
-
-    // Log what we're returning for debugging - v3 comprehensive
-    console.log('Admin API GET - ENTITY AND INDUSTRY DEBUG v3:', {
-      raw_opp_entity_type: opp.entity_type,
-      raw_opp_industry: opp.industry,
-      validated_industry: industry,
-      transformed_client_entity_type: transformedOpportunity.client_entity_type,
-      transformed_client_industry: transformedOpportunity.client_industry,
-      client_time_in_business: transformedOpportunity.client_time_in_business,
-      client_address: transformedOpportunity.client_address
-    });
 
     return NextResponse.json({ opportunity: transformedOpportunity });
 
@@ -350,9 +321,6 @@ export async function PATCH(
       }
     }
 
-    console.log('Sanitized opportunities update data:', opportunitiesUpdateData);
-    console.log('Sanitized details update data:', detailsUpdateData);
-
     // Update opportunities table if there are fields to update
     let opportunity = null;
     if (Object.keys(opportunitiesUpdateData).length > 0) {
@@ -456,8 +424,7 @@ export async function PATCH(
       ];
 
       if (statusesThatTriggerEmail.includes(body.status)) {
-        // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-        console.log(`[EMAIL DISABLED] Status change email for opportunity ${opportunityDetails.opportunity_id || id}, new status: ${body.status}`);
+        // TODO: Send status change notification email
       }
     }
 

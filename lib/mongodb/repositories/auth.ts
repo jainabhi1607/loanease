@@ -22,8 +22,7 @@ export async function createTwoFACode(userId: string): Promise<TwoFACode> {
     used: false
   });
 
-  // TODO: Remove hardcoded OTP before production launch
-  const code = '998877';
+  const code = crypto.randomInt(100000, 999999).toString();
 
   // Expires based on DB setting (default 10 minutes)
   const expiryMinutes = await getTwoFACodeExpiryMinutes();
@@ -140,10 +139,14 @@ export async function findEmailVerificationToken(token: string): Promise<EmailVe
   });
 }
 
-// Alias for findEmailVerificationToken
+// Alias for findEmailVerificationToken (with same safety checks)
 export async function verifyEmailToken(token: string): Promise<EmailVerificationToken | null> {
   const db = await getDatabase();
-  return db.collection<EmailVerificationToken>('email_verification_tokens').findOne({ token });
+  return db.collection<EmailVerificationToken>('email_verification_tokens').findOne({
+    token,
+    used_at: null,
+    expires_at: { $gt: new Date().toISOString() }
+  });
 }
 
 // Find the latest unused verification token for a user
@@ -212,12 +215,13 @@ export async function findPasswordResetToken(token: string): Promise<PasswordRes
   });
 }
 
-// Alias for findPasswordResetToken (verify without expiry check for explicit handling)
+// Alias for findPasswordResetToken (with same safety checks including expiry)
 export async function verifyPasswordResetToken(token: string): Promise<PasswordResetToken | null> {
   const db = await getDatabase();
   return db.collection<PasswordResetToken>('password_reset_tokens').findOne({
     token,
-    used_at: null
+    used_at: null,
+    expires_at: { $gt: new Date().toISOString() }
   });
 }
 

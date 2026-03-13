@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch all clients for this organization
     const clients = await db.collection(COLLECTIONS.CLIENTS)
-      .find({ organisation_id: userData.organisation_id })
+      .find({ organisation_id: userData.organisation_id, deleted_at: null })
       .sort({ created_at: -1 })
       .toArray();
 

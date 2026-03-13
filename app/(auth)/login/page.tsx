@@ -53,11 +53,13 @@ export default function LoginPage() {
       }
 
       if (data.success && data.user) {
-        // Store remember me preference if checked
+        // Store remember me preference for 2FA page and persistence
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true');
+          sessionStorage.setItem('rememberMe', 'true');
         } else {
           localStorage.removeItem('rememberMe');
+          sessionStorage.removeItem('rememberMe');
         }
 
         // Check if user needs 2FA

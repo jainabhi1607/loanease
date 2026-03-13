@@ -143,13 +143,17 @@ function Verify2FAContent() {
       const meData = meResponse.ok ? await meResponse.json() : null;
       const sessionUserId = meData?.user?.id || meData?.user?._id || null;
 
+      // Check if remember me was selected on login page
+      const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
+
       const response = await fetch('/api/auth/verify-2fa', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           code: finalCode,
           email: email,
-          userId: sessionUserId
+          userId: sessionUserId,
+          rememberMe,
         }),
       });
 

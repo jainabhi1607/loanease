@@ -37,32 +37,26 @@ export async function GET(
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 
-    // Fetch client details
-    const client = opportunity.client_id
-      ? await db.collection(COLLECTIONS.CLIENTS).findOne({ _id: opportunity.client_id })
-      : null;
-
-    // Fetch organisation details
-    const org = opportunity.organization_id
-      ? await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: opportunity.organization_id })
-      : null;
-
-    // Fetch opportunity details
-    const oppDetails = await db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({
-      opportunity_id: id
-    });
+    // Fetch related data in parallel
+    const [client, org, oppDetails, creatorUser] = await Promise.all([
+      opportunity.client_id
+        ? db.collection(COLLECTIONS.CLIENTS).findOne({ _id: opportunity.client_id })
+        : null,
+      opportunity.organization_id
+        ? db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: opportunity.organization_id })
+        : null,
+      db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).findOne({ opportunity_id: id }),
+      opportunity.created_by
+        ? db.collection(COLLECTIONS.USERS).findOne(
+            { _id: opportunity.created_by },
+            { projection: { first_name: 1, surname: 1 } }
+          )
+        : null,
+    ]);
 
     // Remove opportunity_id from details to avoid overwriting the real opportunity_id (CF10020)
     const details: any = oppDetails ? { ...oppDetails } : {};
     delete details.opportunity_id;
-
-    // Fetch creator user details
-    const creatorUser = opportunity.created_by
-      ? await db.collection(COLLECTIONS.USERS).findOne(
-          { _id: opportunity.created_by },
-          { projection: { first_name: 1, surname: 1 } }
-        )
-      : null;
 
     // Normalize risk indicator value: handles 0/1, "yes"/"no", true/false → 1 or 0
     const normalizeYesNo = (val: any): number | null => {
@@ -146,7 +140,7 @@ export async function PATCH(
       _id: id as any
     });
 
-    if (!opportunity || opportunity.organization_id !== user.organisationId) {
+    if (!opportunity || opportunity.organization_id !== user.organisationId || opportunity.deleted_at) {
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
     }
 

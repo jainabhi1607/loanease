@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyRefreshToken, generateTokenPair, JWTPayload } from '@/lib/auth/jwt';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
+import { deleteUserSession, createUserSession } from '@/lib/mongodb/repositories/auth';
 
 // Input validation schema
 const refreshSchema = z.object({
@@ -38,6 +39,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Invalidate the old refresh token (one-time use rotation)
+    await deleteUserSession(validatedData.refresh_token);
+
     // Generate new token pair
     const newPayload: JWTPayload = {
       userId: user._id.toString(),
@@ -48,6 +52,9 @@ export async function POST(request: NextRequest) {
     };
 
     const tokens = await generateTokenPair(newPayload);
+
+    // Store the new refresh token session
+    await createUserSession(user._id.toString(), tokens.refreshToken);
 
     return NextResponse.json({
       success: true,

@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     // Get opportunity counts for each client (excluding withdrawn)
     const opportunityCounts = await db.collection('opportunities')
-      .find({ status: { $ne: 'withdrawn' } })
+      .find({ status: { $ne: 'withdrawn' }, deleted_at: null })
       .project({ client_id: 1 })
       .toArray();
 
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     // Fetch organisations
     const organisations = orgIds.length > 0
       ? await db.collection('organisations')
-          .find({ _id: { $in: orgIds } })
+          .find({ _id: { $in: orgIds }, deleted_at: null })
           .project({ _id: 1, company_name: 1 })
           .toArray()
       : [];

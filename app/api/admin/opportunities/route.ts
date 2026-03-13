@@ -90,17 +90,14 @@ export async function GET(request: NextRequest) {
       { $sort: { created_at: -1 } }
     ];
 
-    const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate(pipeline).toArray();
+    // When filtering by status (opportunity or applications), exclude unqualified in pipeline
+    if (statusFilter) {
+      pipeline.push(
+        { $match: { $or: [{ 'opportunity_details.is_unqualified': { $ne: 1 } }, { opportunity_details: null }] } }
+      );
+    }
 
-    // Filter out unqualified opportunities ONLY when viewing opportunities or applications pages
-    const filteredOpportunities = opportunities.filter((opp: any) => {
-      // If no status filter, show all (including unqualified for admin)
-      if (!statusFilter) {
-        return true;
-      }
-      // If filtering by status (opportunity or applications), exclude unqualified
-      return !opp.opportunity_details || opp.opportunity_details.is_unqualified !== 1;
-    });
+    const filteredOpportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate(pipeline).toArray();
 
     // Get unique user IDs and fetch users separately (no FK relationship exists)
     const userIds = [...new Set(filteredOpportunities.map((opp: any) => opp.created_by).filter(Boolean))];

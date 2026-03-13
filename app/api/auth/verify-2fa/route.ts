@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   const userAgent = headersList.get('user-agent') || 'unknown';
 
   try {
-    const { code, email, userId } = await request.json();
+    const { code, email, userId, rememberMe } = await request.json();
 
     if (!code || !email) {
       return NextResponse.json(
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
     attemptStore.delete(attemptKey);
 
     // Set 2FA verified cookie
-    await set2FAVerifiedCookie(codeData.user_id);
+    await set2FAVerifiedCookie(codeData.user_id, rememberMe === true);
 
     // Log successful verification
     await createAuditLog({

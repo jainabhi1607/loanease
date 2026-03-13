@@ -4,6 +4,7 @@ import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { sendNewUserWelcomeEmail } from '@/lib/email/signup-emails';
 import { hashPassword } from '@/lib/auth/password';
 import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +42,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
+    // Validate role - referrer admins can only create referrer roles
+    const allowedRoles = ['referrer_admin', 'referrer_team'];
+    const safeRole = allowedRoles.includes(role) ? role : 'referrer_team';
+
     // Check if email already exists in auth_users
     const existingAuthUser = await db.collection(COLLECTIONS.AUTH_USERS).findOne({ email: email });
 
@@ -53,13 +58,11 @@ export async function POST(request: NextRequest) {
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
       let password = '';
       for (let i = 0; i < 12; i++) {
-        password += chars.charAt(Math.floor(Math.random() * chars.length));
+        password += chars.charAt(crypto.randomInt(0, chars.length));
       }
       return password;
     };
     const tempPassword = generateTempPassword();
-
-    console.log('Creating new user with email:', email);
 
     // Generate new user ID
     const newUserId = uuidv4();
@@ -82,8 +85,6 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    console.log('Auth user created:', newUserId);
-
     // Create user profile in users collection
     await db.collection(COLLECTIONS.USERS).insertOne({
       _id: newUserId as any,
@@ -91,34 +92,29 @@ export async function POST(request: NextRequest) {
       first_name: first_name,
       surname: surname,
       phone: phone,
-      role: role,
+      role: safeRole,
       organisation_id: organisationId,
       status: status || 'active',
       created_at: new Date(),
     });
 
-    console.log('User profile created successfully');
-
     // Get organization details for the welcome email
     const orgData = await db.collection(COLLECTIONS.ORGANISATIONS).findOne({ _id: organisationId as any });
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // try {
-    //   const emailResult = await sendNewUserWelcomeEmail({
-    //     email: email,
-    //     firstName: first_name,
-    //     password: tempPassword,
-    //     companyName: orgData?.company_name || 'Loanease',
-    //   });
-    //   if (!emailResult.success) {
-    //     console.error('Failed to send welcome email');
-    //   } else {
-    //     console.log('Welcome email sent successfully to:', email);
-    //   }
-    // } catch (emailError) {
-    //   console.error('Error sending welcome email:', emailError);
-    // }
-    console.log(`[EMAIL DISABLED] Welcome email for ${email}`);
+    try {
+      const emailResult = await sendNewUserWelcomeEmail({
+        email: email,
+        firstName: first_name,
+        password: tempPassword,
+        companyName: orgData?.company_name || 'Loanease',
+      });
+      if (!emailResult.success) {
+        console.error('Failed to send welcome email');
+      }
+    } catch (emailError) {
+      console.error('Error sending welcome email:', emailError);
+    }
+    // TODO: Re-enable welcome email when email service is configured
 
     // Log the action in audit_logs
     await db.collection(COLLECTIONS.AUDIT_LOGS).insertOne({

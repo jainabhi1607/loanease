@@ -94,9 +94,11 @@ export function EditReferrerAccountDialog({
 
   const handleGeneratePassword = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    const randomValues = new Uint32Array(12);
+    crypto.getRandomValues(randomValues);
     let newPassword = '';
     for (let i = 0; i < 12; i++) {
-      newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+      newPassword += chars.charAt(randomValues[i] % chars.length);
     }
     setPassword(newPassword);
   };

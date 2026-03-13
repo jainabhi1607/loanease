@@ -101,9 +101,7 @@ export async function POST(request: NextRequest) {
           });
         }
 
-        // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-        // await sendAllSignupEmails(signupData);
-        console.log(`[EMAIL DISABLED] Signup emails for ${signupData.email || 'unknown'}`);
+        await sendAllSignupEmails(signupData);
       } catch (emailError) {
         console.error('Error sending signup emails after verification:', emailError);
       }

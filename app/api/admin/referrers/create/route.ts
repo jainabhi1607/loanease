@@ -28,7 +28,7 @@ const createReferrerSchema = z.object({
   })),
   entity: z.string().min(1),
   industryType: z.string().min(1),
-  password: z.string().min(8).max(100),
+  password: z.string().min(10).max(100),
   confirmPassword: z.string(),
 });
 
@@ -216,19 +216,17 @@ export async function POST(request: NextRequest) {
       console.error('Error logging creation:', auditError);
     }
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // try {
-    //   const db = await getDatabase();
-    //   const alertSetting = await db.collection('global_settings').findOne({ key: 'new_referrer_alert_emails' });
-    //   if (alertSetting?.value) {
-    //     const emails = alertSetting.value.split('\n').map((email: string) => email.trim()).filter((email: string) => email && email.includes('@'));
-    //     const alertDetails = { directorName: `${sanitizedData.directorFirstName} ${sanitizedData.directorSurname}`, companyName: sanitizedData.companyName, contactEmail: sanitizedData.contactEmail, contactPhone: sanitizedData.contactPhone, abn: cleanABN, tradingName: sanitizedData.tradingName, address: sanitizedData.companyAddress, industryType: sanitizedData.industryType };
-    //     await Promise.all(emails.map((email: string) => sendNewReferrerAlert(email, alertDetails)));
-    //   }
-    // } catch (emailError) {
-    //   console.error('Error sending new referrer alert emails:', emailError);
-    // }
-    console.log(`[EMAIL DISABLED] New referrer alert email for ${sanitizedData.contactEmail}`);
+    try {
+      const alertDb = await getDatabase();
+      const alertSetting = await alertDb.collection('global_settings').findOne({ key: 'new_referrer_alert_emails' });
+      if (alertSetting?.value) {
+        const emails = alertSetting.value.split('\n').map((email: string) => email.trim()).filter((email: string) => email && email.includes('@'));
+        const alertDetails = { directorName: `${sanitizedData.directorFirstName} ${sanitizedData.directorSurname}`, companyName: sanitizedData.companyName, contactEmail: sanitizedData.contactEmail, contactPhone: sanitizedData.contactPhone, abn: cleanABN, tradingName: sanitizedData.tradingName, address: sanitizedData.companyAddress, industryType: sanitizedData.industryType };
+        await Promise.all(emails.map((email: string) => sendNewReferrerAlert(email, alertDetails)));
+      }
+    } catch (emailError) {
+      console.error('Error sending new referrer alert emails:', emailError);
+    }
 
     return NextResponse.json({
       success: true,

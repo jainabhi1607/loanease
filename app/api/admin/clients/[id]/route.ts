@@ -39,7 +39,7 @@ export async function GET(
 
     // Fetch all opportunities for this client
     const opportunities = await db.collection('opportunities')
-      .find({ client_id: clientId })
+      .find({ client_id: clientId, deleted_at: null })
       .project({
         _id: 1,
         opportunity_id: 1,

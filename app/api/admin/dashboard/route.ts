@@ -22,23 +22,6 @@ export async function GET(request: NextRequest) {
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
     const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
 
-    // 1. Number of Opportunities (status = 'opportunity', exclude unqualified)
-    const opportunities = await db.collection('opportunities').aggregate([
-      { $match: { status: 'opportunity', deleted_at: null } },
-      {
-        $lookup: {
-          from: 'opportunity_details',
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'details'
-        }
-      },
-      { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
-      { $match: { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] } }
-    ]).toArray();
-    const numberOfOpportunities = opportunities.length;
-
-    // 2. Number of Applications (status >= application_created, exclude unqualified)
     const applicationStatuses = [
       'application_created',
       'application_submitted',
@@ -48,94 +31,102 @@ export async function GET(request: NextRequest) {
       'settled',
       'withdrawn'
     ];
-    const applications = await db.collection('opportunities').aggregate([
-      { $match: { status: { $in: applicationStatuses }, deleted_at: null } },
-      {
-        $lookup: {
-          from: 'opportunity_details',
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'details'
+
+    // Single aggregation for all dashboard stats (replaces 4 separate full-scan queries)
+    const unqualifiedFilter = { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] };
+    const detailsLookup = {
+      $lookup: {
+        from: 'opportunity_details',
+        localField: '_id',
+        foreignField: 'opportunity_id',
+        as: 'details'
+      }
+    };
+
+    const [statsResult, newOpportunities, newReferrers, currentUser] = await Promise.all([
+      // 1-5: All stats in a single aggregation
+      db.collection('opportunities').aggregate([
+        { $match: { deleted_at: null } },
+        detailsLookup,
+        { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
+        { $match: unqualifiedFilter },
+        {
+          $group: {
+            _id: null,
+            numberOfOpportunities: {
+              $sum: { $cond: [{ $eq: ['$status', 'opportunity'] }, 1, 0] }
+            },
+            numberOfApplications: {
+              $sum: { $cond: [{ $in: ['$status', applicationStatuses] }, 1, 0] }
+            },
+            totalLoansSettledVolume: {
+              $sum: { $cond: [{ $ne: ['$date_settled', null] }, { $ifNull: ['$loan_amount', 0] }, 0] }
+            },
+            totalLoansSettledUnit: {
+              $sum: { $cond: [{ $ne: ['$date_settled', null] }, 1, 0] }
+            },
+            totalCount: { $sum: 1 }
+          }
         }
-      },
-      { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
-      { $match: { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] } }
-    ]).toArray();
-    const numberOfApplications = applications.length;
+      ]).toArray(),
 
-    // 3. Total Loans Settled (By Volume) - sum of loan_amount where date_settled is set
-    const settledLoans = await db.collection('opportunities').aggregate([
-      { $match: { date_settled: { $ne: null }, deleted_at: null } },
-      {
-        $lookup: {
-          from: 'opportunity_details',
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'details'
-        }
-      },
-      { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
-      { $match: { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] } }
-    ]).toArray();
+      // 6: New Opportunities for Current Month (limit 10)
+      db.collection('opportunities').aggregate([
+        {
+          $match: {
+            created_at: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+            deleted_at: null
+          }
+        },
+        detailsLookup,
+        { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
+        { $match: unqualifiedFilter },
+        {
+          $lookup: {
+            from: 'clients',
+            localField: 'client_id',
+            foreignField: '_id',
+            as: 'client'
+          }
+        },
+        { $unwind: { path: '$client', preserveNullAndEmptyArrays: true } },
+        { $sort: { created_at: -1 } },
+        { $limit: 10 }
+      ]).toArray(),
 
-    const totalLoansSettledVolume = settledLoans.reduce(
-      (sum: number, opp: any) => sum + (opp.loan_amount || 0),
-      0
-    );
+      // 7: New Referrers (limit 10)
+      db.collection('users').aggregate([
+        { $match: { role: 'referrer_admin' } },
+        {
+          $lookup: {
+            from: 'organisations',
+            localField: 'organisation_id',
+            foreignField: '_id',
+            as: 'organisation'
+          }
+        },
+        { $unwind: { path: '$organisation', preserveNullAndEmptyArrays: true } },
+        { $sort: { created_at: -1 } },
+        { $limit: 10 }
+      ]).toArray(),
 
-    // 4. Total Loans Settled (By Unit) - count of opportunities with date_settled
-    const totalLoansSettledUnit = settledLoans.length;
+      // Current user for welcome message
+      db.collection('users').findOne({ _id: user.userId as any })
+    ]);
 
-    // 5. Settlement Conversion Ratio (settled / total opportunities * 100)
-    const allOpportunities = await db.collection('opportunities').aggregate([
-      { $match: { deleted_at: null } },
-      {
-        $lookup: {
-          from: 'opportunity_details',
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'details'
-        }
-      },
-      { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
-      { $match: { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] } }
-    ]).toArray();
-    const totalOpportunitiesCount = allOpportunities.length;
+    const stats = statsResult[0] || {
+      numberOfOpportunities: 0,
+      numberOfApplications: 0,
+      totalLoansSettledVolume: 0,
+      totalLoansSettledUnit: 0,
+      totalCount: 0
+    };
+
+    const { numberOfOpportunities, numberOfApplications, totalLoansSettledVolume, totalLoansSettledUnit, totalCount: totalOpportunitiesCount } = stats;
 
     const conversionRatio = totalOpportunitiesCount > 0
       ? ((totalLoansSettledUnit / totalOpportunitiesCount) * 100).toFixed(1)
       : '0.0';
-
-    // 6. New Opportunities for Current Month (limit 10)
-    const newOpportunities = await db.collection('opportunities').aggregate([
-      {
-        $match: {
-          created_at: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
-          deleted_at: null
-        }
-      },
-      {
-        $lookup: {
-          from: 'opportunity_details',
-          localField: '_id',
-          foreignField: 'opportunity_id',
-          as: 'details'
-        }
-      },
-      { $unwind: { path: '$details', preserveNullAndEmptyArrays: true } },
-      { $match: { $or: [{ 'details.is_unqualified': { $ne: 1 } }, { details: null }] } },
-      {
-        $lookup: {
-          from: 'clients',
-          localField: 'client_id',
-          foreignField: '_id',
-          as: 'client'
-        }
-      },
-      { $unwind: { path: '$client', preserveNullAndEmptyArrays: true } },
-      { $sort: { created_at: -1 } },
-      { $limit: 10 }
-    ]).toArray();
 
     // Get user IDs to fetch referrer names
     const userIds = [...new Set(newOpportunities.map((opp: any) => opp.created_by).filter(Boolean))];
@@ -163,22 +154,6 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    // 7. New Referrers (limit 10, most recent first)
-    const newReferrers = await db.collection('users').aggregate([
-      { $match: { role: 'referrer_admin' } },
-      {
-        $lookup: {
-          from: 'organisations',
-          localField: 'organisation_id',
-          foreignField: '_id',
-          as: 'organisation'
-        }
-      },
-      { $unwind: { path: '$organisation', preserveNullAndEmptyArrays: true } },
-      { $sort: { created_at: -1 } },
-      { $limit: 10 }
-    ]).toArray();
-
     const formattedReferrers = newReferrers.map((ref: any) => ({
       id: ref._id,
       name: ref.first_name && ref.surname
@@ -187,8 +162,6 @@ export async function GET(request: NextRequest) {
       status: ref.organisation?.is_active !== false ? 'Active' : 'Inactive',
     }));
 
-    // Get user details for welcome message
-    const currentUser = await db.collection('users').findOne({ _id: user.userId as any });
     const userName = currentUser?.first_name || 'Admin';
 
     return NextResponse.json({

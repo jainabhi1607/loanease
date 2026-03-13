@@ -72,6 +72,8 @@ export async function GET(request: NextRequest) {
         }
       },
       { $unwind: { path: '$opportunity_details', preserveNullAndEmptyArrays: true } },
+      // Filter out unqualified in pipeline instead of post-query
+      { $match: { $or: [{ 'opportunity_details.is_unqualified': { $ne: 1 } }, { opportunity_details: null }] } },
       { $sort: { created_at: -1 } },
       {
         $project: {
@@ -85,26 +87,22 @@ export async function GET(request: NextRequest) {
           'client.entity_name': 1,
           'client.contact_first_name': 1,
           'client.contact_last_name': 1,
-          'opportunity_details.is_unqualified': 1
         }
       }
     ]).toArray();
 
-    // Filter out unqualified opportunities and format data
-    const formattedOpportunities = opportunities
-      .filter((opp: any) => !opp.opportunity_details?.is_unqualified)
-      .map((opp: any) => ({
-        id: opp._id,
-        opportunity_id: opp.opportunity_id,
-        status: opp.status,
-        created_at: opp.created_at,
-        loan_amount: opp.loan_amount || 0,
-        loan_type: opp.loan_type || '',
-        borrowing_entity: opp.client?.entity_name || '',
-        contact_name: opp.client
-          ? `${opp.client.contact_first_name || ''} ${opp.client.contact_last_name || ''}`.trim()
-          : '',
-      }));
+    const formattedOpportunities = opportunities.map((opp: any) => ({
+      id: opp._id,
+      opportunity_id: opp.opportunity_id,
+      status: opp.status,
+      created_at: opp.created_at,
+      loan_amount: opp.loan_amount || 0,
+      loan_type: opp.loan_type || '',
+      borrowing_entity: opp.client?.entity_name || '',
+      contact_name: opp.client
+        ? `${opp.client.contact_first_name || ''} ${opp.client.contact_last_name || ''}`.trim()
+        : '',
+    }));
 
     return NextResponse.json(formattedOpportunities);
 

@@ -31,22 +31,22 @@ export async function GET(
       return NextResponse.json({ error: 'Referrer not found' }, { status: 404 });
     }
 
-    // Fetch the organisation
-    const organisation = await db.collection('organisations').findOne({
-      _id: referrerUser.organisation_id
-    });
+    // Fetch organisation and directors in parallel
+    const [organisation, directors] = await Promise.all([
+      db.collection('organisations').findOne({
+        _id: referrerUser.organisation_id
+      }),
+      db.collection('organisation_directors')
+        .find({
+          organisation_id: referrerUser.organisation_id,
+        })
+        .sort({ created_at: 1 })
+        .toArray()
+    ]);
 
     if (!organisation) {
       console.error('Error fetching organisation: organisation not found');
     }
-
-    // Fetch all directors (including primary)
-    const directors = await db.collection('organisation_directors')
-      .find({
-        organisation_id: referrerUser.organisation_id,
-      })
-      .sort({ created_at: 1 })
-      .toArray();
 
     // Transform the data
     const firstName = referrerUser.first_name || '';

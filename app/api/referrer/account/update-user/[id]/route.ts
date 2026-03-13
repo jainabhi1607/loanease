@@ -71,15 +71,18 @@ export async function PATCH(
       );
     }
 
-    // Update user profile in users collection
-    const updateData: Record<string, any> = {
-      first_name,
-      surname,
-      phone,
-      role,
-      state: state || null,
-      is_active: is_active !== undefined ? is_active : true,
-    };
+    // Restrict role to referrer roles only (prevent privilege escalation)
+    const allowedRoles = ['referrer_admin', 'referrer_team'];
+    const safeRole = allowedRoles.includes(role) ? role : targetUser.role;
+
+    // Update user profile in users collection — only include fields explicitly sent
+    const updateData: Record<string, any> = {};
+    if ('first_name' in body) updateData.first_name = first_name;
+    if ('surname' in body) updateData.surname = surname;
+    if ('phone' in body) updateData.phone = phone;
+    if ('role' in body) updateData.role = safeRole;
+    if ('state' in body) updateData.state = state || null;
+    if ('is_active' in body) updateData.is_active = is_active;
 
     // Only update email if it changed
     if (email && email !== targetUser.email) {

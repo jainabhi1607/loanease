@@ -4,6 +4,7 @@ import { ObjectId } from 'mongodb';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 // Types
 interface OldUser {
@@ -224,6 +225,18 @@ function loadMappings(name: string): any[] {
 }
 
 export async function POST(request: NextRequest) {
+  // Block migration route in production
+  if (process.env.NODE_ENV === 'production' && process.env.MIGRATION_ENABLED !== 'true') {
+    return NextResponse.json({ error: 'Migration route is disabled in production' }, { status: 403 });
+  }
+
+  // Require super_admin authentication
+  const { getCurrentUserFromRequest } = await import('@/lib/auth/session');
+  const currentUser = await getCurrentUserFromRequest(request);
+  if (!currentUser || currentUser.role !== 'super_admin') {
+    return NextResponse.json({ error: 'Unauthorized — super_admin only' }, { status: 401 });
+  }
+
   const { step } = await request.json();
   const db = await getDatabase();
   const logs: string[] = [];
@@ -426,7 +439,7 @@ export async function POST(request: NextRequest) {
             authUserId = existingUserId;
             log(`Auth exists: ${email}`);
           } else {
-            const tempPassword = Math.random().toString(36).slice(-16) + 'A1!';
+            const tempPassword = crypto.randomBytes(12).toString('base64url') + 'A1!';
             const hashedPassword = await bcrypt.hash(tempPassword, 10);
             authUserId = new ObjectId().toString();
 

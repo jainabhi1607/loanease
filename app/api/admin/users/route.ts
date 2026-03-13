@@ -172,21 +172,17 @@ export async function POST(request: NextRequest) {
 
     const inviterName = inviter ? `${inviter.first_name} ${inviter.surname}` : 'System Administrator';
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // try {
-    //   const { sendUserInvitation } = await import('@/lib/email/postmark');
-    //   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.loanease.com';
-    //   const inviteUrl = `${baseUrl}/auth/complete-registration?token=${token}`;
-    //   const emailResult = await sendUserInvitation(email, inviteUrl, 'Loanease Admin Portal', inviterName, new Date(invitation.expires_at));
-    //   if (!emailResult.success) {
-    //     console.error('Error sending invitation email');
-    //   } else {
-    //     console.log('Admin invitation email sent successfully to:', email);
-    //   }
-    // } catch (emailError) {
-    //   console.error('Error sending invitation email:', emailError);
-    // }
-    console.log(`[EMAIL DISABLED] Admin invitation email for ${email}`);
+    try {
+      const { sendUserInvitation } = await import('@/lib/email/postmark');
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://app.loanease.com';
+      const inviteUrl = `${baseUrl}/auth/complete-registration?token=${token}`;
+      const emailResult = await sendUserInvitation(email, inviteUrl, 'Loanease Admin Portal', inviterName, new Date(invitation.expires_at));
+      if (!emailResult.success) {
+        console.error('Error sending invitation email');
+      }
+    } catch (emailError) {
+      console.error('Error sending invitation email:', emailError);
+    }
 
     // Log the invitation
     await db.collection('audit_logs').insertOne({

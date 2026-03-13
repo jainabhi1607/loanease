@@ -33,6 +33,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
 
+    // Only super_admin can assign super_admin role
+    if (role === 'super_admin' && user.role !== 'super_admin') {
+      return NextResponse.json({ error: 'Only super admins can assign super admin role' }, { status: 403 });
+    }
+
     // Validate status if provided
     if (status && !['active', 'inactive'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 });

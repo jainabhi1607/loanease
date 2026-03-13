@@ -1,22 +1,24 @@
 import { SignJWT, jwtVerify } from 'jose';
 
-if (!process.env.JWT_SECRET) {
-  console.warn('WARNING: JWT_SECRET environment variable is not set. Using insecure fallback.');
-}
-if (!process.env.JWT_REFRESH_SECRET) {
-  console.warn('WARNING: JWT_REFRESH_SECRET environment variable is not set. Using insecure fallback.');
+if (process.env.NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET must be set in production');
+  if (!process.env.JWT_REFRESH_SECRET) throw new Error('JWT_REFRESH_SECRET must be set in production');
+} else {
+  if (!process.env.JWT_SECRET) console.warn('WARNING: JWT_SECRET not set — using dev fallback');
+  if (!process.env.JWT_REFRESH_SECRET) console.warn('WARNING: JWT_REFRESH_SECRET not set — using dev fallback');
 }
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'loanease-jwt-secret-change-in-production-2024'
+  process.env.JWT_SECRET || 'loanease-jwt-secret-dev-only-not-for-production'
 );
 const JWT_REFRESH_SECRET = new TextEncoder().encode(
-  process.env.JWT_REFRESH_SECRET || 'loanease-refresh-secret-change-in-production-2024'
+  process.env.JWT_REFRESH_SECRET || 'loanease-refresh-secret-dev-only-not-for-production'
 );
 
 // Token expiry times
 const ACCESS_TOKEN_EXPIRY = '15m'; // 15 minutes
 const REFRESH_TOKEN_EXPIRY = '7d'; // 7 days
+const REMEMBER_ME_REFRESH_TOKEN_EXPIRY = '30d'; // 30 days
 
 export interface JWTPayload {
   userId: string;
@@ -45,21 +47,21 @@ export async function generateAccessToken(payload: JWTPayload): Promise<string> 
 /**
  * Generate a refresh token
  */
-export async function generateRefreshToken(payload: JWTPayload): Promise<string> {
+export async function generateRefreshToken(payload: JWTPayload, rememberMe: boolean = false): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime(REFRESH_TOKEN_EXPIRY)
+    .setExpirationTime(rememberMe ? REMEMBER_ME_REFRESH_TOKEN_EXPIRY : REFRESH_TOKEN_EXPIRY)
     .sign(JWT_REFRESH_SECRET);
 }
 
 /**
  * Generate both access and refresh tokens
  */
-export async function generateTokenPair(payload: JWTPayload): Promise<TokenPair> {
+export async function generateTokenPair(payload: JWTPayload, rememberMe: boolean = false): Promise<TokenPair> {
   const [accessToken, refreshToken] = await Promise.all([
     generateAccessToken(payload),
-    generateRefreshToken(payload),
+    generateRefreshToken(payload, rememberMe),
   ]);
   return { accessToken, refreshToken };
 }

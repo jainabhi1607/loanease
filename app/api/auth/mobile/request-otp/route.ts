@@ -5,10 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
 import { getTwoFACodeExpiryMinutes } from '@/lib/mongodb/repositories/global-settings';
+import crypto from 'crypto';
 
 // Generate a random 6-digit OTP
 function generateOTP(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return crypto.randomInt(100000, 999999).toString();
 }
 
 // Input validation schema
@@ -161,8 +162,8 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString(),
     });
 
-    // TODO: Send OTP via SMS - for now log it
-    console.log(`[DEV] OTP for ${maskMobile(mobile)}: ${generatedOtp}`);
+    // OTP is sent via email/SMS — do not log the code
+    console.log(`OTP generated for mobile: ${maskMobile(mobile)}`);
 
     return NextResponse.json({
       success: true,

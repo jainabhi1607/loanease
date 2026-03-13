@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUserFromRequest } from '@/lib/auth/session';
 import { getDatabase, COLLECTIONS } from '@/lib/mongodb/client';
-import { hashPassword } from '@/lib/auth/password';
+import { hashPassword, verifyPassword } from '@/lib/auth/password';
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -26,7 +26,8 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { first_name, surname, phone, email, password } = body;
+    // Only allow profile fields — role is not self-updatable
+    const { first_name, surname, phone, email, password, current_password } = body;
 
     // Update user profile in users collection
     const updateData: Record<string, any> = {};
@@ -40,12 +41,27 @@ export async function PATCH(request: NextRequest) {
         { _id: user.userId as any },
         { $set: updateData }
       );
+
+      // If email changed, also update auth_users collection to keep login credentials in sync
+      if (email && email !== userData.email) {
+        await db.collection(COLLECTIONS.AUTH_USERS).updateOne(
+          { _id: user.userId as any },
+          { $set: { email } }
+        );
+      }
     }
 
-    // Update password if provided
+    // Update password if provided (requires current password verification)
     if (password) {
+      if (!current_password) {
+        return NextResponse.json({ error: 'Current password is required to change password' }, { status: 400 });
+      }
+      // Verify current password
+      if (!userData.password_hash || !(await verifyPassword(current_password, userData.password_hash))) {
+        return NextResponse.json({ error: 'Current password is incorrect' }, { status: 400 });
+      }
       const hashedPassword = await hashPassword(password);
-      await db.collection(COLLECTIONS.AUTH_USERS).updateOne(
+      await db.collection(COLLECTIONS.USERS).updateOne(
         { _id: user.userId as any },
         { $set: { password_hash: hashedPassword } }
       );

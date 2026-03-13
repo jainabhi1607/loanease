@@ -1,12 +1,12 @@
 'use client';
 
+import { Calendar, MapPin, Pencil, X, Check } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Check, X, Pencil } from 'lucide-react';
 
 interface OpportunitySidebarProps {
   opportunity: any;
   formatDate: (date?: string) => string;
+  formatCurrency?: (amount: number | undefined) => string;
   canEditDates?: boolean;
   isUnqualified?: boolean;
   onEditExternalRef?: () => void;
@@ -20,6 +20,7 @@ interface OpportunitySidebarProps {
 export function OpportunitySidebar({
   opportunity,
   formatDate,
+  formatCurrency,
   canEditDates = false,
   isUnqualified = false,
   onEditExternalRef,
@@ -29,61 +30,58 @@ export function OpportunitySidebar({
   onClearTargetSettlement,
   onClearDateSettled
 }: OpportunitySidebarProps) {
+  const isCompletedDeclined = opportunity?.status === 'declined' && !!opportunity?.completed_declined_reason;
+  const isDecisionDeclined = opportunity?.status === 'declined' && !opportunity?.completed_declined_reason;
+
   const getProgressPercentage = (status: string) => {
-    const statusOrder = [
-      'draft',
-      'opportunity',
-      'application_created',
-      'application_submitted',
-      'conditionally_approved',
-      'approved',
-      'settled'
-    ];
-    const currentIndex = statusOrder.indexOf(status);
-    if (currentIndex < 0) {
-      // Handle declined/withdrawn
-      if (status === 'declined' || status === 'withdrawn') return 100;
-      return 20;
-    }
-    return ((currentIndex + 1) / statusOrder.length) * 100;
+    if (status === 'settled' || status === 'withdrawn') return 100;
+    if (status === 'declined' && isCompletedDeclined) return 100;
+
+    const statusOrder: { [key: string]: number } = {
+      'draft': 10,
+      'opportunity': 20,
+      'application_created': 40,
+      'application_submitted': 60,
+      'conditionally_approved': 80,
+      'approved': 80,
+      'declined': 80,
+    };
+    return statusOrder[status?.toLowerCase()] || 20;
   };
 
   const isStatusCompleted = (checkStatus: string) => {
-    const statusOrder = [
-      'draft',
-      'opportunity',
-      'application_created',
-      'application_submitted',
-      'conditionally_approved',
-      'approved',
-      'declined',
-      'settled',
-      'withdrawn'
-    ];
-    const currentIndex = statusOrder.indexOf(opportunity.status);
+    const completedStageStatuses = ['settled', 'withdrawn'];
+    if (completedStageStatuses.includes(opportunity?.status?.toLowerCase()) || isCompletedDeclined) {
+      return true;
+    }
+
+    const statusOrder = ['opportunity', 'application_created', 'application_submitted', 'conditionally_approved', 'approved', 'declined', 'settled'];
     const checkIndex = statusOrder.indexOf(checkStatus);
-    return currentIndex >= checkIndex;
+    const currentIndex = statusOrder.indexOf(opportunity?.status?.toLowerCase());
+    return currentIndex >= checkIndex && checkIndex !== -1;
   };
 
-  // Check if any application status is reached
-  const hasApplicationStatus = () => {
-    const applicationStatuses = [
-      'application_created',
-      'application_submitted',
-      'conditionally_approved',
-      'approved',
-      'declined',
-      'settled',
-      'withdrawn'
-    ];
-    return applicationStatuses.includes(opportunity.status);
+  const isCompletedStage = opportunity?.status === 'settled' || opportunity?.status === 'withdrawn' || isCompletedDeclined;
+
+  const defaultFormatCurrency = (amount: number | undefined) => {
+    if (!amount) return '-';
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
+
+  const currencyFormatter = formatCurrency || defaultFormatCurrency;
+
+  const progressPercent = getProgressPercentage(opportunity?.status || 'draft');
 
   return (
-    <div className="space-y-0">
+    <div className="space-y-5">
       {/* External Reference - Only show if admin can edit */}
       {canEditDates && (
-        <Card className="mb-4">
+        <Card className="mb-0">
           <CardContent className="pt-6">
             {opportunity.external_ref ? (
               <div>
@@ -92,276 +90,234 @@ export function OpportunitySidebar({
               </div>
             ) : (
               onEditExternalRef && (
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
                   onClick={onEditExternalRef}
-                  className="w-full"
+                  className="w-full text-sm border border-gray-300 rounded-md px-3 py-2 hover:bg-gray-50"
                 >
                   Add External Ref #
-                </Button>
+                </button>
               )
             )}
           </CardContent>
         </Card>
       )}
 
-      {/* Main Sidebar Card */}
       {!isUnqualified && (
-        <div className="overflow-hidden rounded-lg shadow-md">
-          {/* Application Progress - Light green section */}
-          <div style={{ backgroundColor: 'rgb(237, 255, 215)' }} className="p-6">
-            <h3 className="text-lg font-semibold mb-1 text-[#02383B]">Application Progress</h3>
-            <p className="text-sm text-[#00D37F] font-medium mb-3">
-              {getProgressPercentage(opportunity.status).toFixed(0)}% Completed
-            </p>
+        <>
+          {/* Key Dates Card */}
+          <div className="rounded-xl overflow-hidden shadow-md">
+            <div style={{ backgroundColor: '#02383B' }} className="p-6 text-white">
+              <h3 className="text-[#00D37F] font-semibold text-base mb-5">Key Dates</h3>
 
-            {/* Progress Bar */}
-            <div className="mb-6">
-              <div className="w-full bg-white/50 rounded-full h-2">
-                <div
-                  className="bg-[#00D37F] h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${getProgressPercentage(opportunity.status)}%` }}
+              <div className="space-y-4">
+                {/* Created */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-300">Created</span>
+                  </div>
+                  <span className="font-semibold text-white text-sm">{formatDate(opportunity.created_at)}</span>
+                </div>
+
+                <div className="border-t border-white/10" />
+
+                {/* Target Settlement */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-300">Target Settlement</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {opportunity.target_settlement_date ? (
+                      <>
+                        {canEditDates && onClearTargetSettlement && (
+                          <button
+                            onClick={onClearTargetSettlement}
+                            className="text-gray-400 hover:text-white transition-colors"
+                            title="Clear date"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                        <span className="font-semibold text-white text-sm">{formatDate(opportunity.target_settlement_date)}</span>
+                      </>
+                    ) : (
+                      canEditDates && onEditTargetSettlement ? (
+                        <button onClick={onEditTargetSettlement} className="text-[#00D37F] text-sm font-medium hover:underline transition-colors">
+                          Set Date
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* Settled */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Calendar className="h-4 w-4 text-gray-400" />
+                    <span className="text-sm text-gray-300">Settled</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {opportunity.date_settled ? (
+                      <>
+                        {canEditDates && onClearDateSettled && (
+                          <button
+                            onClick={onClearDateSettled}
+                            className="text-gray-400 hover:text-white transition-colors"
+                            title="Clear date"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                        <span className="font-semibold text-white text-sm">{formatDate(opportunity.date_settled)}</span>
+                      </>
+                    ) : (
+                      canEditDates && onEditDateSettled ? (
+                        <button onClick={onEditDateSettled} className="text-[#00D37F] text-sm font-medium hover:underline transition-colors">
+                          Set Date
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 text-sm">-</span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Deal Finalisation Card */}
+          <div className="rounded-xl overflow-hidden shadow-md">
+            <div style={{ backgroundColor: '#02383B' }} className="p-6 text-white">
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-[#00D37F] font-semibold text-base">Deal Finalisation</h3>
+                {canEditDates && onEditDealFinalisation && (
+                  <button
+                    onClick={onEditDealFinalisation}
+                    className="text-gray-400 hover:text-white transition-colors"
+                    title="Edit deal finalisation"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              <div className="space-y-3.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Loan Acc Ref</span>
+                  <span className="font-semibold text-white text-sm">{opportunity.loan_acc_ref_no || '-'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Flex ID</span>
+                  <span className="font-semibold text-white text-sm">{opportunity.flex_id || '-'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Payment Received</span>
+                  <span className="font-semibold text-white text-sm">
+                    {opportunity.payment_received_date ? formatDate(opportunity.payment_received_date) : '-'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-300">Payment Amount</span>
+                  <span className="font-semibold text-white text-sm">
+                    {opportunity.payment_amount ? currencyFormatter(opportunity.payment_amount) : '-'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Application Progress Card */}
+          <div className="rounded-xl overflow-hidden shadow-md bg-white">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-bold text-[#02383B] text-lg">Application Progress</h3>
+                <span className="text-[#00D37F] font-semibold text-sm">{progressPercent}%</span>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mb-8">
+                <div className="w-full bg-gray-100 rounded-full h-2">
+                  <div
+                    className="bg-[#00D37F] h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Timeline */}
+              <div className="relative">
+                {/* Opportunity */}
+                <TimelineStep
+                  label="Opportunity"
+                  completed={isStatusCompleted('opportunity')}
+                  showLine
                 />
-              </div>
-            </div>
 
-            {/* Workflow Steps */}
-            <div className="space-y-3">
-              {/* Opportunity */}
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                  isStatusCompleted('opportunity')
-                    ? 'border-[#00D37F] bg-transparent'
-                    : 'border-gray-300 bg-transparent'
-                }`}>
-                  {isStatusCompleted('opportunity') && (
-                    <Check className="h-3 w-3 text-[#00D37F]" strokeWidth={3} />
-                  )}
-                </div>
-                <p className={`text-sm font-medium ${isStatusCompleted('opportunity') ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                  Opportunity
-                </p>
-              </div>
+                {/* Application Created */}
+                <TimelineStep
+                  label="Application Created"
+                  completed={isStatusCompleted('application_created')}
+                  showLine
+                />
 
-              {/* Application Closed */}
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                  hasApplicationStatus()
-                    ? 'border-[#00D37F] bg-transparent'
-                    : 'border-gray-300 bg-transparent'
-                }`}>
-                  {hasApplicationStatus() && (
-                    <Check className="h-3 w-3 text-[#00D37F]" strokeWidth={3} />
-                  )}
-                </div>
-                <p className={`text-sm font-medium ${hasApplicationStatus() ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                  Application Closed
-                </p>
-              </div>
+                {/* Application Submitted */}
+                <TimelineStep
+                  label="Application Submitted"
+                  completed={isStatusCompleted('application_submitted')}
+                  showLine
+                />
 
-              {/* Application Submitted */}
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                  isStatusCompleted('application_submitted')
-                    ? 'border-[#00D37F] bg-transparent'
-                    : 'border-gray-300 bg-transparent'
-                }`}>
-                  {isStatusCompleted('application_submitted') && (
-                    <Check className="h-3 w-3 text-[#00D37F]" strokeWidth={3} />
-                  )}
-                </div>
-                <p className={`text-sm font-medium ${isStatusCompleted('application_submitted') ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                  Application Submitted
-                </p>
-              </div>
+                {/* Application Decision */}
+                <TimelineStep
+                  label="Application Decision"
+                  completed={isStatusCompleted('conditionally_approved') || isStatusCompleted('approved') || isDecisionDeclined}
+                  showLine
+                >
+                  <div className="flex flex-wrap gap-2 mt-2 ml-9">
+                    <PillBadge
+                      label="Conditional"
+                      active={opportunity?.status === 'conditionally_approved'}
+                    />
+                    <PillBadge
+                      label="Approved"
+                      active={opportunity?.status === 'approved'}
+                    />
+                    <PillBadge
+                      label="Declined"
+                      active={isDecisionDeclined}
+                    />
+                  </div>
+                </TimelineStep>
 
-              {/* Application Decision */}
-              <div>
-                <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isStatusCompleted('conditionally_approved') || isStatusCompleted('approved') || opportunity.status === 'declined'
-                      ? 'border-[#00D37F] bg-transparent'
-                      : 'border-gray-300 bg-transparent'
-                  }`}>
-                    {(isStatusCompleted('conditionally_approved') || isStatusCompleted('approved') || opportunity.status === 'declined') && (
-                      <Check className="h-3 w-3 text-[#00D37F]" strokeWidth={3} />
-                    )}
+                {/* Completed */}
+                <TimelineStep
+                  label="Completed"
+                  completed={isCompletedStage}
+                  showLine={false}
+                >
+                  <div className="flex flex-wrap gap-2 mt-2 ml-9">
+                    <PillBadge
+                      label="Settled"
+                      active={opportunity?.status === 'settled'}
+                    />
+                    <PillBadge
+                      label="Declined"
+                      active={isCompletedDeclined}
+                    />
+                    <PillBadge
+                      label="Withdrawn"
+                      active={opportunity?.status === 'withdrawn'}
+                    />
                   </div>
-                  <p className={`text-sm font-medium ${isStatusCompleted('conditionally_approved') || isStatusCompleted('approved') || opportunity.status === 'declined' ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                    Application Decision
-                  </p>
-                </div>
-                {/* Sub-items */}
-                <div className="ml-8 mt-2 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                      isStatusCompleted('conditionally_approved')
-                        ? 'border-[#00D37F] bg-transparent'
-                        : 'border-gray-300 bg-transparent'
-                    }`}>
-                      {isStatusCompleted('conditionally_approved') && (
-                        <Check className="h-2.5 w-2.5 text-[#00D37F]" strokeWidth={3} />
-                      )}
-                    </div>
-                    <p className={`text-xs ${isStatusCompleted('conditionally_approved') ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                      Conditionally Approved
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                      isStatusCompleted('approved')
-                        ? 'border-[#00D37F] bg-transparent'
-                        : 'border-gray-300 bg-transparent'
-                    }`}>
-                      {isStatusCompleted('approved') && (
-                        <Check className="h-2.5 w-2.5 text-[#00D37F]" strokeWidth={3} />
-                      )}
-                    </div>
-                    <p className={`text-xs ${isStatusCompleted('approved') ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                      Approved
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                      opportunity.status === 'declined'
-                        ? 'border-[#00D37F] bg-transparent'
-                        : 'border-gray-300 bg-transparent'
-                    }`}>
-                      {opportunity.status === 'declined' && (
-                        <Check className="h-2.5 w-2.5 text-[#00D37F]" strokeWidth={3} />
-                      )}
-                    </div>
-                    <p className={`text-xs ${opportunity.status === 'declined' ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                      Declined
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Application Completed */}
-              <div>
-                <div className="flex items-center gap-3">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                    isStatusCompleted('settled') || opportunity.status === 'declined' || opportunity.status === 'withdrawn'
-                      ? 'border-[#00D37F] bg-transparent'
-                      : 'border-gray-300 bg-transparent'
-                  }`}>
-                    {(isStatusCompleted('settled') || opportunity.status === 'declined' || opportunity.status === 'withdrawn') && (
-                      <Check className="h-3 w-3 text-[#00D37F]" strokeWidth={3} />
-                    )}
-                  </div>
-                  <p className={`text-sm font-medium ${isStatusCompleted('settled') || opportunity.status === 'declined' || opportunity.status === 'withdrawn' ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                    Application Completed
-                  </p>
-                </div>
-                {/* Sub-items */}
-                <div className="ml-8 mt-2 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                      isStatusCompleted('settled')
-                        ? 'border-[#00D37F] bg-transparent'
-                        : 'border-gray-300 bg-transparent'
-                    }`}>
-                      {isStatusCompleted('settled') && (
-                        <Check className="h-2.5 w-2.5 text-[#00D37F]" strokeWidth={3} />
-                      )}
-                    </div>
-                    <p className={`text-xs ${isStatusCompleted('settled') ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                      Settled
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                      opportunity.status === 'withdrawn'
-                        ? 'border-[#00D37F] bg-transparent'
-                        : 'border-gray-300 bg-transparent'
-                    }`}>
-                      {opportunity.status === 'withdrawn' && (
-                        <Check className="h-2.5 w-2.5 text-[#00D37F]" strokeWidth={3} />
-                      )}
-                    </div>
-                    <p className={`text-xs ${opportunity.status === 'withdrawn' ? 'text-[#02383B]' : 'text-gray-400'}`}>
-                      Withdrawn
-                    </p>
-                  </div>
-                </div>
+                </TimelineStep>
               </div>
             </div>
           </div>
-
-          {/* Key Dates - Dark teal section */}
-          <div style={{ backgroundColor: '#02383B' }} className="p-6 text-white">
-            {/* Date Created */}
-            <div className="mb-4">
-              <p className="text-sm text-[#00D37F] mb-1">Date Created</p>
-              <p className="font-semibold">{formatDate(opportunity.created_at)}</p>
-            </div>
-
-            {/* Target Settlement */}
-            <div className="mb-4">
-              <p className="text-sm text-[#00D37F] mb-1">Target Settlement</p>
-              {opportunity.target_settlement_date ? (
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold">{formatDate(opportunity.target_settlement_date)}</p>
-                  {canEditDates && onClearTargetSettlement && (
-                    <button
-                      onClick={onClearTargetSettlement}
-                      className="text-gray-400 hover:text-white transition-colors"
-                      title="Clear date"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <p className="text-gray-300">A target settlement date has not yet been set.</p>
-              )}
-            </div>
-
-            {/* Date Settled */}
-            <div className="mb-4">
-              <p className="text-sm text-[#00D37F] mb-1">Date Settled</p>
-              {opportunity.date_settled ? (
-                <div className="flex items-center gap-2">
-                  <p className="font-semibold">{formatDate(opportunity.date_settled)}</p>
-                  {canEditDates && onClearDateSettled && (
-                    <button
-                      onClick={onClearDateSettled}
-                      className="text-gray-400 hover:text-white transition-colors"
-                      title="Clear date"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <p className="text-gray-300">A date settled date has not yet been set</p>
-              )}
-            </div>
-
-            {/* Deal Finalisation Information */}
-            <div className="mb-4 pt-4 border-t border-white/20">
-              <p className="text-sm text-gray-400 mb-1">Deal Finalisation Information</p>
-              {opportunity.deal_finalisation_status ? (
-                <p className="text-white">{opportunity.deal_finalisation_status}</p>
-              ) : (
-                <p className="text-gray-300">No deal finalisation info yet</p>
-              )}
-            </div>
-
-            {/* Edit Button */}
-            {canEditDates && (
-              <button
-                onClick={onEditDealFinalisation || onEditTargetSettlement}
-                className="flex items-center gap-2 text-white hover:text-[#00D37F] transition-colors"
-              >
-                <Pencil className="h-4 w-4" />
-                <span>Edit</span>
-              </button>
-            )}
-          </div>
-        </div>
+        </>
       )}
 
       {/* Simplified card for unqualified opportunities */}
@@ -380,5 +336,62 @@ export function OpportunitySidebar({
         </Card>
       )}
     </div>
+  );
+}
+
+function TimelineStep({
+  label,
+  completed,
+  showLine,
+  children,
+}: {
+  label: string;
+  completed: boolean;
+  showLine: boolean;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <div className="flex items-start gap-3">
+        {/* Circle + Line */}
+        <div className="flex flex-col items-center">
+          <div
+            className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
+              completed
+                ? 'bg-[#00D37F]'
+                : 'bg-gray-200'
+            }`}
+          >
+            {completed && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+          </div>
+          {showLine && (
+            <div
+              className={`w-0.5 flex-1 min-h-[28px] ${
+                completed ? 'bg-[#00D37F]' : 'bg-gray-200'
+              }`}
+            />
+          )}
+        </div>
+        {/* Label */}
+        <span className={`text-[15px] font-medium pt-0.5 ${completed ? 'text-[#02383B]' : 'text-gray-400'}`}>
+          {label}
+        </span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function PillBadge({ label, active }: { label: string; active: boolean }) {
+  return (
+    <span
+      className={`inline-block px-3.5 py-1 rounded-full text-xs font-medium border ${
+        active
+          ? 'bg-[#00D37F] text-white border-[#00D37F]'
+          : 'bg-white text-gray-500 border-gray-300'
+      }`}
+    >
+      {label}
+    </span>
   );
 }

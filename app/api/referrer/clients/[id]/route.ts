@@ -49,7 +49,8 @@ export async function GET(
     const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES)
       .find({
         client_id: clientId,
-        organization_id: userData.organisation_id
+        organization_id: userData.organisation_id,
+        deleted_at: null
       })
       .sort({ created_at: -1 })
       .toArray();

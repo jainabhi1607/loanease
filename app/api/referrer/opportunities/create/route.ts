@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
     const db = await getDatabase();
 
     const body = await request.json();
-    console.log('Referrer create API - Received body:', JSON.stringify(body, null, 2));
 
     const {
       referrer_user_id,
@@ -57,8 +56,6 @@ export async function POST(request: NextRequest) {
       terms_accepted,
       status // 'draft' or 'opportunity'
     } = body;
-
-    console.log('Referrer create API - Parsed new_client_data:', new_client_data);
 
     // Validate referrer user selection
     if (!referrer_user_id) {
@@ -97,8 +94,6 @@ export async function POST(request: NextRequest) {
       });
 
       if (existingClient) {
-        // Use existing client
-        console.log('Client with ABN already exists, using existing client:', existingClient._id);
         clientId = existingClient._id;
       } else {
         // Create new client - note: address, time_in_business, industry are on opportunities/opportunity_details, not clients
@@ -117,8 +112,6 @@ export async function POST(request: NextRequest) {
           created_at: new Date().toISOString()
         };
 
-        console.log('Attempting to create client with data:', clientData);
-
         const clientResult = await db.collection(COLLECTIONS.CLIENTS).insertOne(clientData as any);
 
         if (!clientResult.insertedId) {
@@ -129,7 +122,6 @@ export async function POST(request: NextRequest) {
           }, { status: 500 });
         }
 
-        console.log('Client created successfully:', newClientId);
         clientId = newClientId;
 
         // Log audit trail for client creation
@@ -169,7 +161,6 @@ export async function POST(request: NextRequest) {
       }
     }
     const nextOpportunityId = `CF${nextNumber}`;
-    console.log('Generated next opportunity_id:', nextOpportunityId);
 
     // Create opportunity
     const opportunityId = new ObjectId().toString();
@@ -186,13 +177,6 @@ export async function POST(request: NextRequest) {
 
     // Add client-related fields to opportunities table if new client
     if (client_type === 'new' && new_client_data) {
-      console.log('Saving client data to opportunity:', {
-        entityType: new_client_data.entityType,
-        industry: new_client_data.industry,
-        timeInBusiness: new_client_data.timeInBusiness,
-        abn: new_client_data.abn,
-        companyAddress: new_client_data.companyAddress
-      });
       const entityMap: Record<string, number> = {
         'private_company': 1, 'sole_trader': 2, 'smsf_trust': 3, 'trust': 4, 'partnership': 5, 'individual': 6
       };
@@ -213,14 +197,6 @@ export async function POST(request: NextRequest) {
       opportunityData.lvr = typeof lvr === 'number' ? lvr : null;
       opportunityData.icr = typeof icr === 'number' ? icr : null;
 
-      console.log('Loan details being saved to opportunities:', {
-        loan_amount: opportunityData.loan_amount,
-        property_value: opportunityData.property_value,
-        loan_purpose: opportunityData.loan_purpose,
-        loan_type: opportunityData.loan_type,
-        lvr: opportunityData.lvr,
-        icr: opportunityData.icr
-      });
     }
 
     const opportunityResult = await db.collection(COLLECTIONS.OPPORTUNITIES).insertOne(opportunityData);
@@ -246,13 +222,6 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     };
 
-    console.log('Creating opportunity_details with:', {
-      opportunity_id: opportunityId,
-      client_address: detailsData.client_address,
-      time_in_business: detailsData.time_in_business,
-      brief_overview: detailsData.brief_overview
-    });
-
     // Add detailed info if provided
     if (has_more_info) {
       // Address fields
@@ -260,8 +229,6 @@ export async function POST(request: NextRequest) {
 
       // Financial details - always process if financial_details object exists
       if (financial_details) {
-        console.log('Processing financial_details:', JSON.stringify(financial_details, null, 2));
-
         // Save "funded from rental" field - convert yes/no to Yes/No for consistency with admin display
         detailsData.rental_income = financial_details.fundedFromRental === 'yes' ? 'Yes' : (financial_details.fundedFromRental === 'no' ? 'No' : null);
 
@@ -280,20 +247,6 @@ export async function POST(request: NextRequest) {
         detailsData.ato_liabilities = financial_details.existingATO === 'yes' ? 1 : (financial_details.existingATO === 'no' ? 0 : null);
         detailsData.credit_file_issues = financial_details.creditIssues === 'yes' ? 1 : (financial_details.creditIssues === 'no' ? 0 : null);
 
-        console.log('Financial details being saved to opportunity_details:', {
-          rental_income: detailsData.rental_income,
-          net_profit: detailsData.net_profit,
-          ammortisation: detailsData.ammortisation,
-          deprecition: detailsData.deprecition,
-          existing_interest_costs: detailsData.existing_interest_costs,
-          rental_expense: detailsData.rental_expense,
-          proposed_rental_income: detailsData.proposed_rental_income,
-          existing_liabilities: detailsData.existing_liabilities,
-          additional_property: detailsData.additional_property,
-          smsf_structure: detailsData.smsf_structure,
-          ato_liabilities: detailsData.ato_liabilities,
-          credit_file_issues: detailsData.credit_file_issues
-        });
       }
 
       // Outcome and notes
@@ -309,8 +262,6 @@ export async function POST(request: NextRequest) {
       detailsData.term4 = terms_accepted.term4 ? 1 : 0;
     }
 
-    console.log('Final detailsData being inserted:', JSON.stringify(detailsData, null, 2));
-
     const detailsResult = await db.collection(COLLECTIONS.OPPORTUNITY_DETAILS).insertOne(detailsData);
 
     if (!detailsResult.insertedId) {
@@ -318,8 +269,6 @@ export async function POST(request: NextRequest) {
       console.error('Details data that failed:', JSON.stringify(detailsData, null, 2));
       // Don't fail the whole operation, just log the error
       console.warn('Opportunity created but details failed to save');
-    } else {
-      console.log('Opportunity details saved successfully');
     }
 
     // Step 4: Log audit trail for opportunity creation
@@ -336,11 +285,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // Step 5: Opportunity alert emails disabled
-    if (status === 'opportunity') {
-      console.log(`[EMAIL DISABLED] Opportunity alert emails for ${nextOpportunityId}`);
-    }
+    // TODO: Send opportunity alert emails when email templates are configured
 
     return NextResponse.json({
       success: true,

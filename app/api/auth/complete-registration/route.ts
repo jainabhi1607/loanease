@@ -114,9 +114,7 @@ export async function POST(request: NextRequest) {
       created_at: new Date().toISOString()
     });
 
-    // EMAIL DISABLED: Email sending is disabled until a new email service provider is configured.
-    // Welcome emails commented out - uncomment when new email provider is ready.
-    console.log(`[EMAIL DISABLED] Welcome email for ${invitation.email}`);
+    // TODO: Send welcome email when registration completes via invitation
 
     return NextResponse.json({
       success: true,

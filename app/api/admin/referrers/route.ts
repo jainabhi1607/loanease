@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch all organisations
     const organisations = await db.collection('organisations')
-      .find({})
+      .find({ deleted_at: null })
       .sort({ created_at: -1 })
       .toArray();
 
