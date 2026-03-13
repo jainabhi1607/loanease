@@ -18,6 +18,9 @@ npm run dev         # Development server (localhost:3000)
 npm run build       # Production build
 npm run lint        # Linting
 
+# Database
+node scripts/create-indexes.js   # Create/update MongoDB indexes (24 indexes total)
+
 # Mobile App (mobile/)
 cd mobile
 npm install         # Install dependencies
@@ -85,9 +88,12 @@ npx expo start --android  # Android emulator
 
 ### JWT-Based Auth (Web)
 - **Access Token**: 15-minute expiry, stored in `cf_access_token` cookie
-- **Refresh Token**: 7-day expiry, stored in `cf_refresh_token` cookie
+- **Refresh Token**: 7-day expiry (30-day with Remember Me), stored in `cf_refresh_token` cookie
+- **Remember Me**: `cf_remember_me` cookie extends token expiry to 30 days
 - **2FA Cookie**: `cf_2fa_verified` cookie for 2FA session tracking
 - **Password Hashing**: bcrypt with 12 rounds
+- **Refresh Token Rotation**: Old token invalidated on each refresh; new session created in `user_sessions` collection
+- **Session Tracking**: `user_sessions` collection stores refresh tokens; logout invalidates session
 
 ### Mobile Auth
 - **Token Storage**: `expo-secure-store` (native) / `localStorage` (web)
@@ -97,10 +103,11 @@ npx expo start --android  # Android emulator
 - **Auto-refresh**: 401 → refresh token → retry request (with queue for concurrent requests)
 
 ### Auth Flow
-1. Login → Verify password with bcrypt → Issue JWT tokens
-2. 2FA (if enabled) → Verify code → Set 2FA cookie
+1. Login → Verify password with bcrypt → Issue JWT tokens → Create `user_sessions` record
+2. 2FA (if enabled/mandatory for admins) → Verify code → Set 2FA cookie
 3. Middleware checks JWT on protected routes
-4. Refresh token used for silent token renewal
+4. Refresh token → Delete old session → Issue new tokens → Create new session (rotation)
+5. Logout → Verify refresh token → Delete session → Clear cookies
 
 ### Key Auth Files
 - `lib/auth/jwt.ts` - JWT generation/verification using `jose` library
@@ -327,9 +334,11 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 
 ### Data Security
 - JWT verification on all protected routes
+- Refresh token rotation via `user_sessions` collection (old token invalidated on refresh)
 - Referrers filtered by organisation_id
 - Admins see all data
 - All mutations logged in audit_logs
+- Role allowlists prevent privilege escalation on user create/update endpoints
 
 ## Admin Page Features
 
@@ -398,6 +407,10 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 3. Implement rate limiting on public endpoints
 4. Log security events in audit_logs
 5. Use parameterized queries (MongoDB handles this)
+6. **Cryptographic randomness**: Use `crypto.randomInt()` (server) or `crypto.getRandomValues()` (client) — never `Math.random()`
+7. **Role allowlists**: Always validate roles against an allowlist on user creation/update (e.g., referrer_admin can only create referrer roles)
+8. **Soft deletes**: All queries on `clients`, `opportunities`, `organisations` MUST include `deleted_at: null`
+9. **No debug logging in production**: Never `console.log` PII, financial data, passwords, or OTP codes
 
 ### Database Operations
 - **ICR and LVR**: Auto-calculated in edit dialogs, stored in DB. Display as plain numbers (no `%` sign)
@@ -423,6 +436,7 @@ NEXT_PUBLIC_APP_URL=
 ## Email System
 
 ### Email Configuration
+- **Status**: ACTIVE (all Postmark sending enabled as of Mar 2026)
 - **From Email**: `noreply@loanease.com` (general), `partners@loanease.com` (agreements)
 - **Domain**: `loanease.com`
 
