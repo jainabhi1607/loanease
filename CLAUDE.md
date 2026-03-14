@@ -89,11 +89,12 @@ npx expo start --android  # Android emulator
 ### JWT-Based Auth (Web)
 - **Access Token**: 15-minute expiry, stored in `cf_access_token` cookie
 - **Refresh Token**: 7-day expiry (30-day with Remember Me), stored in `cf_refresh_token` cookie
-- **Remember Me**: `cf_remember_me` cookie extends token expiry to 30 days
-- **2FA Cookie**: `cf_2fa_verified` cookie for 2FA session tracking
+- **Remember Me**: `cf_remember_me` cookie extends ALL token/cookie expiry to 30 days (refresh token, 2FA cookie, user_sessions)
+- **2FA Cookie**: `cf_2fa_verified` cookie stores userId for 2FA session tracking (7d default, 30d with Remember Me)
 - **Password Hashing**: bcrypt with 12 rounds
 - **Refresh Token Rotation**: Old token invalidated on each refresh; new session created in `user_sessions` collection
-- **Session Tracking**: `user_sessions` collection stores refresh tokens; logout invalidates session
+- **Session Tracking**: `user_sessions` collection stores refresh tokens for both web AND mobile; logout invalidates session
+- **Middleware Token Refresh**: When access token expires, middleware verifies refresh token and issues a new access token cookie on the response (transparent to user)
 
 ### Mobile Auth
 - **Token Storage**: `expo-secure-store` (native) / `localStorage` (web)
@@ -103,11 +104,12 @@ npx expo start --android  # Android emulator
 - **Auto-refresh**: 401 → refresh token → retry request (with queue for concurrent requests)
 
 ### Auth Flow
-1. Login → Verify password with bcrypt → Issue JWT tokens → Create `user_sessions` record
-2. 2FA (if enabled/mandatory for admins) → Verify code → Set 2FA cookie
-3. Middleware checks JWT on protected routes
-4. Refresh token → Delete old session → Issue new tokens → Create new session (rotation)
-5. Logout → Verify refresh token → Delete session → Clear cookies
+1. Login → Verify password with bcrypt → Issue JWT tokens → Create `user_sessions` record (web + mobile)
+2. 2FA (if enabled/mandatory for admins) → Verify code → Set 2FA cookie (reads `cf_remember_me` cookie for correct expiry)
+3. Middleware checks JWT on protected routes; refreshes access token from refresh token when expired
+4. Middleware 2FA check: if `cf_2fa_verified` cookie missing/mismatched → redirect to `/login` (never to verify-2fa mid-session)
+5. Refresh token → Delete old session → Issue new tokens → Create new session (rotation)
+6. Logout → Verify refresh token → Delete session → Clear all 4 cookies
 
 ### Key Auth Files
 - `lib/auth/jwt.ts` - JWT generation/verification using `jose` library
@@ -210,13 +212,28 @@ Draft → Opportunity → Application → Settled/Declined/Withdrawn
 ```
 
 ### Application Status Details
-- **Application Created** → **Application Submitted** → **Application Decision** → **Application Completed**
 - **Decision Declined** vs **Completed Declined**: Both store `status: 'declined'` in DB. Distinguished by `completed_declined_reason` field:
   - `declined` + no `completed_declined_reason` = Decision Declined (progress ~60%)
   - `declined` + has `completed_declined_reason` = Completed Declined (progress 100%)
-- **Application Closed**: `deal_finalisation_status` is set on `opportunity_details`
 - **Settlements page**: Shows applications with `date_settled` set OR `deal_finalisation_status` set
 - **Date Settled / Target Settlement edit**: Super admin only (pencil icon + clear button)
+
+### Application Navigation (Admin)
+- **"Application" dropdown menu** in admin nav bar with two sub-items:
+  - **Applications**: Active applications page
+  - **Applications Archive**: Archived applications page
+
+### Applications Page (Active)
+- **Filter options**: All Applications, Application Created, Application Submitted, Decision Conditional, Decision Approved, Completed: Declined
+- **Excludes**: decision_declined, settled, withdrawn statuses (these go to archive)
+- **30-day rule**: Applications with `target_settlement_date` more than 30 days old are hidden
+- Status labels: "Decision Conditional" (conditionally_approved), "Decision Approved" (approved), "Completed: Declined" (declined + completed_declined_reason)
+
+### Applications Archive Page
+- **Shows**: decision_declined, settled, withdrawn statuses
+- **Also shows**: Any application with `target_settlement_date` more than 30 days old (regardless of status)
+- **Filter options**: All Archived, Decision Declined, Settled, Withdrawn
+- Route: `/admin/applications/archive`
 
 ### 3. User Roles & Access
 
@@ -343,9 +360,15 @@ const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
 ## Admin Page Features
 
 ### Applications Page Filter
-- Popover filter dropdown with 6 options: All Applications, Application Created, Application Submitted, Application Decision, Application Completed, Application Closed
+- Popover filter dropdown with 6 options: All Applications, Application Created, Application Submitted, Decision Conditional, Decision Approved, Completed: Declined
 - Header layout: `Applications (count) [Filter Dropdown] [Search]`
-- Application Closed = `deal_finalisation_status` is set on opportunity_details
+- Excludes decision_declined, settled, withdrawn (moved to Applications Archive)
+- Hides applications with `target_settlement_date` > 30 days old
+
+### Applications Archive Page
+- Route: `/admin/applications/archive`
+- Shows decision_declined, settled, withdrawn statuses + applications with `target_settlement_date` > 30 days old
+- Filter: All Archived, Decision Declined, Settled, Withdrawn
 
 ### Settlements Page (formerly "Upcoming Settlements")
 - Menu item: "Settlements" (not "Upcoming Settlements")
