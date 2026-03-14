@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
 import { verifyAccessToken, verifyRefreshToken, generateTokenPair, JWTPayload } from './jwt';
 import { getDatabase } from '@/lib/mongodb/client';
+import { deleteUserSession, createUserSession } from '@/lib/mongodb/repositories/auth';
 
 // Cookie names
 export const ACCESS_TOKEN_COOKIE = 'cf_access_token';
@@ -108,8 +109,10 @@ export async function getCurrentUser(): Promise<JWTPayload | null> {
     // Preserve remember me preference on token refresh
     const rememberMe = cookieStore.get(REMEMBER_ME_COOKIE)?.value === 'true';
 
-    // Generate new tokens and set cookies
-    await setAuthCookies(refreshPayload, rememberMe);
+    // Invalidate old refresh token (rotation) and generate new tokens
+    await deleteUserSession(refreshToken);
+    const newTokens = await setAuthCookies(refreshPayload, rememberMe);
+    await createUserSession(refreshPayload.userId, newTokens.refreshToken, undefined, undefined, rememberMe);
     return refreshPayload;
   }
 

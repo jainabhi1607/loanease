@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { jwtVerify, SignJWT } from 'jose';
+import { jwtVerify, SignJWT, CompactEncrypt, compactDecrypt, base64url } from 'jose';
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'loanease-jwt-secret-change-in-production-2024'
+  process.env.JWT_SECRET || 'loanease-jwt-secret-dev-only-not-for-production'
 );
 
 const JWT_REFRESH_SECRET = new TextEncoder().encode(
-  process.env.JWT_REFRESH_SECRET || 'loanease-refresh-secret-change-in-production-2024'
+  process.env.JWT_REFRESH_SECRET || 'loanease-refresh-secret-dev-only-not-for-production'
 );
+
+const TOKEN_ENCRYPTION_KEY = process.env.TOKEN_ENCRYPTION_KEY
+  ? base64url.decode(process.env.TOKEN_ENCRYPTION_KEY)
+  : base64url.decode('bG9hbmVhc2UtZGV2LWVuY3J5cHRpb24ta2V5LTAwMDA');
 
 // Cookie names
 const ACCESS_TOKEN_COOKIE = 'cf_access_token';
@@ -24,9 +28,21 @@ interface JWTPayload {
   twoFaEnabled?: boolean;
 }
 
+async function decryptToken(encryptedToken: string): Promise<string> {
+  const { plaintext } = await compactDecrypt(encryptedToken, TOKEN_ENCRYPTION_KEY);
+  return new TextDecoder().decode(plaintext);
+}
+
+async function encryptToken(signedJwt: string): Promise<string> {
+  return new CompactEncrypt(new TextEncoder().encode(signedJwt))
+    .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
+    .encrypt(TOKEN_ENCRYPTION_KEY);
+}
+
 async function verifyAccessToken(token: string): Promise<JWTPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const signedJwt = await decryptToken(token);
+    const { payload } = await jwtVerify(signedJwt, JWT_SECRET);
     return payload as unknown as JWTPayload;
   } catch {
     return null;
@@ -35,7 +51,8 @@ async function verifyAccessToken(token: string): Promise<JWTPayload | null> {
 
 async function verifyRefreshToken(token: string): Promise<JWTPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, JWT_REFRESH_SECRET);
+    const signedJwt = await decryptToken(token);
+    const { payload } = await jwtVerify(signedJwt, JWT_REFRESH_SECRET);
     return payload as unknown as JWTPayload;
   } catch {
     return null;
@@ -43,11 +60,12 @@ async function verifyRefreshToken(token: string): Promise<JWTPayload | null> {
 }
 
 async function generateAccessTokenInMiddleware(payload: JWTPayload): Promise<string> {
-  return new SignJWT({ ...payload })
+  const signedJwt = await new SignJWT({ ...payload })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('15m')
     .sign(JWT_SECRET);
+  return encryptToken(signedJwt);
 }
 
 function clearAllAuthCookies(response: NextResponse): NextResponse {
