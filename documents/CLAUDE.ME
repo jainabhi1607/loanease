@@ -1,0 +1,23 @@
+# CLAUDE.ME - Session Log
+
+## Completed Tasks
+
+### 2025-11-25: Type Error Fixes (Build Failures)
+
+**Issue**: Build failing due to Supabase returning `never` types for query results.
+
+**Files Fixed**:
+- `app/api/referrer/opportunities/[id]/notes/[noteId]/route.ts` - Added type assertions for `OpportunityData` and `NoteData`
+- `app/api/referrer/opportunities/[id]/notes/route.ts` - Added type assertion for `OpportunityData`
+- `app/api/referrer/opportunities/[id]/route.ts` - Added type assertions for opportunity query (`as any`) and `CreatorUser`
+- `components/EditReferrerUserDialog.tsx` - Fixed boolean type coercion with `!!` for disabled prop
+
+**Pattern Used**:
+```typescript
+// Supabase type inference fix
+type OpportunityData = { id: string; organization_id: string } | null;
+const { data: opportunityData } = await serviceClient.from('opportunities')...
+const opportunity = opportunityData as OpportunityData;
+```
+
+**Result**: Build successful.
