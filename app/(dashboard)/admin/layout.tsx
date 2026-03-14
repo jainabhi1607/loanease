@@ -11,6 +11,7 @@ import {
   Loader2,
   Menu,
   X,
+  ChevronDown,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
@@ -19,12 +20,20 @@ interface NavigationItem {
   name: string;
   href: string;
   superAdminOnly?: boolean;
+  children?: { name: string; href: string }[];
 }
 
 const navigation: NavigationItem[] = [
   { name: 'Dashboard', href: '/admin/dashboard' },
   { name: 'Opportunities', href: '/admin/opportunities' },
-  { name: 'Applications', href: '/admin/applications' },
+  {
+    name: 'Application',
+    href: '/admin/applications',
+    children: [
+      { name: 'Applications', href: '/admin/applications' },
+      { name: 'Applications Archive', href: '/admin/applications/archive' },
+    ],
+  },
   { name: 'Settlements', href: '/admin/settlements/upcoming' },
   { name: 'Clients', href: '/admin/clients' },
   { name: 'Referrers', href: '/admin/referrers' },
@@ -153,6 +162,50 @@ function AdminLayoutContent({
                   }
                 }
 
+                // Dropdown menu for items with children
+                if (item.children) {
+                  const isChildActive = item.children.some(
+                    (child) => pathname === child.href || pathname.startsWith(child.href)
+                  ) || (isOpportunityDetail && isFromApplications);
+
+                  return (
+                    <div key={item.name} className="relative group">
+                      <button
+                        className={cn(
+                          'flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+                          isChildActive
+                            ? 'text-white'
+                            : 'text-gray-300 hover:text-white'
+                        )}
+                      >
+                        {item.name}
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      </button>
+                      <div className="absolute left-0 top-full pt-1 hidden group-hover:block z-50">
+                        <div className="bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[200px]">
+                          {item.children.map((child) => {
+                            const isSubActive = pathname === child.href || pathname.startsWith(child.href);
+                            return (
+                              <LoadingLink
+                                key={child.name}
+                                href={child.href}
+                                className={cn(
+                                  'block px-4 py-2.5 text-sm transition-colors',
+                                  isSubActive
+                                    ? 'text-[#02383B] font-semibold bg-gray-50'
+                                    : 'text-gray-700 hover:bg-gray-50 hover:text-[#02383B]'
+                                )}
+                              >
+                                {child.name}
+                              </LoadingLink>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
                 return (
                   <LoadingLink
                     key={item.name}
@@ -215,6 +268,34 @@ function AdminLayoutContent({
                     if (item.href === '/admin/settlements/upcoming') isActive = true;
                     else if (item.href === '/admin/opportunities') isActive = false;
                   }
+                }
+
+                if (item.children) {
+                  return (
+                    <div key={item.name}>
+                      <span className="block px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        {item.name}
+                      </span>
+                      {item.children.map((child) => {
+                        const isSubActive = pathname === child.href || pathname.startsWith(child.href);
+                        return (
+                          <LoadingLink
+                            key={child.name}
+                            href={child.href}
+                            className={cn(
+                              'block pl-6 pr-3 py-2 text-sm font-medium rounded-md',
+                              isSubActive
+                                ? 'bg-[#0f2a2a] text-white'
+                                : 'text-gray-300 hover:bg-[#0f2a2a] hover:text-white'
+                            )}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {child.name}
+                          </LoadingLink>
+                        );
+                      })}
+                    </div>
+                  );
                 }
 
                 return (

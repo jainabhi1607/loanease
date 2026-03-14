@@ -245,11 +245,12 @@ export interface UserSession {
   created_at: string;
 }
 
-export async function createUserSession(userId: string, refreshToken: string, ipAddress?: string, userAgent?: string): Promise<UserSession> {
+export async function createUserSession(userId: string, refreshToken: string, ipAddress?: string, userAgent?: string, rememberMe: boolean = false): Promise<UserSession> {
   const db = await getDatabase();
 
-  // Expires in 7 days
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+  // Expires in 7 days (or 30 days with Remember Me)
+  const expiryDays = rememberMe ? 30 : 7;
+  const expiresAt = new Date(Date.now() + expiryDays * 24 * 60 * 60 * 1000).toISOString();
 
   const session: UserSession = {
     _id: new ObjectId().toString(),

@@ -43,12 +43,13 @@ export async function POST(request: NextRequest) {
     await deleteUserSession(validatedData.refresh_token);
 
     // Generate new token pair
+    const isAdminRole = user.role === 'super_admin' || user.role === 'admin_team';
     const newPayload: JWTPayload = {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
       organisationId: user.organisation_id,
-      twoFaEnabled: user.two_fa_enabled,
+      twoFaEnabled: user.two_fa_enabled || isAdminRole,
     };
 
     const tokens = await generateTokenPair(newPayload);

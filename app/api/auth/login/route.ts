@@ -230,16 +230,19 @@ export async function POST(request: NextRequest) {
       twoFaEnabled: user.two_fa_enabled || isAdmin
     };
 
-    // Set auth cookies (for web)
-    await setAuthCookies(jwtPayload, rememberMe === true);
+    // Set auth cookies (for web) and get tokens back
+    const webTokens = await setAuthCookies(jwtPayload, rememberMe === true);
 
-    // Generate tokens for mobile app
+    // Create user_sessions record for web login (enables refresh token rotation and revocation)
+    await createUserSession(user._id, webTokens.refreshToken, ip, userAgent, rememberMe === true);
+
+    // Generate separate tokens for mobile app
     const isMobileApp = validatedData.mobile_app === true;
     let tokens = null;
     if (isMobileApp) {
-      tokens = await generateTokenPair(jwtPayload);
+      tokens = await generateTokenPair(jwtPayload, rememberMe === true);
       // Store refresh token session for token rotation
-      await createUserSession(user._id, tokens.refreshToken, ip, userAgent);
+      await createUserSession(user._id, tokens.refreshToken, ip, userAgent, rememberMe === true);
     }
 
     const responseData: Record<string, unknown> = {

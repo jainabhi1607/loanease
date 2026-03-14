@@ -22,6 +22,7 @@ function Verify2FAContent() {
   const [error, setError] = useState<string | null>(null);
   const [resendTimer, setResendTimer] = useState(0);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const [sessionUserId, setSessionUserId] = useState<string | null>(null);
 
   // Check if user has a valid session that requires 2FA
   useEffect(() => {
@@ -52,6 +53,8 @@ function Verify2FAContent() {
           return;
         }
 
+        // Store userId for 2FA ownership validation
+        setSessionUserId(userData.user?.id || userData.user?._id || null);
         setIsCheckingSession(false);
       } catch (err) {
         console.error('Session check error:', err);
@@ -137,12 +140,6 @@ function Verify2FAContent() {
     setError(null);
 
     try {
-      // Use API route for verification with rate limiting
-      // Get userId from session for ownership validation
-      const meResponse = await fetch('/api/auth/me');
-      const meData = meResponse.ok ? await meResponse.json() : null;
-      const sessionUserId = meData?.user?.id || meData?.user?._id || null;
-
       // Check if remember me was selected on login page
       const rememberMe = sessionStorage.getItem('rememberMe') === 'true';
 

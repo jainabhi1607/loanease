@@ -19,8 +19,9 @@ const COOKIE_OPTIONS = {
 
 /**
  * Set auth cookies after successful login
+ * Returns the generated tokens so the caller can store the refresh token in user_sessions
  */
-export async function setAuthCookies(payload: JWTPayload, rememberMe: boolean = false): Promise<void> {
+export async function setAuthCookies(payload: JWTPayload, rememberMe: boolean = false): Promise<{ accessToken: string; refreshToken: string }> {
   const cookieStore = await cookies();
   const { accessToken, refreshToken } = await generateTokenPair(payload, rememberMe);
 
@@ -47,6 +48,8 @@ export async function setAuthCookies(payload: JWTPayload, rememberMe: boolean = 
   } else {
     cookieStore.delete(REMEMBER_ME_COOKIE);
   }
+
+  return { accessToken, refreshToken };
 }
 
 /**

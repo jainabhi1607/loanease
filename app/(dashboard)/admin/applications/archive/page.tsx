@@ -37,15 +37,13 @@ interface Application {
 }
 
 const FILTER_OPTIONS = [
-  { value: 'all', label: 'All Applications' },
-  { value: 'application_created', label: 'Application Created' },
-  { value: 'application_submitted', label: 'Application Submitted' },
-  { value: 'decision_conditional', label: 'Decision Conditional' },
-  { value: 'decision_approved', label: 'Decision Approved' },
-  { value: 'completed_declined', label: 'Completed: Declined' },
+  { value: 'all', label: 'All Archived' },
+  { value: 'decision_declined', label: 'Decision Declined' },
+  { value: 'settled', label: 'Settled' },
+  { value: 'withdrawn', label: 'Withdrawn' },
 ];
 
-function ApplicationsContent() {
+function ApplicationsArchiveContent() {
   const router = useRouter();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -63,7 +61,6 @@ function ApplicationsContent() {
 
   const fetchApplications = async () => {
     try {
-      // Filter to show only applications (status >= application_created)
       const response = await fetch('/api/admin/opportunities?status=applications');
       const data = await response.json();
 
@@ -122,19 +119,17 @@ function ApplicationsContent() {
   };
 
   const formatStatus = (app: Application) => {
-    if (app.status === 'declined' && app.completed_declined_reason) {
-      return 'Completed: Declined';
-    }
+    // Decision declined: declined without completed_declined_reason
     if (app.status === 'declined' && !app.completed_declined_reason) {
       return 'Decision Declined';
     }
-    const statusMap: { [key: string]: string } = {
-      'conditionally_approved': 'Decision Conditional',
-      'approved': 'Decision Approved',
-    };
-    return statusMap[app.status] || app.status
+    // Completed declined: declined with completed_declined_reason
+    if (app.status === 'declined' && app.completed_declined_reason) {
+      return 'Completed: Declined';
+    }
+    return app.status
       .split('_')
-      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
 
@@ -168,34 +163,30 @@ function ApplicationsContent() {
     return targetDate < thirtyDaysAgo;
   };
 
-  // Exclude archived statuses (decision_declined, settled, withdrawn) and applications with target_settlement_date > 30 days old
-  const activeApplications = applications.filter((app) => {
-    // Exclude decision declined (declined without completed_declined_reason)
-    if (app.status === 'declined' && !app.completed_declined_reason) return false;
-    // Exclude settled
-    if (app.status === 'settled') return false;
-    // Exclude withdrawn
-    if (app.status === 'withdrawn') return false;
-    // Exclude applications with target_settlement_date more than 30 days old
-    if (isOlderThan30Days(app.target_settlement_date)) return false;
-    return true;
+  // Archive shows: decision_declined, settled, withdrawn, OR target_settlement_date > 30 days old
+  const archivedApplications = applications.filter((app) => {
+    // Decision declined (declined without completed_declined_reason)
+    if (app.status === 'declined' && !app.completed_declined_reason) return true;
+    // Settled
+    if (app.status === 'settled') return true;
+    // Withdrawn
+    if (app.status === 'withdrawn') return true;
+    // Target settlement date more than 30 days old
+    if (isOlderThan30Days(app.target_settlement_date)) return true;
+    return false;
   });
 
-  // Filter applications based on status filter
-  const statusFilteredApplications = activeApplications.filter((app) => {
+  // Filter by status dropdown
+  const statusFilteredApplications = archivedApplications.filter((app) => {
     switch (statusFilter) {
       case 'all':
         return true;
-      case 'application_created':
-        return app.status === 'application_created';
-      case 'application_submitted':
-        return app.status === 'application_submitted';
-      case 'decision_conditional':
-        return app.status === 'conditionally_approved';
-      case 'decision_approved':
-        return app.status === 'approved';
-      case 'completed_declined':
-        return app.status === 'declined' && !!app.completed_declined_reason;
+      case 'decision_declined':
+        return app.status === 'declined' && !app.completed_declined_reason;
+      case 'settled':
+        return app.status === 'settled';
+      case 'withdrawn':
+        return app.status === 'withdrawn';
       default:
         return true;
     }
@@ -258,7 +249,7 @@ function ApplicationsContent() {
     return (
       <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center py-12">
-          <p className="text-gray-500">Loading applications...</p>
+          <p className="text-gray-500">Loading archived applications...</p>
         </div>
       </div>
     );
@@ -269,19 +260,19 @@ function ApplicationsContent() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#02383B]">Applications</h1>
+          <h1 className="text-2xl font-bold text-[#02383B]">Applications Archive</h1>
           <p className="text-gray-500 mt-1">
-            Manage loan applications that have progressed beyond opportunity stage.
+            View archived loan applications including declined, settled, and withdrawn.
           </p>
         </div>
       </div>
 
-      {/* Main Applications Section */}
+      {/* Main Section */}
       <div className="bg-[#EDFFD7] rounded-lg border border-gray-200">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h2 className="text-lg font-bold text-gray-900">Applications</h2>
+              <h2 className="text-lg font-bold text-gray-900">Archived Applications</h2>
               <span className="text-gray-500 text-sm">({filteredApplications.length})</span>
               <Popover open={filterOpen} onOpenChange={setFilterOpen}>
                 <PopoverTrigger asChild>
@@ -330,7 +321,7 @@ function ApplicationsContent() {
           <div className="p-10 text-center">
             {searchTerm ? (
               <>
-                <p className="text-gray-500 mb-2">No applications found matching &quot;{searchTerm}&quot;</p>
+                <p className="text-gray-500 mb-2">No archived applications found matching &quot;{searchTerm}&quot;</p>
                 <Button
                   variant="outline"
                   size="sm"
@@ -342,9 +333,9 @@ function ApplicationsContent() {
               </>
             ) : (
               <>
-                <p className="text-gray-500 mb-4">No applications yet</p>
+                <p className="text-gray-500 mb-4">No archived applications</p>
                 <p className="text-sm text-gray-400">
-                  Applications will appear here when opportunities are converted to applications.
+                  Declined, settled, and withdrawn applications will appear here.
                 </p>
               </>
             )}
@@ -452,16 +443,16 @@ function ApplicationsContent() {
   );
 }
 
-export default function ApplicationsPage() {
+export default function ApplicationsArchivePage() {
   return (
     <Suspense fallback={
       <div className="max-w-[1290px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center py-12">
-          <p className="text-gray-500">Loading applications...</p>
+          <p className="text-gray-500">Loading archived applications...</p>
         </div>
       </div>
     }>
-      <ApplicationsContent />
+      <ApplicationsArchiveContent />
     </Suspense>
   );
 }

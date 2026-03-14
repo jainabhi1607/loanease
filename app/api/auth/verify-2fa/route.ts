@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 import { verify2FACode, deleteUsed2FACodes } from '@/lib/mongodb/repositories/auth';
 import { findUserById } from '@/lib/mongodb/repositories/users';
 import { createAuditLog } from '@/lib/mongodb/repositories/audit-logs';
-import { set2FAVerifiedCookie } from '@/lib/auth/session';
+import { set2FAVerifiedCookie, REMEMBER_ME_COOKIE } from '@/lib/auth/session';
 
 // In-memory rate limiting (consider Redis for production)
 const attemptStore = new Map<string, { count: number; firstAttempt: number; lockedUntil?: number }>();
@@ -125,8 +125,11 @@ export async function POST(request: NextRequest) {
     // Clear failed attempts on success
     attemptStore.delete(attemptKey);
 
-    // Set 2FA verified cookie
-    await set2FAVerifiedCookie(codeData.user_id, rememberMe === true);
+    // Set 2FA verified cookie - check both request body and server cookie for rememberMe
+    const cookieStore = await cookies();
+    const serverRememberMe = cookieStore.get(REMEMBER_ME_COOKIE)?.value === 'true';
+    const effectiveRememberMe = rememberMe === true || serverRememberMe;
+    await set2FAVerifiedCookie(codeData.user_id, effectiveRememberMe);
 
     // Log successful verification
     await createAuditLog({
