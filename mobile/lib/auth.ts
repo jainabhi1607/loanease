@@ -10,6 +10,9 @@ import {
   getTokens,
   getUserData,
   isBiometricEnabled,
+  getBiometricCredentials,
+  hasBiometricCredentials,
+  clearBiometricCredentials,
 } from './storage';
 import {
   LoginResponse,
@@ -303,7 +306,14 @@ export async function authenticateWithBiometrics(): Promise<{
   }
 }
 
-// Login with biometrics (uses stored credentials)
+// Login with biometrics.
+//
+// Behaviour:
+//   1. If there's an active session in SecureStore, biometric just unlocks it.
+//   2. If there's no active session but the user previously stored credentials
+//      via the Account → Biometric Login toggle, biometric prompts and then
+//      re-authenticates against the API using those credentials.
+//   3. Otherwise returns an error explaining how to bootstrap biometric login.
 export async function loginWithBiometrics(): Promise<{
   success: boolean;
   user?: User;
@@ -315,8 +325,13 @@ export async function loginWithBiometrics(): Promise<{
   }
 
   const tokens = await getTokens();
-  if (!tokens) {
-    return { success: false, error: 'No stored credentials' };
+  const hasStoredCreds = await hasBiometricCredentials();
+
+  if (!tokens && !hasStoredCreds) {
+    return {
+      success: false,
+      error: 'Log in with your password once to set up biometric login.',
+    };
   }
 
   const authResult = await authenticateWithBiometrics();
@@ -324,16 +339,44 @@ export async function loginWithBiometrics(): Promise<{
     return { success: false, error: authResult.error };
   }
 
-  // Verify tokens are still valid
-  try {
-    const user = await refreshUserData();
-    if (user) {
-      return { success: true, user };
+  // Path 1: active session — just unlock it.
+  if (tokens) {
+    try {
+      const user = await refreshUserData();
+      if (user) {
+        return { success: true, user };
+      }
+    } catch {
+      // Fall through to stored-credential re-login if available.
     }
-    return { success: false, error: 'Session expired. Please log in again.' };
-  } catch {
-    return { success: false, error: 'Session expired. Please log in again.' };
   }
+
+  // Path 2: re-authenticate using stored email + password.
+  if (hasStoredCreds) {
+    const creds = await getBiometricCredentials();
+    if (!creds) {
+      return { success: false, error: 'Stored credentials unavailable. Please re-enable biometric login.' };
+    }
+
+    const loginResponse = await loginWithEmail(creds.email, creds.password);
+    if (loginResponse.success && loginResponse.user) {
+      return { success: true, user: loginResponse.user };
+    }
+
+    // If the password is no longer valid (e.g. user changed it on the web),
+    // wipe the stored credentials so the user is prompted to re-enable.
+    if (loginResponse.error?.toLowerCase().includes('password') || loginResponse.attempts_remaining !== undefined) {
+      await clearBiometricCredentials();
+      return {
+        success: false,
+        error: 'Saved password no longer works. Please log in with your password and re-enable biometric login.',
+      };
+    }
+
+    return { success: false, error: loginResponse.error || 'Biometric login failed.' };
+  }
+
+  return { success: false, error: 'Session expired. Please log in again.' };
 }
 
 /**

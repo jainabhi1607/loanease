@@ -9,6 +9,7 @@ web-build/
 # Native builds
 *.orig.*
 *.jks
+credentials.json
 *.p8
 *.p12
 *.key

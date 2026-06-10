@@ -15,7 +15,14 @@ import {
   refreshUserData,
   hasBiometricSupport,
 } from '../lib/auth';
-import { getTokens, setBiometricEnabled, isBiometricEnabled } from '../lib/storage';
+import {
+  getTokens,
+  setBiometricEnabled,
+  isBiometricEnabled,
+  storeBiometricCredentials,
+  clearBiometricCredentials,
+  hasBiometricCredentials,
+} from '../lib/storage';
 
 interface AuthState {
   // State
@@ -44,6 +51,7 @@ interface AuthState {
   verify2FA: (code: string) => Promise<boolean>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  enableBiometricWithCredentials: (email: string, password: string) => Promise<void>;
   clearError: () => void;
   setBiometric: (enabled: boolean) => Promise<void>;
 }
@@ -314,10 +322,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ error: null });
   },
 
-  // Set biometric preference
+  // Set biometric preference.
+  // When disabling, also clear any stored credentials so they can't be used.
   setBiometric: async (enabled: boolean) => {
     await setBiometricEnabled(enabled);
+    if (!enabled) {
+      await clearBiometricCredentials();
+    }
     set({ biometricEnabled: enabled });
+  },
+
+  // Activate biometric login by capturing the user's password.
+  // Called from the Account screen after the user enters their password.
+  enableBiometricWithCredentials: async (email: string, password: string) => {
+    await storeBiometricCredentials({ email, password });
+    await setBiometricEnabled(true);
+    set({ biometricEnabled: true });
   },
 }));
 

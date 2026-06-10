@@ -139,6 +139,51 @@ export async function isBiometricEnabled(): Promise<boolean> {
 }
 
 /**
+ * Biometric-protected credentials.
+ *
+ * Stored under a separate SecureStore key from session tokens so that they
+ * survive logout. On retrieval, the caller is responsible for prompting
+ * biometric authentication first (via LocalAuthentication.authenticateAsync).
+ *
+ * A sentinel flag is kept under its own key so existence checks don't have
+ * to read the credential blob (and therefore don't need biometric auth).
+ */
+const BIOMETRIC_CREDS_KEY = 'loanease_biometric_creds';
+const BIOMETRIC_CREDS_FLAG_KEY = 'loanease_biometric_creds_present';
+
+export interface BiometricCredentials {
+  email: string;
+  password: string;
+}
+
+export async function storeBiometricCredentials(creds: BiometricCredentials): Promise<void> {
+  await setItem(BIOMETRIC_CREDS_KEY, JSON.stringify(creds));
+  await setItem(BIOMETRIC_CREDS_FLAG_KEY, 'true');
+}
+
+export async function getBiometricCredentials(): Promise<BiometricCredentials | null> {
+  const raw = await getItem(BIOMETRIC_CREDS_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as BiometricCredentials;
+  } catch {
+    return null;
+  }
+}
+
+export async function hasBiometricCredentials(): Promise<boolean> {
+  const flag = await getItem(BIOMETRIC_CREDS_FLAG_KEY);
+  return flag === 'true';
+}
+
+export async function clearBiometricCredentials(): Promise<void> {
+  await Promise.all([
+    deleteItem(BIOMETRIC_CREDS_KEY),
+    deleteItem(BIOMETRIC_CREDS_FLAG_KEY),
+  ]);
+}
+
+/**
  * Store generic key-value pair securely
  */
 export async function setSecureItem(key: string, value: string): Promise<void> {

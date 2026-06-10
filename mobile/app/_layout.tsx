@@ -145,6 +145,26 @@ export default function RootLayout() {
             title: 'Team Management',
           }}
         />
+        <Stack.Screen
+          name="account/login-history"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Login History',
+          }}
+        />
+        <Stack.Screen
+          name="account/delete-account"
+          options={{
+            headerStyle: { backgroundColor: '#02383B' },
+            headerTintColor: '#FFFFFF',
+            headerBackTitle: 'Back',
+            headerTitleAlign: 'center',
+            title: 'Delete Account',
+          }}
+        />
       </Stack>
     </>
   );

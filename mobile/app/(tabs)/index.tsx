@@ -19,6 +19,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/auth';
 import { get } from '../../lib/api';
 import { StatusBadge } from '../../components/ui';
@@ -115,6 +116,7 @@ function LeadItem({
 
 export default function DashboardScreen() {
   const { user } = useAuthStore();
+  const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState({
     openOpportunities: 0,
@@ -197,7 +199,7 @@ export default function DashboardScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
+        <View style={[styles.header, { paddingTop: insets.top + 12 }]}>
           <Image
             source={require('../../assets/loanease_logo.png')}
             style={styles.logo}

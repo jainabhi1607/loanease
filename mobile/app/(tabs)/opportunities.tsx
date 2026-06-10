@@ -39,12 +39,16 @@ export default function OpportunitiesScreen() {
         data = await get<Opportunity[]>('/referrer/opportunities?status=draft');
       } else if (activeTab === 'unqualified') {
         // Unqualified has a separate endpoint with different response format
-        const response = await get<{ opportunities: Opportunity[] }>('/referrer/opportunities/unqualified');
+        type UnqualifiedOpportunity = Opportunity & {
+          client_entity_name?: string;
+          client_contact_name?: string;
+        };
+        const response = await get<{ opportunities: UnqualifiedOpportunity[] }>('/referrer/opportunities/unqualified');
         // Map client_entity_name to borrowing_entity for consistency
         data = (response.opportunities || []).map(opp => ({
           ...opp,
-          borrowing_entity: (opp as any).client_entity_name || '',
-          contact_name: (opp as any).client_contact_name || '',
+          borrowing_entity: opp.client_entity_name || '',
+          contact_name: opp.client_contact_name || '',
         }));
       }
 

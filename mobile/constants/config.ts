@@ -8,12 +8,12 @@ import { Platform } from 'react-native';
 
 const DEV_API_URL = Platform.OS === 'web'
   ? 'http://localhost:3000/api'  // Web browser
-  : 'http://192.168.1.11:3000/api';  // Mobile device - local network IP
+  : 'http://192.168.1.4:3000/api';  // Mobile device - local network IP
 
 export const API_CONFIG = {
   BASE_URL: __DEV__
     ? DEV_API_URL  // Development
-    : 'https://loanease.com/api',  // Production
+    : 'https://loanease-app.vercel.app/api',  // Production
 
   TIMEOUT: 30000, // 30 seconds
 };

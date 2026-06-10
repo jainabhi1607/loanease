@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { get } from '../../lib/api';
 import { getAccessToken } from '../../lib/storage';
@@ -59,53 +59,81 @@ export default function ClientsScreen() {
   // Download CSV
   const handleDownloadCSV = async () => {
     setIsDownloading(true);
+    const timestamp = new Date().getTime();
+    const fileName = `Clients-${timestamp}.csv`;
+    const url = `${API_CONFIG.BASE_URL}/referrer/clients/export/csv`;
+
+    const downloadOnce = async (token: string) => {
+      const fileUri = (FileSystem.documentDirectory ?? '') + fileName;
+      return FileSystem.downloadAsync(url, fileUri, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    };
+
     try {
-      const token = await getAccessToken();
-      const timestamp = new Date().getTime();
-      const fileName = `Clients-${timestamp}.csv`;
+      let token = await getAccessToken();
+      if (!token) {
+        Alert.alert('Please log in again to download.');
+        return;
+      }
 
       if (Platform.OS === 'web') {
         // Web: use fetch + blob download
-        const response = await fetch(`${API_CONFIG.BASE_URL}/referrer/clients/export/csv`, {
+        const response = await fetch(url, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Failed to download CSV');
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        const objectUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = objectUrl;
         a.download = fileName;
         document.body.appendChild(a);
         a.click();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(objectUrl);
         document.body.removeChild(a);
-      } else {
-        // Native: download to file system then share
-        const fileUri = FileSystem.documentDirectory + fileName;
-        const result = await FileSystem.downloadAsync(
-          `${API_CONFIG.BASE_URL}/referrer/clients/export/csv`,
-          fileUri,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        return;
+      }
 
-        if (result.status !== 200) {
-          throw new Error('Failed to download CSV');
+      // Native: download to file system then share
+      let result = await downloadOnce(token);
+
+      // FileSystem.downloadAsync bypasses our api.ts auto-refresh on 401.
+      // If the access token is expired, ping any endpoint via api.ts to refresh, then retry.
+      if (result.status === 401) {
+        try {
+          await get('/referrer/clients');
+        } catch {
+          // Refresh may still have succeeded
         }
-
-        const canShare = await Sharing.isAvailableAsync();
-        if (canShare) {
-          await Sharing.shareAsync(result.uri, {
-            mimeType: 'text/csv',
-            dialogTitle: 'Export Clients CSV',
-            UTI: 'public.comma-separated-values-text',
-          });
-        } else {
-          Alert.alert('Success', `CSV saved to ${result.uri}`);
+        const refreshed = await getAccessToken();
+        if (refreshed && refreshed !== token) {
+          token = refreshed;
+          result = await downloadOnce(token);
         }
       }
-    } catch (error) {
-      console.error('CSV download failed:', error);
-      Alert.alert('Error', 'Failed to download CSV. Please try again.');
+
+      if (result.status === 401) {
+        Alert.alert('Session expired', 'Please log out and log back in to download.');
+        return;
+      }
+
+      if (result.status !== 200) {
+        throw new Error(`Server returned ${result.status}`);
+      }
+
+      const canShare = await Sharing.isAvailableAsync();
+      if (canShare) {
+        await Sharing.shareAsync(result.uri, {
+          mimeType: 'text/csv',
+          dialogTitle: 'Export Clients CSV',
+          UTI: 'public.comma-separated-values-text',
+        });
+      } else {
+        Alert.alert('Saved', `CSV saved to ${result.uri}`);
+      }
+    } catch (error: any) {
+      Alert.alert('Download failed', error?.message || 'Please try again later.');
     } finally {
       setIsDownloading(false);
     }

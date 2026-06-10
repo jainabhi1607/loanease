@@ -400,7 +400,7 @@ export default function TeamScreen() {
               <Text style={styles.label}>Role *</Text>
               <TouchableOpacity
                 style={[styles.inputBox, !!errors.role && styles.inputError]}
-                onPress={() => { setShowRolePicker(!showRolePicker); setShowStatePicker(false); }}
+                onPress={() => { setShowRolePicker(!showRolePicker); }}
               >
                 <Text style={[styles.inputField, !role && { color: '#aaa' }]}>
                   {ROLE_OPTIONS.find(r => r.value === role)?.label || 'Select role'}
