@@ -10,24 +10,31 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if user is a referrer
-    if (user.role !== 'referrer_admin' && user.role !== 'referrer_team') {
+    // Admins (super_admin / admin_team) see all data, like the web app.
+    // Referrers are scoped to their own organisation.
+    const isAdmin = user.role === 'super_admin' || user.role === 'admin_team';
+    const isReferrer = user.role === 'referrer_admin' || user.role === 'referrer_team';
+
+    if (!isAdmin && !isReferrer) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    if (!user.organisationId) {
+    if (!isAdmin && !user.organisationId) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const db = await getDatabase();
 
+    // Match stage (admins: all orgs; referrers: their org only)
+    const orgMatch: any = { deleted_at: null };
+    if (!isAdmin) {
+      orgMatch.organization_id = user.organisationId;
+    }
+
     // Aggregate opportunities with their details
     const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES).aggregate([
       {
-        $match: {
-          organization_id: user.organisationId,
-          deleted_at: null,
-        }
+        $match: orgMatch
       },
       {
         $lookup: {

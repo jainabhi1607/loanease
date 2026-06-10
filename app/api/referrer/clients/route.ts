@@ -19,18 +19,26 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Check if user is a referrer (referrer_admin or referrer_team)
-    if (userData.role !== 'referrer_admin' && userData.role !== 'referrer_team') {
+    // Admins (super_admin / admin_team) see all clients, like the web app.
+    // Referrers are scoped to their own organisation.
+    const isAdmin = userData.role === 'super_admin' || userData.role === 'admin_team';
+    const isReferrer = userData.role === 'referrer_admin' || userData.role === 'referrer_team';
+
+    if (!isAdmin && !isReferrer) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
     }
 
-    if (!userData.organisation_id) {
+    if (!isAdmin && !userData.organisation_id) {
       return NextResponse.json({ error: 'No organization found' }, { status: 404 });
     }
 
-    // Fetch all clients for this organization
+    // Fetch clients (admins: all orgs; referrers: their org only)
+    const clientFilter: any = { deleted_at: null };
+    if (!isAdmin) {
+      clientFilter.organisation_id = userData.organisation_id;
+    }
     const clients = await db.collection(COLLECTIONS.CLIENTS)
-      .find({ organisation_id: userData.organisation_id, deleted_at: null })
+      .find(clientFilter)
       .sort({ created_at: -1 })
       .toArray();
 

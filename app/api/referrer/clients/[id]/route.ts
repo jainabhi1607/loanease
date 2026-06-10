@@ -25,33 +25,37 @@ export async function GET(
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Check if user is a referrer
-    if (userData.role !== 'referrer_admin' && userData.role !== 'referrer_team') {
+    // Admins (super_admin / admin_team) can view any client, like the web app.
+    // Referrers are scoped to their own organisation.
+    const isAdmin = userData.role === 'super_admin' || userData.role === 'admin_team';
+    const isReferrer = userData.role === 'referrer_admin' || userData.role === 'referrer_team';
+
+    if (!isAdmin && !isReferrer) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
     }
 
-    if (!userData.organisation_id) {
+    if (!isAdmin && !userData.organisation_id) {
       return NextResponse.json({ error: 'No organization found' }, { status: 404 });
     }
 
-    // Fetch client details - ensure it belongs to the user's organization
-    const client = await db.collection(COLLECTIONS.CLIENTS).findOne({
-      _id: clientId as any,
-      organisation_id: userData.organisation_id,
-      deleted_at: null
-    });
+    // Fetch client details (admins: any org; referrers: their org only)
+    const clientQuery: any = { _id: clientId as any, deleted_at: null };
+    if (!isAdmin) {
+      clientQuery.organisation_id = userData.organisation_id;
+    }
+    const client = await db.collection(COLLECTIONS.CLIENTS).findOne(clientQuery);
 
     if (!client) {
       return NextResponse.json({ error: 'Client not found' }, { status: 404 });
     }
 
-    // Fetch all opportunities for this client (scoped to organization)
+    // Fetch all opportunities for this client (admins: any org; referrers: their org)
+    const oppQuery: any = { client_id: clientId, deleted_at: null };
+    if (!isAdmin) {
+      oppQuery.organization_id = userData.organisation_id;
+    }
     const opportunities = await db.collection(COLLECTIONS.OPPORTUNITIES)
-      .find({
-        client_id: clientId,
-        organization_id: userData.organisation_id,
-        deleted_at: null
-      })
+      .find(oppQuery)
       .sort({ created_at: -1 })
       .toArray();
 

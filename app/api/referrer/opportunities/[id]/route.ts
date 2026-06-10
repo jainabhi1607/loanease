@@ -15,23 +15,27 @@ export async function GET(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Check if user is a referrer
-    if (user.role !== 'referrer_admin' && user.role !== 'referrer_team') {
+    // Admins (super_admin / admin_team) can view any opportunity, like the web app.
+    // Referrers are scoped to their own organisation.
+    const isAdmin = user.role === 'super_admin' || user.role === 'admin_team';
+    const isReferrer = user.role === 'referrer_admin' || user.role === 'referrer_team';
+
+    if (!isAdmin && !isReferrer) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    if (!user.organisationId) {
+    if (!isAdmin && !user.organisationId) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const db = await getDatabase();
 
-    // Fetch opportunity with organization filter
-    const opportunity = await db.collection(COLLECTIONS.OPPORTUNITIES).findOne({
-      _id: id as any,
-      organization_id: user.organisationId,
-      deleted_at: null,
-    });
+    // Fetch opportunity (admins: any org; referrers: their org only)
+    const oppQuery: any = { _id: id as any, deleted_at: null };
+    if (!isAdmin) {
+      oppQuery.organization_id = user.organisationId;
+    }
+    const opportunity = await db.collection(COLLECTIONS.OPPORTUNITIES).findOne(oppQuery);
 
     if (!opportunity) {
       return NextResponse.json({ error: 'Opportunity not found' }, { status: 404 });
