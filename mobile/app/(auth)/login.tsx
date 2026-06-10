@@ -19,11 +19,13 @@ import { Link, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../../store/auth';
 import { VALIDATION } from '../../constants/config';
+import { getTokens, hasBiometricCredentials } from '../../lib/storage';
 
 type LoginMethod = 'email' | 'mobile';
 
 export default function LoginScreen() {
   const [method, setMethod] = useState<LoginMethod>('email');
+  const [hasStoredSession, setHasStoredSession] = useState(false);
 
   // Email login state
   const [email, setEmail] = useState('');
@@ -52,12 +54,25 @@ export default function LoginScreen() {
     biometricEnabled,
   } = useAuthStore();
 
-  // Attempt biometric login on mount if available and enabled
+  // Detect whether biometric login can actually run: either there's a stored
+  // session to unlock, or the user previously stored credentials behind the
+  // biometric gate (so we can re-authenticate against the API on tap).
   useEffect(() => {
-    if (biometricAvailable && biometricEnabled) {
+    (async () => {
+      const [tokens, storedCreds] = await Promise.all([
+        getTokens(),
+        hasBiometricCredentials(),
+      ]);
+      setHasStoredSession(!!tokens || storedCreds);
+    })();
+  }, []);
+
+  // Auto-prompt biometric on mount only when something is actually unlockable.
+  useEffect(() => {
+    if (biometricAvailable && biometricEnabled && hasStoredSession) {
       handleBiometricLogin();
     }
-  }, [biometricAvailable, biometricEnabled]);
+  }, [biometricAvailable, biometricEnabled, hasStoredSession]);
 
   const handleBiometricLogin = async () => {
     clearError();
@@ -103,11 +118,17 @@ export default function LoginScreen() {
 
     const success = await loginEmail(email, password);
     if (success) {
-      if (requires2FA) {
-        router.push('/(auth)/verify-2fa');
-      } else {
-        router.replace('/(tabs)');
-      }
+      // ===== TEMP: OTP/2FA STEP DISABLED FOR GOOGLE PLAY STORE REVIEW =====
+      // Reviewers log in with username + password only (they can't receive an OTP).
+      // RE-ENABLE the block below after the app is approved, then remove the
+      // unconditional redirect underneath it.
+      // if (requires2FA) {
+      //   router.push('/(auth)/verify-2fa');
+      // } else {
+      //   router.replace('/(tabs)');
+      // }
+      router.replace('/(tabs)');
+      // ===== END TEMP =====
     }
   };
 
@@ -301,8 +322,8 @@ export default function LoginScreen() {
           </View>
         )}
 
-        {/* Biometric Login */}
-        {biometricAvailable && biometricEnabled && (
+        {/* Biometric Login — only when there's a stored session to unlock */}
+        {biometricAvailable && biometricEnabled && hasStoredSession && (
           <TouchableOpacity
             style={styles.biometricBtn}
             onPress={handleBiometricLogin}
