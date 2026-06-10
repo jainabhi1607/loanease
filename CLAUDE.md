@@ -281,6 +281,17 @@ The mobile app is for referrers only (not admin). Accessed via Expo Go during de
 - `GET /referrer/opportunities?status=draft|opportunity` - List by status
 - `POST /referrer/opportunities/create` - Create new opportunity
 
+### Admin Access on Mobile Endpoints (commit c7cd956)
+- `super_admin` / `admin_team` see ALL data across organisations on `/api/referrer/*` GET routes (opportunities, applications, clients, details, history, notes, unqualified, dashboard) — matches web app
+- Referrers (`referrer_admin` / `referrer_team`) stay scoped to their own `organisation_id`
+- Pattern: `isAdmin` skips the `organization_id` match filter and the missing-org 404
+- Edit/mutation paths stay referrer-scoped (opportunity create/update, note edit/delete) — except note CREATE, which admins may also do
+
+### Account Features (Mobile)
+- **Delete Account** (`mobile/app/account/delete-account.tsx` + `app/api/referrer/account/delete-account/route.ts`): self-service account deletion
+- **Login History** (`mobile/app/account/login-history.tsx`): view recent login attempts
+- **EAS Build**: config in `mobile/eas.json`; Play Store assets in `mobile/store-assets/`, icon generation via `mobile/scripts/generate-icons.mjs`
+
 ### Mobile UI Components (`mobile/components/ui/`)
 - `Button` - Primary/outline/ghost variants with loading state
 - `Input` - Text input with label, error, icons; `PhoneInput` (+91 prefix); `CurrencyInput` ($ prefix)
