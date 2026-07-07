@@ -124,7 +124,17 @@
       "WebSearch",
       "PowerShell(explorer \"H:\\\\coxy\\\\loanease\\\\mobile\\\\store-assets\\\\tablet\")",
       "Bash(git show *)",
-      "Bash(git rev-list *)"
+      "Bash(git rev-list *)",
+      "Bash(python -c \"import PIL; print\\('PIL', PIL.__version__\\)\")",
+      "Bash(magick --version)",
+      "Bash(convert --version)",
+      "Bash(python -c \"from PIL import Image; import glob; [print\\(f, Image.open\\(f\\).size\\) for f in glob.glob\\('/h/coxy/loanease/mobile/store-assets/**/*.jpg', recursive=True\\)]\")",
+      "Bash(rm -f store-assets-test-text.png title-sample.png)",
+      "Bash(cp -n mobile/store-assets/mobile/*.jpg mobile/store-assets/raw/mobile/)",
+      "Bash(cp -n mobile/store-assets/tablet/*.jpg mobile/store-assets/raw/tablet/)",
+      "Bash(git checkout *)",
+      "Bash(npx eas-cli@latest whoami)",
+      "Bash(tee /c/Users/STERLI~1/AppData/Local/Temp/claude/H--coxy-loanease/11c14b6d-93fc-46dd-a1b6-59f6f2af0ddd/scratchpad/eas-build.log)"
     ],
     "deny": [],
     "ask": []
